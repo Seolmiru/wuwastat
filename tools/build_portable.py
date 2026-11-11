@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import shutil
 import subprocess
 import sys
@@ -111,10 +112,15 @@ def verify_signatures(py: Path) -> None:
     for exe in ("python.exe", "pythonw.exe"):
         ps = (f"$s = Get-AuthenticodeSignature '{py / exe}'; "
               "Write-Output ($s.Status.ToString() + '|' + $s.SignerCertificate.Subject)")
-        out = subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, text=True).stdout.strip()
+        # GitHub Actions(pwsh)에서 실행하면 PSModulePath에 PowerShell 7 경로가 섞여 Windows PowerShell 5.1이
+        # Microsoft.PowerShell.Security 모듈(Get-AuthenticodeSignature)을 못 불러온다. 그 변수를 빼고 실행한다.
+        env = {k: v for k, v in os.environ.items() if k.upper() != "PSMODULEPATH"}
+        r = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps],
+                           capture_output=True, text=True, env=env)
+        out = r.stdout.strip()
         status, _, subject = out.partition("|")
         if status != "Valid" or "Python Software Foundation" not in subject:
-            raise SystemExit(f"{exe} 서명 확인 실패: {out}")
+            raise SystemExit(f"{exe} 서명 확인 실패: {out or '(출력 없음)'} {r.stderr.strip()}")
         print(f"{exe} 서명 확인: {subject.split(',')[0]}")
 
 
