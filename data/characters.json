@@ -1,0 +1,4860 @@
+{
+  "source": "https://wuwaguide.kurogames.com/ko/",
+  "fetched_at": "2026-11-11T11:32:17+00:00",
+  "count": 61,
+  "errors": [],
+  "characters": [
+    {
+      "id": "1208",
+      "name": "갈브레나",
+      "name_en": "Galbrena",
+      "star": 5,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/f23be01a357c1bde4424317b9b07e876.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1208",
+      "guide": {
+        "id": 13130,
+        "language": "ko",
+        "title": "[입문] 갈브레나 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 1311,
+        "modified_at": 1794393386
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2400.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 60.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 280.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "코로사우루스",
+      "sonata": [
+        "불타는 깃털을 펼친 사냥꾼의 그림자 3세트",
+        "울부짖는 늑대의 불꽃 2세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크리티컬/크리티컬 피해>공격력%>강공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1405",
+      "name": "감심",
+      "name_en": "Jianxin",
+      "star": 5,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/3d636a5e0efcac1ba60a70c3a238ba6d.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1405",
+      "guide": {
+        "id": 13030,
+        "language": "ko",
+        "title": "[입문] 감심 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 117,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 60.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 200.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 134.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "음험한 백로",
+      "sonata": [
+        "떠오르는 구름 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 효율"
+    },
+    {
+      "id": "1212",
+      "name": "경연",
+      "name_en": "Jingran",
+      "star": 5,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/3b3c0d664435a2fa97373594dd68ba01/7ba64e1c268d88cf24c5e6e63f7449a3.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1212",
+      "guide": {
+        "id": 13150,
+        "language": "ko",
+        "title": "[입문] 경연 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 106,
+        "modified_at": 1788941842
+      },
+      "targets": [
+        {
+          "stat": "hp",
+          "value": 50000.0,
+          "op": ">=",
+          "label": "HP"
+        },
+        {
+          "stat": "atk",
+          "value": 3000.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 50.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 300.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 4,
+          "main": "crit_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        }
+      ],
+      "main_echo": "만와뢰 · 잔해",
+      "sonata": [
+        "황천길을 밝히는 등불 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "hp_pct"
+        ],
+        [
+          "energy_regen"
+        ],
+        [
+          "atk_pct"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>HP 백분율>공명 효율>공격력 백분율"
+    },
+    {
+      "id": "1411",
+      "name": "구원",
+      "name_en": "Qiuyuan",
+      "star": 5,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/d5e2a4a3f93538f69107a2ee95222de4.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1411",
+      "guide": {
+        "id": 13131,
+        "language": "ko",
+        "title": "[입문] 구원 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 692,
+        "modified_at": 1761721544
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 65.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "공명 메아리 · 펜리코",
+      "sonata": [
+        "만물의 숨결에 비롯된 울림 3세트",
+        "스쳐가는 바람 2세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격 백분율>강공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1304",
+      "name": "금희",
+      "name_en": "Jinhsi",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/f0f853fc28b06aab285db5ab274bec52.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1304",
+      "guide": {
+        "id": 13011,
+        "language": "ko",
+        "title": "[입문] 금희 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 372,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 275.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "skill_dmg",
+          "value": 20.0,
+          "op": ">=",
+          "label": "공명 스킬 피해 보너스"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "용의 별자리",
+      "sonata": [
+        "빛나는 별 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 스킬 피해 보너스"
+    },
+    {
+      "id": "1404",
+      "name": "기염",
+      "name_en": "Jiyan",
+      "star": 5,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/dfed76d9925a4a98924242b231e236cc.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1404",
+      "guide": {
+        "id": 13024,
+        "language": "ko",
+        "title": "[입문] 기염 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 118,
+        "modified_at": 1749648670
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "aero_dmg",
+          "value": 40.0,
+          "op": ">=",
+          "label": "기류 피해 보너스"
+        },
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "폭주의 고릴라",
+      "sonata": [
+        "스쳐가는 바람 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>강공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1104",
+      "name": "능양",
+      "name_en": "Lingyang",
+      "star": 5,
+      "element": "glacio",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/a5c8de9c8a8d60b02481274bc7f05671.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1104",
+      "guide": {
+        "id": 13027,
+        "language": "ko",
+        "title": "[입문] 능양 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 61,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 1800.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 60.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 200.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 3,
+          "main": "glacio_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "반디의 군세",
+      "sonata": [
+        "야밤의 서리 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ],
+        [
+          "energy_regen"
+        ],
+        [
+          "liberation_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>일반 공격 피해 보너스>공명 효율>공명 해방 피해 보너스"
+    },
+    {
+      "id": "1602",
+      "name": "단근",
+      "name_en": "Danjin",
+      "star": 4,
+      "element": "havoc",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/5b341b6f1c5e1f43640081bed20ef61c.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1602",
+      "guide": {
+        "id": 13022,
+        "language": "ko",
+        "title": "[입문] 단근 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 95,
+        "modified_at": 1785298615
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 50.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 210.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "atk",
+          "value": 1900.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 크라운리스",
+      "sonata": [
+        "빛을 삼키는 해 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg",
+          "heavy_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>일반 공격/강공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1211",
+      "name": "데니아",
+      "name_en": "Denia",
+      "star": 5,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/7cd3a060b03a576b87151cadde4434f5.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1211",
+      "guide": {
+        "id": 13142,
+        "language": "ko",
+        "title": "[입문] 데니아 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 652,
+        "modified_at": 1787197709
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 270.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "공명의 메아리 · 데니아",
+      "sonata": [
+        "오색찬란한 거품 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 해방 피해>공명 효율"
+    },
+    {
+      "id": "1601",
+      "name": "도기",
+      "name_en": "Taoqi",
+      "star": 4,
+      "element": "havoc",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/80e25dc73edb84d45d2ca8a60a01ec6b.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1601",
+      "guide": {
+        "id": 13018,
+        "language": "ko",
+        "title": "[입문] 도기 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 60,
+        "modified_at": 1785298615
+      },
+      "targets": [
+        {
+          "stat": "def",
+          "value": 4000.0,
+          "op": ">=",
+          "label": "방어력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "def_pct"
+        },
+        {
+          "cost": 3,
+          "main": "def_pct"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "def_pct"
+        },
+        {
+          "cost": 1,
+          "main": "def_pct"
+        }
+      ],
+      "main_echo": "타종 거북이",
+      "sonata": [
+        "떠오르는 구름 5세트"
+      ],
+      "substat_priority": [
+        [
+          "def_pct"
+        ],
+        [
+          "energy_regen"
+        ],
+        [
+          "liberation_dmg"
+        ]
+      ],
+      "substat_priority_text": "방어력 백분율>공명 효율>공명 해방 피해 보너스"
+    },
+    {
+      "id": "1308",
+      "name": "레베카",
+      "name_en": "Rebecca",
+      "star": 5,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/46a2036c6e6e5a89133570f18abe6d7f/12f4a3c1249a4d44190e7757b314ac53.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1308",
+      "guide": {
+        "id": 13144,
+        "language": "ko",
+        "title": "[입문] 레베카 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 232,
+        "modified_at": 1780880175
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 80.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 280.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "공명의 메아리 · 악몽 아담 · 스매셔",
+      "sonata": [
+        "끊임없는 잔향 2세트",
+        "울려퍼지는 뇌음 2세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>일반 공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1606",
+      "name": "로코코",
+      "name_en": "Roccia",
+      "star": 5,
+      "element": "havoc",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/8c0be7d51ff69ecaf9f6dd6a8825f804.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1606",
+      "guide": {
+        "id": 13004,
+        "language": "ko",
+        "title": "[입문] 로코코 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천\t",
+        "author": "WW echoes",
+        "likes": 218,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 220.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "음험한 백로",
+      "sonata": [
+        "떠오르는 구름 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate"
+        ],
+        [
+          "crit_dmg"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확>크피>강공격 피해 보너스>공격력 백분율>공명 효율"
+    },
+    {
+      "id": "1504",
+      "name": "루미",
+      "name_en": "Lumi",
+      "star": 4,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/16d26d0d0948c1242774840c50601c97.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1504",
+      "guide": {
+        "id": 13002,
+        "language": "ko",
+        "title": "[입문] 루미 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Guides",
+        "likes": 41,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2000.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 210.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 뇌운의 비늘",
+      "sonata": [
+        "울려퍼지는 뇌음 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ],
+        [
+          "energy_regen"
+        ],
+        [
+          "liberation_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>일반 공격 피해 보너스>공명 효율>공명 해방 피해 보너스"
+    },
+    {
+      "id": "1511",
+      "name": "루시",
+      "name_en": "Lucy",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/46a2036c6e6e5a89133570f18abe6d7f/b7ee163d2126c08e328d59c8f2d84469.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1511",
+      "guide": {
+        "id": 13143,
+        "language": "ko",
+        "title": "[입문] 루시 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 346,
+        "modified_at": 1780880188
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 80.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "atk",
+          "value": 2300.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "공명의 메아리 · 악몽 아담 · 스매셔",
+      "sonata": [
+        "흐르는 금빛 속 진리의 답 2세트",
+        "빛나는 별 2세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격 백분율>강공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1109",
+      "name": "루실라",
+      "name_en": "Lucilla",
+      "star": 5,
+      "element": "glacio",
+      "icon": "https://guide-res.aki-game.net/introduction/material/63f36b9a6b6602c22ac8055fbaa367b6/77e6b7f90219f64bba05731581f5090f.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1109",
+      "guide": {
+        "id": 13145,
+        "language": "ko",
+        "title": "[입문] 루실라 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 212,
+        "modified_at": 1785326292
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 3,
+          "main": "glacio_dmg"
+        },
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "glacio_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "글로모스",
+      "sonata": [
+        "소리 없이 내려앉은 기도의 눈 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>일반 공격 피해 보너스>공격"
+    },
+    {
+      "id": "1510",
+      "name": "루크 · 헤르센",
+      "name_en": "Luuk Herssen",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/53996829319d425f877060d282523896.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1510",
+      "guide": {
+        "id": 13139,
+        "language": "ko",
+        "title": "[입문] 루크·헤르센 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 325,
+        "modified_at": 1783597642
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "트윈 노바 · 네뷸러스 캐논",
+      "sonata": [
+        "흐르는 금빛 속 진리의 답 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>평타 피해>공명 효율"
+    },
+    {
+      "id": "1207",
+      "name": "루파",
+      "name_en": "Lupa",
+      "star": 5,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/fe170cf89d5648970e857b721bb117f8.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1207",
+      "guide": {
+        "id": 13122,
+        "language": "ko",
+        "title": "[입문] 루파 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 781,
+        "modified_at": 1794393271
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "atk",
+          "value": 2300.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "영광의 사자",
+      "sonata": [
+        "울부짖는 늑대의 불꽃 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크리티컬/크리티컬 피해>공격력 백분율>공명 해방 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1509",
+      "name": "린네",
+      "name_en": "Lynae",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/acd70405164cb93b7dffe29fb3f6acb8.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1509",
+      "guide": {
+        "id": 13134,
+        "language": "ko",
+        "title": "[입문] 린네 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 1538,
+        "modified_at": 1783597642
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 270.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "spectro_dmg",
+          "value": 70.0,
+          "op": ">=",
+          "label": "회절 피해 보너스"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "하이와티아",
+      "sonata": [
+        "역광 속 눈부신 서약 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>일반 공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1512",
+      "name": "릴리",
+      "name_en": "Lily",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/a8dfb8a5fca67d2590e31e2b031bd971/6cc2275c788f35471d114c4b72dfdf4f.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1512",
+      "guide": null,
+      "targets": [],
+      "echo_slots": [],
+      "main_echo": "",
+      "sonata": [],
+      "substat_priority": [],
+      "substat_priority_text": ""
+    },
+    {
+      "id": "1209",
+      "name": "모니에",
+      "name_en": "Mornye",
+      "star": 5,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/34bf12f0ca96c0ad5bbfd06f57f8e564.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1209",
+      "guide": {
+        "id": 13135,
+        "language": "ko",
+        "title": "[입문] 모니에 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "ww echoes",
+        "likes": 1284,
+        "modified_at": 1788940942
+      },
+      "targets": [
+        {
+          "stat": "healing",
+          "value": 48.4,
+          "op": ">=",
+          "label": "치료 효과 보너스"
+        },
+        {
+          "stat": "def",
+          "value": 3200.0,
+          "op": ">=",
+          "label": "방어력"
+        },
+        {
+          "stat": "hp",
+          "value": 19935.0,
+          "op": ">=",
+          "label": "HP"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 260.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "healing"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 1,
+          "main": "def_pct"
+        },
+        {
+          "cost": 1,
+          "main": "def_pct"
+        }
+      ],
+      "main_echo": "리액터 허스크",
+      "sonata": [
+        "빛을 쫓는 별의 고리 5세트"
+      ],
+      "substat_priority": [
+        [
+          "energy_regen"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "def_pct"
+        ],
+        [
+          "crit_rate"
+        ],
+        [
+          "crit_dmg"
+        ]
+      ],
+      "substat_priority_text": "공명 효율>공명 해방 피해 보너스>방어력 백분비>크확>크피"
+    },
+    {
+      "id": "1204",
+      "name": "모르테피",
+      "name_en": "Mortefi",
+      "star": 4,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/50a37085725e57ca1904015e848d5d07.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1204",
+      "guide": {
+        "id": 13025,
+        "language": "ko",
+        "title": "[입문] 모르테피 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 102,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 210.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "음험한 백로",
+      "sonata": [
+        "떠오르는 구름 5세트"
+      ],
+      "substat_priority": [
+        [
+          "energy_regen"
+        ],
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ]
+      ],
+      "substat_priority_text": "공명 효율>크확/크피>공격력 백분율"
+    },
+    {
+      "id": "1408",
+      "name": "방랑자 · 기류",
+      "name_en": "Rover: Aero",
+      "star": 5,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/e2d9a74d8323aed853d6a1e999a9a56b.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1408",
+      "guide": {
+        "id": 13115,
+        "language": "ko",
+        "title": "기류 방랑자 개념때려잡기 | 매커니즘부터 효율까지!",
+        "author": "니브",
+        "likes": 499,
+        "modified_at": 1794394627
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 69.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 213.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "atk",
+          "value": 2129.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 150.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "공명의 메아리 · 플뢰르 드 리스",
+      "sonata": [
+        "영광이 깃든 바람 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ]
+      ],
+      "substat_priority_text": "크리티컬/크리티컬 피해 > 공격력 백분율> 공명 스킬 피해 보너스"
+    },
+    {
+      "id": "1604",
+      "name": "방랑자 · 인멸",
+      "name_en": "Rover: Havoc",
+      "star": 5,
+      "element": "havoc",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/7352939906e901a783483aa9abfdc738.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1604",
+      "guide": {
+        "id": 13035,
+        "language": "ko",
+        "title": "[입문] 방랑자·인멸 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 474,
+        "modified_at": 1794395400
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 210.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "무망자",
+      "sonata": [
+        "빛을 삼키는 해 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "basic_dmg",
+          "heavy_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 해방 피해 보너스>일반 공격/강공격 피해 보너스"
+    },
+    {
+      "id": "1309",
+      "name": "방랑자 · 전도",
+      "name_en": "Rover: Electro",
+      "star": 5,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/46a2036c6e6e5a89133570f18abe6d7f/7bb61d835380e06fad688a778964e88a.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1309",
+      "guide": {
+        "id": 13147,
+        "language": "ko",
+        "title": "[입문] 방랑자 · 전도 원스톱 육성 가이드",
+        "author": "WW Echoes",
+        "likes": 71,
+        "modified_at": 1790731986
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 110.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "절식백",
+      "sonata": [
+        "거울 그림자에 번개가 스치는 찰나 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "skill_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확=크피>공명 스킬 피해>공격%>공명 해방 피해 > 공명 효율"
+    },
+    {
+      "id": "1502",
+      "name": "방랑자 · 회절",
+      "name_en": "Rover: Spectro",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/ebc1ec3a5f3ce13058390564e0513cd3.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1502",
+      "guide": {
+        "id": 13019,
+        "language": "ko",
+        "title": "[입문] 방랑자·회절 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 250,
+        "modified_at": 1785298615
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2000.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 240.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 50.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 애곡하는 아익스",
+      "sonata": [
+        "영원의 광채 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ],
+        [
+          "liberation_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 스킬 피해 보너스>공명 해방 피해 보너스"
+    },
+    {
+      "id": "1503",
+      "name": "벨리나",
+      "name_en": "Verina",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/deb60fc64c2de8328301b889518f593f.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1503",
+      "guide": {
+        "id": 13015,
+        "language": "ko",
+        "title": "[입문] 벨리나 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 537,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2500.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "healing",
+          "value": 48.0,
+          "op": ">=",
+          "label": "치료 효과 보너스"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 210.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "healing"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "타종 거북이",
+      "sonata": [
+        "찬란한 광휘 5세트"
+      ],
+      "substat_priority": [
+        [
+          "energy_regen"
+        ],
+        [
+          "atk_pct"
+        ]
+      ],
+      "substat_priority_text": "공명 효율>공격력 백분율>나머지"
+    },
+    {
+      "id": "1307",
+      "name": "복링",
+      "name_en": "Buling",
+      "star": 4,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/2fdb664642d57f6fe3a444c595821059.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1307",
+      "guide": {
+        "id": 13133,
+        "language": "ko",
+        "title": "[입문] 복링 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 251,
+        "modified_at": 1794393921
+      },
+      "targets": [
+        {
+          "stat": "energy_regen",
+          "value": 160.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "healing",
+          "value": 48.4,
+          "op": ">=",
+          "label": "치료 효과 보너스"
+        },
+        {
+          "stat": "atk",
+          "value": 2400.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "healing"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "돌아갈 곳이 없는 오류",
+      "sonata": [
+        "찬란한 광휘 5세트"
+      ],
+      "substat_priority": [
+        [
+          "atk_pct"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "공격력 백분율>공명 효율>기타"
+    },
+    {
+      "id": "1206",
+      "name": "브렌트",
+      "name_en": "Brant",
+      "star": 5,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/12af3a43a139b880f2f538677170f066.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1206",
+      "guide": {
+        "id": 13006,
+        "language": "ko",
+        "title": "[입문] 브렌트 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 341,
+        "modified_at": 1783597642
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2000.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 210.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 270.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "탄식의 고룡",
+      "sonata": [
+        "파도에 맞선 용기 5세트"
+      ],
+      "substat_priority": [
+        [
+          "energy_regen"
+        ],
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "basic_dmg"
+        ],
+        [
+          "atk_pct"
+        ]
+      ],
+      "substat_priority_text": "공명 효율>크확/크피>평타 피해 보너스>공격력 백분율"
+    },
+    {
+      "id": "1102",
+      "name": "산화",
+      "name_en": "Sanhua",
+      "star": 4,
+      "element": "glacio",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/016f91853740e75f2548041f7b86db3b.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1102",
+      "guide": {
+        "id": 13017,
+        "language": "ko",
+        "title": "[입문] 산화 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 538,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2500.0,
+          "op": ">",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 50.0,
+          "op": ">",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 205.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 150.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 3,
+          "main": "glacio_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "음험한 백로",
+      "sonata": [
+        "떠오르는 구름 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>강공격 피해 보너스>공명 해방 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1305",
+      "name": "상리요",
+      "name_en": "Xiangli Yao",
+      "star": 5,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/1395ae6839b12de38062b75d2fd9d25f.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1305",
+      "guide": {
+        "id": 13009,
+        "language": "ko",
+        "title": "[입문] 상리요 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 137,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 60.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 220.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 뇌운의 비늘",
+      "sonata": [
+        "울려퍼지는 뇌음 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 해방 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1407",
+      "name": "샤콘",
+      "name_en": "Ciaccona",
+      "star": 5,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/716270ae8422a47578106b2b9cd0f74d.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1407",
+      "guide": {
+        "id": 13120,
+        "language": "ko",
+        "title": "샤콘 개념때려잡기 | 매커니즘부터 효율까지!",
+        "author": "니브",
+        "likes": 156,
+        "modified_at": 1794394913
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 73.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 273.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "atk",
+          "value": 1975.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 켈피",
+      "sonata": [
+        "끝없는 하늘 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ]
+      ],
+      "substat_priority_text": "크리티컬 확률/ 크리티컬 피해 >공격력 백분율> 공명 해방 피해 보너스"
+    },
+    {
+      "id": "1103",
+      "name": "설지",
+      "name_en": "Baizhi",
+      "star": 4,
+      "element": "glacio",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/a47bcae3046ffd93badb14bfa62ca24c.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1103",
+      "guide": {
+        "id": 13020,
+        "language": "ko",
+        "title": "[입문] 설지 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 70,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "energy_regen",
+          "value": 220.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "healing",
+          "value": 48.0,
+          "op": ">=",
+          "label": "치료 효과 보너스"
+        },
+        {
+          "stat": "hp",
+          "value": 30000.0,
+          "op": ">=",
+          "label": "HP"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "healing"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        }
+      ],
+      "main_echo": "타종 거북이",
+      "sonata": [
+        "찬란한 광휘 5세트"
+      ],
+      "substat_priority": [
+        [
+          "energy_regen"
+        ],
+        [
+          "hp_pct"
+        ]
+      ],
+      "substat_priority_text": "공명 효율>HP 백분율>나머지"
+    },
+    {
+      "id": "1312",
+      "name": "쇄명",
+      "name_en": "Suoming",
+      "star": 5,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/47b38add35af39ee8218fe1733ab4d54/54fd2e32125570d522a2215931905740.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1312",
+      "guide": {
+        "id": 13152,
+        "language": "ko",
+        "title": "[입문] 쇄명 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 87,
+        "modified_at": 1792677487
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "절식백",
+      "sonata": [
+        "꿈으로 세상을 비추는 마음 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>일반 공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1110",
+      "name": "수수",
+      "name_en": "Suisui",
+      "star": 5,
+      "element": "glacio",
+      "icon": "https://guide-res.aki-game.net/introduction/material/5776bc9b9fe180db76ecf76add47bf44/6941a971665e80a206db56b0ad3c59b7.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1110",
+      "guide": {
+        "id": 13148,
+        "language": "ko",
+        "title": "[입문] 수수 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 162,
+        "modified_at": 1785326292
+      },
+      "targets": [
+        {
+          "stat": "energy_regen",
+          "value": 260.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "hp",
+          "value": 40000.0,
+          "op": ">=",
+          "label": "HP"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 4,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        }
+      ],
+      "main_echo": "봉정계유",
+      "sonata": [
+        "내려앉은 깃털의 노래 5세트"
+      ],
+      "substat_priority": [
+        [
+          "energy_regen"
+        ],
+        [
+          "hp_pct"
+        ],
+        [
+          "crit_dmg"
+        ]
+      ],
+      "substat_priority_text": "공명 효율>HP 백분율>크피>나머지"
+    },
+    {
+      "id": "1412",
+      "name": "시그리카",
+      "name_en": "Sigrika",
+      "star": 5,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/a3b0035d8d82501df8c7f8fd5591fb39.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1412",
+      "guide": {
+        "id": 13140,
+        "language": "ko",
+        "title": "[입문] 시그리카 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 270,
+        "modified_at": 1773880276
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 270.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 140.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "이름없는 탐색자",
+      "sonata": [
+        "함의의 소리를 따라 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct",
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율=공명 효율>공격"
+    },
+    {
+      "id": "1306",
+      "name": "아우구스타",
+      "name_en": "Augusta",
+      "star": 5,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/359c1bbf33fa9be011924f70565f913c.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1306",
+      "guide": {
+        "id": 13126,
+        "language": "ko",
+        "title": "[입문] 아우구스타 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 1674,
+        "modified_at": 1794393685
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "atk",
+          "value": 2400.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "거짓의 신왕",
+      "sonata": [
+        "영광의 칼날로 만들어진 왕관 3세트",
+        "울려퍼지는 뇌음 2세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>강공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1403",
+      "name": "알토",
+      "name_en": "Aalto",
+      "star": 4,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/3fbfcf454c32a1b6d81aa5fd20ac90a4.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1403",
+      "guide": {
+        "id": 13023,
+        "language": "ko",
+        "title": "[입문] 알토 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 35,
+        "modified_at": 1794395071
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 210.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "폭주의 고릴라",
+      "sonata": [
+        "스쳐가는 바람 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ],
+        [
+          "liberation_dmg",
+          "basic_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 스킬 피해 보너스>공명 해방 피해 보너스/일반 공격 피해 보너스"
+    },
+    {
+      "id": "1203",
+      "name": "앙코",
+      "name_en": "Encore",
+      "star": 5,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/52f422d633124cf6e287e57dda5cb98f.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1203",
+      "guide": {
+        "id": 13021,
+        "language": "ko",
+        "title": "[입문] 앙코 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 162,
+        "modified_at": 1783327675
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 65.0,
+          "op": ">",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 250.0,
+          "op": ">",
+          "label": "크리티컬 피해"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 지옥불 기사",
+      "sonata": [
+        "솟구치는 용암 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>일반 공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1402",
+      "name": "양양",
+      "name_en": "Yangyang",
+      "star": 4,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/87d919a165e38fd43355d8bbec5a3e2e.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1402",
+      "guide": {
+        "id": 13013,
+        "language": "ko",
+        "title": "[입문] 양양 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 58,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2000.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 60.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 210.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 125.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "음험한 백로",
+      "sonata": [
+        "떠오르는 구름 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 효율"
+    },
+    {
+      "id": "1610",
+      "name": "양양 · 현령",
+      "name_en": "Yangyang: Xuanling",
+      "star": 5,
+      "element": "havoc",
+      "icon": "https://guide-res.aki-game.net/introduction/material/46a2036c6e6e5a89133570f18abe6d7f/605b547fe33aa6a8ffd6db8c94e24ada.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1610",
+      "guide": {
+        "id": 13146,
+        "language": "ko",
+        "title": "[입문] 양양·현령 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 246,
+        "modified_at": 1785341078
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "천괴중루",
+      "sonata": [
+        "내려앉은 깃털의 노래 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격 백분율>강공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1210",
+      "name": "에이메스",
+      "name_en": "Aemeath",
+      "star": 5,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/5a3397804e89114246e0a908c1a754b1.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1210",
+      "guide": {
+        "id": 13138,
+        "language": "ko",
+        "title": "[입문] 에이메스 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 2526,
+        "modified_at": 1783597642
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 270.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "atk",
+          "value": 2300.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "시길룸",
+      "sonata": [
+        "긴 여정을 떠나는 별 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 해방 피해>공명 효율"
+    },
+    {
+      "id": "1311",
+      "name": "여우의 별자리",
+      "name_en": "Hsin",
+      "star": 5,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/2bd0b218329cc047e2b294056dcc5181/0e707e81e4a7c7b133dbf5c962baeed0.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1311",
+      "guide": {
+        "id": 13151,
+        "language": "ko",
+        "title": "[입문] 여우의 별자리 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 334,
+        "modified_at": 1792636818
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 110.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "공명의 메아리 · 태초의 여우의 별자리 · 천연",
+      "sonata": [
+        "꿈으로 세상을 비추는 마음 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 스킬 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1303",
+      "name": "연무",
+      "name_en": "Yuanwu",
+      "star": 4,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/99755b6393f1bbc4fadb4be5cb3f4d25.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1303",
+      "guide": {
+        "id": 13029,
+        "language": "ko",
+        "title": "[입문] 연무 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 30,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "def",
+          "value": 3500.0,
+          "op": ">=",
+          "label": "방어력"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 110.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 210.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 1,
+          "main": "def_pct"
+        },
+        {
+          "cost": 1,
+          "main": "def_pct"
+        }
+      ],
+      "main_echo": "헤카테",
+      "sonata": [
+        "하늘의 합주곡 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "energy_regen"
+        ],
+        [
+          "skill_dmg",
+          "liberation_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 효율>공명 스킬 피해 보너스/공명 해방 피해 보너스"
+    },
+    {
+      "id": "1410",
+      "name": "유노",
+      "name_en": "Iuno",
+      "star": 5,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/0b8b32ec96d68a517072c0d83846be60.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1410",
+      "guide": {
+        "id": 13127,
+        "language": "ko",
+        "title": "[입문] 유노 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 2038,
+        "modified_at": 1790696676
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 80.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "바다의 여인",
+      "sonata": [
+        "영광의 칼날로 만들어진 왕관 3세트",
+        "스쳐가는 바람 2세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크리티컬/크리티컬 피해>공격력%>공명 해방 피해 보서스>공명 효율"
+    },
+    {
+      "id": "1106",
+      "name": "유호",
+      "name_en": "Youhu",
+      "star": 4,
+      "element": "glacio",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/6b06a64f95dc353896e12377a74cb26a.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1106",
+      "guide": {
+        "id": 13007,
+        "language": "ko",
+        "title": "[입문] 유호 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 36,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 60.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 220.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "healing"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 3,
+          "main": "glacio_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "타종 거북이",
+      "sonata": [
+        "찬란한 광휘 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 스킬 피해 보너스 증가"
+    },
+    {
+      "id": "1302",
+      "name": "음림",
+      "name_en": "Yinlin",
+      "star": 5,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/628f4043213e83a3ba475bad8907f5b8.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1302",
+      "guide": {
+        "id": 13028,
+        "language": "ko",
+        "title": "[입문] 음림 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 139,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 80.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 220.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "atk",
+          "value": 1800.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "헤카테",
+      "sonata": [
+        "하늘의 합주곡 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate"
+        ],
+        [
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확>크피>공격력 백분율>공명 스킬 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1205",
+      "name": "장리",
+      "name_en": "Changli",
+      "star": 5,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/6b08d1da05d2ce8bf65033419bd3ab90.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1205",
+      "guide": {
+        "id": 13012,
+        "language": "ko",
+        "title": "[입문] 장리 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 469,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 240.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 지옥불 기사",
+      "sonata": [
+        "솟구치는 용암 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 스킬 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1105",
+      "name": "절지",
+      "name_en": "Zhezhi",
+      "star": 5,
+      "element": "glacio",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/c8f2296790674a0b95dd8b328a10f448.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1105",
+      "guide": {
+        "id": 13010,
+        "language": "ko",
+        "title": "[입문] 절지 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 169,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 65.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "atk",
+          "value": 2100.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 160.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 3,
+          "main": "glacio_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "헤카테",
+      "sonata": [
+        "하늘의 합주곡 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "energy_regen"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공명 효율>공격력 백분율>일반 공격 피해 증가"
+    },
+    {
+      "id": "1507",
+      "name": "젠니",
+      "name_en": "Zani",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/e0d01f1b2ae2b6adfd257c349484d292.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1507",
+      "guide": {
+        "id": 13033,
+        "language": "ko",
+        "title": "[입문] 젠니 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 743,
+        "modified_at": 1775617618
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 60.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 4,
+          "main": "crit_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "카피타네우스",
+      "sonata": [
+        "영원의 광채 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>강공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1413",
+      "name": "청초",
+      "name_en": "Qingxiao",
+      "star": 5,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/01096f1f2c9f8e865a4054b6ec9d48e8/2403117c01187d1932832b3a7069c255.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1413",
+      "guide": {
+        "id": 13149,
+        "language": "ko",
+        "title": "[입문] 청초 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 199,
+        "modified_at": 1787145414
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 75.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 280.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "atk",
+          "value": 2300.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "aero_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "하늘의 기관 인형 · 겁살",
+      "sonata": [
+        "악을 씻어내는 마음 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "energy_regen"
+        ],
+        [
+          "heavy_dmg",
+          "liberation_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 효율>강공격 피해 보너스/공명 해방 피해 보너스"
+    },
+    {
+      "id": "1508",
+      "name": "치사",
+      "name_en": "Chisa",
+      "star": 5,
+      "element": "havoc",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/ba81bbe33358b2f73201b58f51df43bb.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1508",
+      "guide": {
+        "id": 13132,
+        "language": "ko",
+        "title": "[입문] 치사 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 2416,
+        "modified_at": 1790696676
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 80.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "공명의 메아리 · 명식 · 레비아탄",
+      "sonata": [
+        "운명을 붕괴시키는 현 3세트",
+        "빛을 삼키는 해 2세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 해방 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1202",
+      "name": "치샤",
+      "name_en": "Chixia",
+      "star": 4,
+      "element": "fusion",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/e05a962eda74b62db0f8ada80845e1c4.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1202",
+      "guide": {
+        "id": 13014,
+        "language": "ko",
+        "title": "[입문] 치샤 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 48,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 1800.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 210.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 3,
+          "main": "fusion_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 지옥불 기사",
+      "sonata": [
+        "솟구치는 용암 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ],
+        [
+          "liberation_dmg",
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 스킬 피해 보너스>공명 해방 피해 보너스/공명 효율"
+    },
+    {
+      "id": "1409",
+      "name": "카르티시아",
+      "name_en": "Cartethyia",
+      "star": 5,
+      "element": "aero",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/ba71005399dfcad6ff518511069c6047.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1409",
+      "guide": {
+        "id": 13121,
+        "language": "ko",
+        "title": "카르티시아 개념때려잡기 | 매커니즘부터 효율까지!",
+        "author": "니브",
+        "likes": 2013,
+        "modified_at": 1781685966
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 66.5,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 257.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "hp",
+          "value": 50085.0,
+          "op": ">=",
+          "label": "HP"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 4,
+          "main": "crit_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        }
+      ],
+      "main_echo": "공명의 메아리 · 플뢰르 드 리스",
+      "sonata": [
+        "영광이 깃든 바람 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "hp_pct"
+        ],
+        [
+          "basic_dmg"
+        ],
+        [
+          "liberation_dmg"
+        ]
+      ],
+      "substat_priority_text": "크리티컬 확률/피해 >HP 백분율> 일반 공격 피해 보너스 > 공명 해방 피해 보너스"
+    },
+    {
+      "id": "1107",
+      "name": "카를로타",
+      "name_en": "Carlotta",
+      "star": 5,
+      "element": "glacio",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/625ace038419ed5f732b60e0fa60d00a.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1107",
+      "guide": {
+        "id": 13031,
+        "language": "ko",
+        "title": "[입문] 카를로타 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 731,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 3,
+          "main": "glacio_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "이성(異性) 무장",
+      "sonata": [
+        "냉철한 결단 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "skill_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 스킬 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1603",
+      "name": "카멜리아",
+      "name_en": "Camellya",
+      "star": 5,
+      "element": "havoc",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/c4cb80b5c5cfe32ba1308f10dd509e1d.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1603",
+      "guide": {
+        "id": 13032,
+        "language": "ko",
+        "title": "[입문] 카멜리아 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 289,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 65.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "havoc_dmg",
+          "value": 97.0,
+          "op": ">=",
+          "label": "인멸 피해 보너스"
+        },
+        {
+          "stat": "atk",
+          "value": 2000.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 크라운리스",
+      "sonata": [
+        "빛을 삼키는 해 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "basic_dmg"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>일반 공격 피해 증가"
+    },
+    {
+      "id": "1301",
+      "name": "카카루",
+      "name_en": "Calcharo",
+      "star": 5,
+      "element": "electro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/26174bff9a90260842db44a840da1525.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1301",
+      "guide": {
+        "id": 13026,
+        "language": "ko",
+        "title": "[입문] 카카루 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 120,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 65.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 270.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 120.0,
+          "op": ">=",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "atk",
+          "value": 2100.0,
+          "op": ">=",
+          "label": "공격력"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "electro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 뇌운의 비늘",
+      "sonata": [
+        "울려퍼지는 뇌음 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 해방 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1607",
+      "name": "칸타렐라",
+      "name_en": "Cantarella",
+      "star": 5,
+      "element": "havoc",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/c529907cec256dc427728b03f491b179.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1607",
+      "guide": {
+        "id": 13005,
+        "language": "ko",
+        "title": "[입문] 칸타렐라 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 851,
+        "modified_at": 1788167817
+      },
+      "targets": [
+        {
+          "stat": "crit_dmg",
+          "value": 240.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 140.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 크라운리스",
+      "sonata": [
+        "빛을 삼키는 해 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "energy_regen",
+          "basic_dmg",
+          "atk_pct"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공명 효율=평타 피해 보너스=공격력 백분율"
+    },
+    {
+      "id": "1505",
+      "name": "파수인",
+      "name_en": "Shorekeeper",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/890adae97f3ec5f380008a743cbbc563.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1505",
+      "guide": {
+        "id": 13008,
+        "language": "ko",
+        "title": "[입문] 파수인 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 1227,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "energy_regen",
+          "value": 230.0,
+          "op": ">",
+          "label": "공명 효율"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 190.0,
+          "op": ">",
+          "label": "크리티컬 피해"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "healing"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 3,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        }
+      ],
+      "main_echo": "돌아갈 곳이 없는 오류",
+      "sonata": [
+        "찬란한 광휘 5세트"
+      ],
+      "substat_priority": [
+        [
+          "energy_regen"
+        ],
+        [
+          "hp_pct"
+        ],
+        [
+          "crit_rate",
+          "crit_dmg"
+        ]
+      ],
+      "substat_priority_text": "공명 효율>HP 백분율>크확/크피>나머지"
+    },
+    {
+      "id": "1506",
+      "name": "페비",
+      "name_en": "Phoebe",
+      "star": 5,
+      "element": "spectro",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/b18600fa14f98402ba75b5661494b3ee.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1506",
+      "guide": {
+        "id": 13003,
+        "language": "ko",
+        "title": "[입문] 페비 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW echoes",
+        "likes": 475,
+        "modified_at": 1785298604
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 240.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "spectro_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 애곡하는 아익스",
+      "sonata": [
+        "영원의 광채 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "heavy_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>강공격 피해 보너스>공명 효율"
+    },
+    {
+      "id": "1608",
+      "name": "플로로",
+      "name_en": "Phrolova",
+      "star": 5,
+      "element": "havoc",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/246a6e7486ae99e97fb5f9f1e28bf5c2.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1608",
+      "guide": {
+        "id": 13125,
+        "language": "ko",
+        "title": "[입문] 플로로 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 1778,
+        "modified_at": 1794395423
+      },
+      "targets": [
+        {
+          "stat": "atk",
+          "value": 2200.0,
+          "op": ">=",
+          "label": "공격력"
+        },
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "havoc_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "악몽 · 헤카테",
+      "sonata": [
+        "뒤틀린 피안의 꿈 3세트",
+        "어둠의 장막 2세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "skill_dmg"
+        ],
+        [
+          "atk_pct"
+        ]
+      ],
+      "substat_priority_text": "크리티컬 / 크리티컬 피해>공명 스킬 피해 보너스>공격력"
+    },
+    {
+      "id": "1108",
+      "name": "히유키",
+      "name_en": "Hiyuki",
+      "star": 5,
+      "element": "glacio",
+      "icon": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/cca7f28cb5e35e396e2f027394780b9a.png",
+      "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1108",
+      "guide": {
+        "id": 13141,
+        "language": "ko",
+        "title": "[입문] 히유키 원스톱 육성 가이드 | 세팅&공명 체인&파티 추천",
+        "author": "WW Echoes",
+        "likes": 1387,
+        "modified_at": 1785341073
+      },
+      "targets": [
+        {
+          "stat": "crit_rate",
+          "value": 70.0,
+          "op": ">=",
+          "label": "크리티컬"
+        },
+        {
+          "stat": "crit_dmg",
+          "value": 260.0,
+          "op": ">=",
+          "label": "크리티컬 피해"
+        },
+        {
+          "stat": "energy_regen",
+          "value": 130.0,
+          "op": ">=",
+          "label": "공명 효율"
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 4,
+          "main": "crit_rate"
+        },
+        {
+          "cost": 3,
+          "main": "glacio_dmg"
+        },
+        {
+          "cost": 3,
+          "main": "glacio_dmg"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        },
+        {
+          "cost": 1,
+          "main": "atk_pct"
+        }
+      ],
+      "main_echo": "공명의 메아리 · 명식 · 허무의 신",
+      "sonata": [
+        "소리 없이 내려앉은 기도의 눈 5세트"
+      ],
+      "substat_priority": [
+        [
+          "crit_rate",
+          "crit_dmg"
+        ],
+        [
+          "atk_pct"
+        ],
+        [
+          "liberation_dmg"
+        ],
+        [
+          "energy_regen"
+        ]
+      ],
+      "substat_priority_text": "크확/크피>공격력 백분율>공명 해방 피해>공명 효율"
+    }
+  ]
+}

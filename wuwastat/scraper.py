@@ -1,0 +1,304 @@
+"""명조 공식 공략 사이트(wuwaguide.kurogames.com)에서 캐릭터별 추천 스탯을 수집한다.
+
+공식 사이트는 Vue SPA이며 아래 API에서 데이터를 받아온다.
+  GET /role/avatar/list                      전체 캐릭터 목록
+  GET /introduction/list?roleGbId=<id>       캐릭터별 공략 목록 (언어별로 따로 등록됨)
+  GET /introduction/info?id=<공략 id>        공략 상세 (x-language 헤더가 공략 언어와 같아야 함)
+
+공략 상세의 roleAttribute(추천 스탯), echo(에코 코스트별 추천 메인옵션, 세트),
+echoTexts(서브옵션 우선순위 문구)를 정리해서 data/characters.json 에 저장한다.
+
+실행: python -m wuwastat.scraper
+"""
+
+from __future__ import annotations
+
+import argparse
+import html
+import json
+import re
+import sys
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Callable
+
+from . import stats as S
+
+API_BASES = ["https://guide-server.aki-game.net", "https://guide-server-1.aki-game.net"]
+GUIDE_PAGE = "https://wuwaguide.kurogames.com/ko/?role_id={id}"
+DEFAULT_OUTPUT = Path(__file__).resolve().parent.parent / "data" / "characters.json"
+PREFERRED_LANG = "ko"
+
+# roleAttribute.gbId 앞부분 → 스탯 키 (다른 언어 공략일 때 이름 대신 사용)
+TARGET_GBID = {
+    "2": S.HP, "7": S.ATK, "10": S.DEF, "8": S.CRIT_RATE, "9": S.CRIT_DMG,
+    "11": S.ENERGY_REGEN, "35": S.HEALING,
+    "22": S.GLACIO_DMG, "23": S.FUSION_DMG, "24": S.ELECTRO_DMG,
+    "25": S.AERO_DMG, "26": S.SPECTRO_DMG, "27": S.HAVOC_DMG,
+    "14": S.SKILL_DMG,
+}
+# echoAttributes.attribute.gbId → 에코 메인옵션 키
+ECHO_MAIN_GBID = {
+    "81": S.CRIT_RATE, "91": S.CRIT_DMG, "111": S.ENERGY_REGEN, "351": S.HEALING,
+    "221": S.GLACIO_DMG, "231": S.FUSION_DMG, "241": S.ELECTRO_DMG,
+    "251": S.AERO_DMG, "261": S.SPECTRO_DMG, "271": S.HAVOC_DMG,
+    "100072": S.ATK_PCT, "100022": S.HP_PCT, "100102": S.DEF_PCT,
+}
+OPERATIONS = {1: "=", 2: "!=", 3: "<", 4: ">", 5: "<=", 6: ">="}
+
+
+class ApiError(RuntimeError):
+    pass
+
+
+def _get(path: str, lang: str = PREFERRED_LANG, timeout: float = 20) -> Any:
+    last: Exception | None = None
+    for base in API_BASES:
+        req = urllib.request.Request(
+            base + path,
+            headers={
+                "x-language": lang,
+                "User-Agent": "wuwastat/0.1",
+                "Origin": "https://wuwaguide.kurogames.com",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                body = json.load(resp)
+        except Exception as e:  # 네트워크 오류면 다음 도메인으로
+            last = e
+            continue
+        if body.get("code") != 200:
+            raise ApiError(f"{path}: {body.get('message')}")
+        return body.get("data")
+    raise ApiError(f"{path}: {last}")
+
+
+def _text(texts: list[dict] | None, field: str = "name", lang: str = PREFERRED_LANG) -> str:
+    texts = texts or []
+    for t in texts:
+        if t.get("language") == lang and t.get(field):
+            return t[field]
+    for t in texts:
+        if t.get("language") == "en" and t.get(field):
+            return t[field]
+    return next((t[field] for t in texts if t.get(field)), "")
+
+
+def _strip_html(s: str) -> str:
+    s = re.sub(r"<br\s*/?>|</p>", "\n", s or "")
+    s = re.sub(r"<[^>]+>", "", s)
+    return html.unescape(s).replace("\xa0", " ").strip()
+
+
+def _parse_number(s: str) -> float:
+    return float(re.sub(r"[^\d.\-]", "", s) or 0)
+
+
+# ---------------------------------------------------------------------------
+# 서브옵션 우선순위 문구 해석
+# ---------------------------------------------------------------------------
+_IGNORE_WORDS = ("나머지", "기타", "그외", "그 외")
+
+
+def parse_priority(text: str) -> list[list[str]]:
+    """'크확/크피>공격력 백분율>강공격 피해 보너스>공명 효율' → [[crit_rate, crit_dmg], [atk_pct], ...]
+
+    '>'로 등급을 나누고, '/', '=', ',' 로 묶인 항목은 같은 등급으로 본다.
+    """
+    text = text.replace("＞", ">").replace("》", ">").replace("→", ">")
+    tiers: list[list[str]] = []
+    seen: set[str] = set()
+    for chunk in text.split(">"):
+        if any(w in chunk for w in _IGNORE_WORDS):
+            continue
+        tier: list[str] = []
+        prev: str | None = None
+        parts = [p for p in re.split(r"[/=,、]", chunk) if p.strip()]
+        # '일반 공격/강공격 피해 보너스' 처럼 앞부분에 '피해'가 생략된 경우도 classify가 처리한다.
+        for part in parts:
+            key = S.classify_stat_name(part, percent=True, prev=prev)
+            if key and key not in seen:
+                tier.append(key)
+                seen.add(key)
+            prev = key or prev
+        if tier:
+            tiers.append(tier)
+    return tiers
+
+
+# ---------------------------------------------------------------------------
+# 공략 → 캐릭터 레코드
+# ---------------------------------------------------------------------------
+def _target_from_item(item: dict) -> dict | None:
+    prefix = str(item.get("gbId", "")).split("-")[0]
+    name = _text(item.get("texts"))
+    key = TARGET_GBID.get(prefix)
+    if key is None:
+        key = S.classify_stat_name(name, percent=item.get("attachmentType") == "2")
+        if key:
+            key = S.to_total_key(key)
+    if key is None:
+        return None
+    return {
+        "stat": key,
+        "value": _parse_number(str(item.get("recommendAmount", "0"))),
+        "op": OPERATIONS.get(item.get("operation"), ">="),
+        "label": name,
+    }
+
+
+def _echo_main_key(attr: dict | None) -> str | None:
+    if not attr:
+        return None
+    key = ECHO_MAIN_GBID.get(str(attr.get("gbId")))
+    if key is None:
+        key = S.classify_stat_name(_text(attr.get("texts")), percent=attr.get("attachmentGameBusinessId") == "2")
+    return key
+
+
+def build_character(avatar: dict, guide_meta: dict | None, info: dict | None) -> dict:
+    rid = str(avatar["roleGbId"])
+    element = S.ELEMENT_BY_GBID.get(str((avatar.get("element") or {}).get("gbId")), "")
+    record: dict[str, Any] = {
+        "id": rid,
+        "name": _text(avatar.get("texts")),
+        "name_en": _text(avatar.get("texts"), lang="en"),
+        "star": avatar.get("star"),
+        "element": element,
+        "icon": avatar.get("cardPictureUrl"),
+        "source_url": GUIDE_PAGE.format(id=rid),
+        "guide": None,
+        "targets": [],
+        "echo_slots": [],
+        "main_echo": "",
+        "sonata": [],
+        "substat_priority": [],
+        "substat_priority_text": "",
+    }
+    if not info:
+        return record
+
+    lang = guide_meta["language"] if guide_meta else PREFERRED_LANG
+    record["guide"] = {
+        "id": info.get("id"),
+        "language": lang,
+        "title": _text(info.get("baseTexts"), "introductionName", lang)
+        or (guide_meta or {}).get("title", ""),
+        "author": _text(info.get("baseTexts"), "introductionSource", lang),
+        "likes": info.get("likeCount"),
+        "modified_at": (guide_meta or {}).get("modified_at"),
+    }
+
+    for item in (info.get("roleAttribute") or {}).get("items") or []:
+        t = _target_from_item(item)
+        if t:
+            record["targets"].append(t)
+
+    echo_main = (info.get("echo") or {}).get("main") or {}
+    props = echo_main.get("echoProps") or {}
+    record["main_echo"] = _text(props.get("texts"), lang=lang)
+    sets: dict[str, int] = {}  # 세트 이름 → 최대 세트 수 (5세트와 2세트가 함께 오면 5세트만)
+    for se in echo_main.get("echoSetEffects") or []:
+        name = _text(se.get("texts"), lang=lang)
+        if name:
+            sets[name] = max(sets.get(name, 0), int(se.get("echoSet") or 0))
+    record["sonata"] = [f"{n} {c}세트" for n, c in sets.items()]
+    for slot in echo_main.get("echoAttributes") or []:
+        key = _echo_main_key(slot.get("attribute"))
+        if key:
+            record["echo_slots"].append({"cost": int(slot.get("cost") or 0), "main": key})
+
+    prio_text = _strip_html(_text(info.get("echoTexts"), "recommendDescription", lang))
+    record["substat_priority_text"] = prio_text
+    record["substat_priority"] = parse_priority(prio_text) if lang == PREFERRED_LANG else []
+    return record
+
+
+def _pick_guide(guides: list[dict]) -> dict | None:
+    """한국어 공략 중 추천 수가 가장 많은 것, 없으면 전체 언어 중 가장 많은 것."""
+    cands = []
+    for g in guides or []:
+        for t in g.get("texts") or []:
+            if t.get("introductionName"):
+                cands.append({
+                    "id": g["id"],
+                    "language": t["language"],
+                    "title": t["introductionName"],
+                    "likes": g.get("likeCount", 0),
+                    "modified_at": g.get("modifiedAt"),
+                })
+    if not cands:
+        return None
+    cands.sort(key=lambda c: (c["language"] == PREFERRED_LANG, c["likes"]), reverse=True)
+    return cands[0]
+
+
+def fetch_character(avatar: dict) -> dict:
+    rid = avatar["roleGbId"]
+    meta = _pick_guide(_get(f"/introduction/list?roleGbId={rid}"))
+    info = _get(f"/introduction/info?id={meta['id']}", meta["language"]) if meta else None
+    return build_character(avatar, meta, info)
+
+
+def scrape_all(progress: Callable[[int, int, str], None] | None = None, workers: int = 4) -> dict:
+    avatars = _get("/role/avatar/list")
+    results: list[dict] = [None] * len(avatars)  # type: ignore[list-item]
+    errors: list[str] = []
+
+    def job(i: int) -> None:
+        a = avatars[i]
+        try:
+            results[i] = fetch_character(a)
+        except Exception as e:  # 한 캐릭터 실패가 전체를 막지 않게
+            errors.append(f"{a.get('roleGbId')}: {e}")
+            results[i] = build_character(a, None, None)
+
+    done = 0
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        for i, _ in zip(range(len(avatars)), ex.map(job, range(len(avatars)))):
+            done += 1
+            if progress:
+                progress(done, len(avatars), results[i]["name"] if results[i] else "")
+
+    chars = sorted((r for r in results if r), key=lambda c: c["name"])
+    return {
+        "source": "https://wuwaguide.kurogames.com/ko/",
+        "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "count": len(chars),
+        "errors": errors,
+        "characters": chars,
+    }
+
+
+def save(data: dict, path: Path = DEFAULT_OUTPUT) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    tmp.replace(path)
+    return path
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="공식 공략 사이트에서 캐릭터 추천 스탯 수집")
+    ap.add_argument("-o", "--output", type=Path, default=DEFAULT_OUTPUT)
+    args = ap.parse_args(argv)
+
+    def progress(i: int, n: int, name: str) -> None:
+        print(f"[{i}/{n}] {name}", flush=True)
+
+    data = scrape_all(progress)
+    path = save(data, args.output)
+    no_guide = [c["name"] for c in data["characters"] if not c["guide"]]
+    print(f"저장 완료: {path} ({data['count']}명)")
+    if no_guide:
+        print("공략 없음:", ", ".join(no_guide))
+    for e in data["errors"]:
+        print("오류:", e, file=sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
