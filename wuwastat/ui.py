@@ -828,6 +828,9 @@ class MainWindow(QMainWindow):
                                 "추가한 옵션은 공략 우선순위 바로 다음 순위로 계산합니다.")
         self.b_extra.clicked.connect(self.edit_extra_substats)
         left_lay.addWidget(self.b_extra)
+        test_label = QLabel("퇴사하고 싶다")  # 업데이트 테스트용 문구
+        test_label.setStyleSheet(f"color: {MUTED_COLOR}; font-size: 8pt;")
+        left_lay.addWidget(test_label)
         split.addWidget(left)
 
         mid = QWidget()
