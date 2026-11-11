@@ -9,6 +9,10 @@ on:
 permissions:
   contents: write  # 릴리스 만들기
 
+env:
+  PYTHONUTF8: "1"  # 한글 출력이 cp1252 콘솔에서 깨지지 않게
+  PYTHONIOENCODING: utf-8
+
 jobs:
   build:
     runs-on: windows-latest

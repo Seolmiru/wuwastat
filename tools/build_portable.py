@@ -23,6 +23,11 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+# CI(Windows) 콘솔 기본 인코딩(cp1252)에서 한글 출력이 실패하지 않게 한다
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from wuwastat import __version__  # noqa: E402
