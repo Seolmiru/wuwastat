@@ -177,7 +177,7 @@ def build_character(avatar: dict, guide_meta: dict | None, info: dict | None) ->
         "name_en": _text(avatar.get("texts"), lang="en"),
         "star": avatar.get("star"),
         "element": element,
-        "icon": avatar.get("cardPictureUrl"),
+        "portrait": avatar.get("cardPictureUrl") or avatar.get("portrait"),
         "source_url": GUIDE_PAGE.format(id=rid),
         "guide": None,
         "targets": [],
@@ -254,7 +254,30 @@ def build_character(avatar: dict, guide_meta: dict | None, info: dict | None) ->
         for c in (info.get("roleResonance") or {}).get("items") or []
     ]
     record["chain_text"] = _strip_html(_text(info.get("roleResonanceTexts"), "recommendDescription", lang))
+    record["echo_images"] = collect_echo_images(info)
     return record
+
+
+def collect_echo_images(info: dict) -> dict[str, str]:
+    """공략에 등장하는 모든 에코(추천 메인·대체·파티원 에코)의 한국어 이름 → 공식 이미지 주소."""
+    out: dict[str, str] = {}
+
+    def walk(o: Any) -> None:
+        if isinstance(o, dict):
+            props = o.get("echoProps")
+            if isinstance(props, dict):
+                name = next((t.get("name") for t in props.get("texts") or [] if t.get("language") == "ko"), None)
+                url = props.get("pictureUrl")
+                if name and isinstance(url, str) and url.startswith("https://"):
+                    out.setdefault(name, url)
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+
+    walk(info)
+    return out
 
 
 def _pick_guide(guides: list[dict]) -> dict | None:
@@ -291,7 +314,7 @@ def _avatar_from_record(rec: dict) -> dict:
         "texts": [{"language": "ko", "name": rec.get("name", "")}, {"language": "en", "name": rec.get("name_en", "")}],
         "star": rec.get("star"),
         "element": {"gbId": gbid},
-        "cardPictureUrl": rec.get("icon"),
+        "cardPictureUrl": rec.get("portrait") or rec.get("icon"),
     }
 
 
@@ -337,12 +360,16 @@ def scrape_all(progress: Callable[[int, int, str], None] | None = None, workers:
             results[i] = {**r, **old, "stale": True}
 
     chars = sorted((r for r in results if r), key=lambda c: c["name"])
+    echo_images: dict[str, str] = dict((previous or {}).get("echo_images", {}))
+    for c in chars:
+        echo_images.update(c.pop("echo_images", None) or {})
     return {
         "source": "https://wuwaguide.kurogames.com/ko/",
         "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "count": len(chars),
         "errors": errors,
         "characters": chars,
+        "echo_images": dict(sorted(echo_images.items())),
     }
 
 
@@ -357,7 +384,8 @@ def save(data: dict, path: Path = DEFAULT_OUTPUT) -> Path:
 def slim(data: dict) -> dict:
     """저장소에 올릴 데이터: 계산에 쓰는 숫자와 이름만 남기고 공략 설명 글은 뺀다.
 
-    빼는 것: 공략 제목·작성자, 서브옵션 우선순위 원문, 무기 효과·추천 설명, 공명 체인 효과·추천 설명, 이미지 주소.
+    빼는 것: 공략 제목·작성자, 서브옵션 우선순위 원문, 무기 효과·추천 설명, 공명 체인 효과·추천 설명.
+    이미지는 파일이 아니라 공식 서버의 주소(링크)만 남긴다. 앱이 실행 중에 받아 PC 캐시에만 둔다.
     빠진 내용은 앱에서 '캐릭터 데이터 업데이트'를 누르면 공식 사이트에서 받아 로컬 파일에만 저장한다.
     """
     chars = []
@@ -370,6 +398,7 @@ def slim(data: dict) -> dict:
             "star": c.get("star"),
             "element": c.get("element", ""),
             "source_url": c.get("source_url", ""),
+            "portrait": _official_image(c.get("portrait") or c.get("icon")),
             "guide": {k: g.get(k) for k in ("id", "language", "likes", "modified_at")} if g else None,
             "targets": [{k: t[k] for k in ("stat", "value", "op")} for t in c.get("targets", [])],
             "echo_slots": c.get("echo_slots", []),
@@ -387,7 +416,14 @@ def slim(data: dict) -> dict:
         "count": len(chars),
         "slim": True,
         "characters": chars,
+        "echo_images": {k: v for k, v in (data.get("echo_images") or {}).items() if _official_image(v)},
     }
+
+
+def _official_image(url: str | None) -> str:
+    """공식 CDN의 https 이미지 주소만 남긴다."""
+    from .images import is_allowed
+    return url if url and is_allowed(url) else ""
 
 
 def main(argv: list[str] | None = None) -> int:

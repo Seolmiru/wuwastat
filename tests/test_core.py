@@ -355,3 +355,41 @@ def test_chain_estimate_needs_full_data():
     assert estimate_chains(c) == []
     ev = evaluate(c, Build({S.CRIT_RATE: 62.0}, [], chain=1))
     assert ev.chain_gain is None and ev.chain_grade is None
+
+
+# --- 초상화 이미지 -------------------------------------------------------------
+def test_image_host_allowlist_and_validation(tmp_path):
+    from wuwastat import images
+
+    assert images.is_allowed("https://guide-res.aki-game.net/introduction/material/a/b.png")
+    for bad in ("http://guide-res.aki-game.net/a.png", "https://evil.example.com/a.png",
+                "file:///C:/a.png", "https://guide-res.aki-game.net.evil.com/a.png", ""):
+        assert not images.is_allowed(bad)
+    assert images.fetch("https://evil.example.com/a.png", tmp_path) is None  # 요청 자체를 안 함
+    assert images._validate(b"<html>not an image</html>") is None
+    import io
+    from PIL import Image
+    buf = io.BytesIO()
+    Image.new("RGB", (8, 8), (255, 0, 0)).save(buf, "PNG")
+    assert images._validate(buf.getvalue()).startswith(b"\x89PNG")
+
+
+def test_echo_image_matching_tolerates_ocr_typos():
+    from wuwastat.images import match_echo_image
+
+    imgs = {"공명의 메아리 · 명식 · 레비아탄": "u1", "헤카테": "u2", "악몽 · 헤카테": "u3"}
+    assert match_echo_image("공명의 메아리 · 영식 · 레비아탄", imgs) == "u1"  # 명/영 오인식
+    assert match_echo_image("헤카테", imgs) == "u2"
+    assert match_echo_image("악몽 · 헤카테", imgs) == "u3"
+    assert match_echo_image("드레이크 · 전도", imgs) is None
+    assert match_echo_image("", imgs) is None
+
+
+def test_bundled_image_links_are_official():
+    import json
+    from wuwastat.images import is_allowed
+    from wuwastat.models import BUNDLED_DATA
+
+    data = json.loads(BUNDLED_DATA.read_text(encoding="utf-8"))
+    urls = [c["portrait"] for c in data["characters"] if c.get("portrait")] + list(data.get("echo_images", {}).values())
+    assert len(urls) > 50 and all(is_allowed(u) for u in urls)

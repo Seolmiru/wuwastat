@@ -62,6 +62,7 @@ class Character:
     star: int | None = None
     element: str = ""
     source_url: str = ""
+    portrait: str = ""  # 공식 서버의 캐릭터 초상화 주소
     guide: dict | None = None
     targets: list[Target] = field(default_factory=list)
     echo_slots: list[EchoSlot] = field(default_factory=list)
@@ -94,6 +95,7 @@ class Character:
             star=d.get("star"),
             element=d.get("element", ""),
             source_url=d.get("source_url", ""),
+            portrait=d.get("portrait") or d.get("icon") or "",
             guide=d.get("guide"),
             targets=[Target(**t) for t in d.get("targets", [])],
             echo_slots=[EchoSlot(**s) for s in d.get("echo_slots", [])],

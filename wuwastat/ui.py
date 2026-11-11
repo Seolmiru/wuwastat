@@ -13,8 +13,8 @@ from pathlib import Path
 from typing import Callable
 
 from PIL import Image
-from PySide6.QtCore import QBuffer, QIODevice, QObject, QRunnable, QStandardPaths, Qt, QThreadPool, QTimer, QUrl, Signal
-from PySide6.QtGui import QDesktopServices, QFont, QImage, QKeySequence, QShortcut
+from PySide6.QtCore import QBuffer, QIODevice, QObject, QRunnable, QSize, QStandardPaths, Qt, QThreadPool, QTimer, QUrl, Signal
+from PySide6.QtGui import QDesktopServices, QFont, QIcon, QImage, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
     QAbstractItemView, QApplication, QComboBox, QCompleter, QDoubleSpinBox, QFileDialog, QFrame, QGridLayout,
     QGroupBox, QHBoxLayout, QHeaderView, QLabel, QLineEdit, QMainWindow, QMessageBox, QProgressBar, QProgressDialog,
@@ -109,6 +109,28 @@ def _ocr_echo(image, progress):
     return parse_echo(image, progress=progress)
 
 
+def image_cache_dir() -> Path:
+    base = QStandardPaths.writableLocation(QStandardPaths.CacheLocation) or str(Path.home() / ".wuwastat" / "cache")
+    return Path(base) / "images"
+
+
+def _fetch_image(url, cache_dir, progress=None):
+    from .images import fetch
+    return fetch(url, cache_dir)
+
+
+PORTRAIT_SIZE = 120
+ECHO_ICON_SIZE = 72
+
+
+def portrait_label(size: int) -> QLabel:
+    lb = QLabel()
+    lb.setFixedSize(size, size)
+    lb.setAlignment(Qt.AlignCenter)
+    lb.setStyleSheet("border: 1px solid #555; border-radius: 6px; color: gray;")
+    return lb
+
+
 def _watch(characters, cancel, progress):
     from .gamewatch import watch
     return watch(characters, progress, cancel)
@@ -197,11 +219,15 @@ class EchoEditor(DropMixin, QFrame):
         for b in (b_open, b_paste, b_clear):
             btns.addWidget(b)
         btns.addStretch()
+        self.icon = portrait_label(ECHO_ICON_SIZE)
+        btns.addWidget(self.icon)
         lay.addLayout(btns)
         b_open.clicked.connect(self._open)
         b_paste.clicked.connect(self.paste)
         b_clear.clicked.connect(self.clear)
         self.image_dropped.connect(self.ocr_requested.emit)
+        self.icon_url: str | None = None
+        self.icon_cost = -1
 
         grid = QGridLayout()
         grid.addWidget(QLabel("이름"), 0, 0)
@@ -241,6 +267,14 @@ class EchoEditor(DropMixin, QFrame):
         self.main.currentIndexChanged.connect(lambda: (self.main_val.set_stat(self.main.key()), self.changed.emit()))
         self.main_val.valueChanged.connect(lambda *_: self.changed.emit())
         self._cost_changed()
+
+    def set_icon(self, pix: "QPixmap | None", cost: int = 0) -> None:
+        """에코 초상화. 공식 이미지가 없는 에코는 코스트만 표시한다."""
+        if pix is not None and not pix.isNull():
+            self.icon.setPixmap(pix.scaled(ECHO_ICON_SIZE, ECHO_ICON_SIZE, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        else:
+            self.icon.setPixmap(QPixmap())
+            self.icon.setText(f"COST\n{cost}" if cost else "")
 
     def _cost_changed(self) -> None:
         cost = self.cost.currentData() or 0
@@ -536,12 +570,19 @@ class ResultsPanel(QWidget):
         self.echoes.setHorizontalHeaderLabels(["에코", "코스트", "메인옵션", "등급 (희귀도)", "메모"])
         self._table_style(self.echoes)
         self.echoes.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)
+        self.echoes.setIconSize(QSize(36, 36))
         self.echoes.setWordWrap(True)
         lay.addWidget(self.echoes)
 
         lay.addWidget(QLabel("<b>육성 가이드</b>"))
         self.advice = QTextBrowser()
         lay.addWidget(self.advice, 1)
+
+    def set_echo_icon(self, index: int, pix: "QPixmap | None") -> None:
+        row = getattr(self, "_echo_rows", {}).get(index)
+        item = self.echoes.item(row, 0) if row is not None else None
+        if item is not None:
+            item.setIcon(QIcon(pix) if pix is not None else QIcon())
 
     @staticmethod
     def _table_style(t: QTableWidget) -> None:
@@ -600,6 +641,7 @@ class ResultsPanel(QWidget):
             self.targets.setCellWidget(r, 3, bar)
 
         self.echoes.setRowCount(len(ev.replace_order))
+        self._echo_rows: dict[int, int] = {}
         for r, e in enumerate(ev.replace_order):
             main = f"{S.label(e.echo.main.stat)} {S.fmt(e.echo.main.stat, e.echo.main.value)}" if e.echo.main and e.echo.main.stat else "-"
             if not e.main_ok:
@@ -609,6 +651,7 @@ class ResultsPanel(QWidget):
             score_item.setForeground(Qt.GlobalColor.white)
             score_item.setBackground(_qcolor(GRADE_COLORS.get(e.grade, "#555")))
             self.echoes.setItem(r, 0, QTableWidgetItem(f"{e.index + 1}번"))
+            self._echo_rows[e.index] = r
             self.echoes.setItem(r, 1, QTableWidgetItem(str(e.echo.cost or "?")))
             self.echoes.setItem(r, 2, QTableWidgetItem(main))
             self.echoes.setItem(r, 3, score_item)
@@ -640,6 +683,9 @@ class MainWindow(QMainWindow):
         self.all_sets: list[str] = []
         self._loading = False
         self._workers: set[Worker] = set()  # 완료 신호가 전달될 때까지 작업 객체를 붙잡아 둔다
+        self._pixmaps: dict[str, QPixmap | None] = {}  # 이미지 주소 → 그림 (None = 받기 실패)
+        self._pix_waiting: dict[str, list] = {}
+        self.echo_images: dict[str, str] = {}
 
         central = QWidget()
         root = QVBoxLayout(central)
@@ -663,14 +709,14 @@ class MainWindow(QMainWindow):
         root.addLayout(bar)
 
         watch_bar = QHBoxLayout()
-        self.b_watch = QPushButton("게임 화면 감시 시작")
+        self.b_watch = QPushButton("세팅 자동 측정 시작")
         self.b_watch.setCheckable(True)
         self.b_watch.setToolTip(
             "명조 창 화면을 읽기만 해서 캐릭터 화면의 스탯과 에코 화면의 에코를 자동으로 채웁니다.\n"
             "게임에 클릭이나 키 입력을 보내지 않고, 캡처한 화면은 저장하지 않습니다.")
         watch_bar.addWidget(self.b_watch)
         self.watch_label = plain_label(
-            "감시를 시작한 뒤 게임에서 캐릭터 속성 화면을 열고, 에코 화면에서 에코 5개를 차례로 클릭하세요.")
+            "자동 측정을 시작한 뒤 게임에서 캐릭터 속성 화면을 열고, 에코 화면에서 에코 5개를 차례로 클릭하세요.")
         self.watch_label.setStyleSheet("color: gray;")
         watch_bar.addWidget(self.watch_label, 1)
         root.addLayout(watch_bar)
@@ -678,8 +724,14 @@ class MainWindow(QMainWindow):
         self._watch_cleared = False
 
         split = QSplitter(Qt.Horizontal)
+        left = QWidget()
+        left_lay = QVBoxLayout(left)
+        left_lay.setContentsMargins(0, 0, 0, 0)
+        self.portrait = portrait_label(PORTRAIT_SIZE)
+        left_lay.addWidget(self.portrait, 0, Qt.AlignHCenter)
         self.info = CharacterInfo()
-        split.addWidget(self.info)
+        left_lay.addWidget(self.info, 1)
+        split.addWidget(left)
 
         mid = QWidget()
         mid_lay = QVBoxLayout(mid)
@@ -729,6 +781,7 @@ class MainWindow(QMainWindow):
             QTimer.singleShot(300, self._ask_initial_update)
             return
         self.characters, self.meta = load_characters(data_path())
+        self.echo_images = dict(self.meta.get("echo_images") or {})
         # 모든 캐릭터 공략에 나온 세트 이름 (그 외 세트를 고를 수 있게)
         self.all_sets = sorted({n for c in self.characters for n in c.sonata_names})
         prev = self.current.id if self.current else None
@@ -792,6 +845,7 @@ class MainWindow(QMainWindow):
         cid = self.char_combo.currentData()
         self.current = next((c for c in self.characters if c.id == cid), None)
         self.info.show_character(self.current)
+        self.show_portrait()
         self.totals.set_targets(self.current)
         self.gear.set_character(self.current, self.all_sets)
         self.load_build()
@@ -839,6 +893,71 @@ class MainWindow(QMainWindow):
         return Build(self.totals.totals(), [e for ed in self.echo_editors if (e := ed.get_echo())],
                      weapon=weapon, sonata=sonata, chain=chain)
 
+    # ----- 초상화 -----
+    def load_image(self, url: str | None, callback) -> None:
+        """공식 서버 이미지를 백그라운드로 받아 callback(QPixmap | None)을 부른다."""
+        if not url:
+            callback(None)
+            return
+        if url in self._pixmaps:
+            callback(self._pixmaps[url])
+            return
+        waiting = self._pix_waiting.setdefault(url, [])
+        waiting.append(callback)
+        if len(waiting) > 1:
+            return
+        w = Worker(_fetch_image, url, image_cache_dir())
+        w.signals.done.connect(lambda data, url=url: self._image_loaded(url, data))
+        w.signals.error.connect(lambda _m, url=url: self._image_loaded(url, None))
+        self.start_worker(w)
+
+    def _image_loaded(self, url: str, data: bytes | None) -> None:
+        pix = None
+        if data:
+            pix = QPixmap()
+            if not pix.loadFromData(data, "PNG"):
+                pix = None
+        self._pixmaps[url] = pix
+        for cb in self._pix_waiting.pop(url, []):
+            cb(pix)
+
+    def show_portrait(self) -> None:
+        c = self.current
+        self.portrait.setPixmap(QPixmap())
+        self.portrait.setText(c.name if c else "")
+        if not c or not c.portrait:
+            return
+
+        def done(pix, cid=c.id):
+            if self.current and self.current.id == cid and pix is not None:
+                self.portrait.setPixmap(pix.scaled(PORTRAIT_SIZE, PORTRAIT_SIZE, Qt.KeepAspectRatio,
+                                                   Qt.SmoothTransformation))
+        self.load_image(c.portrait, done)
+
+    def refresh_echo_icons(self) -> None:
+        """에코 이름에 맞는 공식 초상화를 에코 탭과 결과 표에 표시한다."""
+        from .images import match_echo_image
+
+        for i, ed in enumerate(self.echo_editors):
+            e = ed.get_echo()
+            url = match_echo_image(e.name, self.echo_images) if e else None
+            cost = e.cost if e else 0
+            if url == ed.icon_url and cost == ed.icon_cost:
+                if url and url in self._pixmaps:
+                    self.results.set_echo_icon(i, self._pixmaps[url])
+                continue
+            ed.icon_url, ed.icon_cost = url, cost
+            ed.set_icon(None, cost)
+            self.results.set_echo_icon(i, None)
+            if not url:
+                continue
+
+            def done(pix, i=i, url=url, cost=cost):
+                if self.echo_editors[i].icon_url == url:
+                    self.echo_editors[i].set_icon(pix, cost)
+                    self.results.set_echo_icon(i, pix)
+            self.load_image(url, done)
+
     def run_eval(self) -> None:
         if not self.current:
             self.results.show_evaluation(None)
@@ -848,6 +967,7 @@ class MainWindow(QMainWindow):
             self.results.show_evaluation(None)
             return
         self.results.show_evaluation(evaluate(self.current, build))
+        self.refresh_echo_icons()
         self.save_build(build)
 
     # ----- OCR -----
@@ -891,21 +1011,21 @@ class MainWindow(QMainWindow):
                 then()
         self._start_ocr(_ocr_echo, image, done, ed.status)
 
-    # ----- 게임 화면 감시 -----
+    # ----- 세팅 자동 측정 (게임 화면 읽기) -----
     def toggle_watch(self, on: bool) -> None:
         import threading
 
         if not on:
             if self._watch_stop:
                 self._watch_stop.set()
-            self.b_watch.setText("게임 화면 감시 시작")
+            self.b_watch.setText("세팅 자동 측정 시작")
             return
         if not self.characters:
             self.b_watch.setChecked(False)
             return
         self._watch_stop = threading.Event()
         self._watch_cleared = False
-        self.b_watch.setText("감시 중지")
+        self.b_watch.setText("자동 측정 중지")
         self.watch_label.setStyleSheet("color: #2980b9;")
         self.watch_label.setText("게임 창을 찾는 중...")
         w = Worker(_watch, self.characters, self._watch_stop.is_set)
@@ -943,16 +1063,16 @@ class MainWindow(QMainWindow):
 
     def _watch_finished(self, error: str | None) -> None:
         if error:
-            self.watch_label.setText(f"감시 종료: {error.split(': ', 1)[-1]}")
+            self.watch_label.setText(f"자동 측정 종료: {error.split(': ', 1)[-1]}")
             self.watch_label.setStyleSheet("color: #c0392b;")
         elif self._watch_stop and self._watch_stop.is_set():
-            self.watch_label.setText("감시를 멈췄습니다.")
+            self.watch_label.setText("자동 측정을 멈췄습니다.")
             self.watch_label.setStyleSheet("color: gray;")
         else:
             self.watch_label.setStyleSheet("color: #27ae60;")
         self.b_watch.blockSignals(True)
         self.b_watch.setChecked(False)
-        self.b_watch.setText("게임 화면 감시 시작")
+        self.b_watch.setText("세팅 자동 측정 시작")
         self.b_watch.blockSignals(False)
 
     def closeEvent(self, e):  # noqa: N802

@@ -1,6 +1,6 @@
 {
   "source": "https://wuwaguide.kurogames.com/ko/",
-  "fetched_at": "2026-11-11T12:18:21+00:00",
+  "fetched_at": "2026-11-11T13:13:19+00:00",
   "count": 61,
   "slim": true,
   "characters": [
@@ -11,6 +11,7 @@
       "star": 5,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1208",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/f23be01a357c1bde4424317b9b07e876.png",
       "guide": {
         "id": 13130,
         "language": "ko",
@@ -141,6 +142,7 @@
       "star": 5,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1405",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/3d636a5e0efcac1ba60a70c3a238ba6d.png",
       "guide": {
         "id": 13030,
         "language": "ko",
@@ -262,6 +264,7 @@
       "star": 5,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1212",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/3b3c0d664435a2fa97373594dd68ba01/7ba64e1c268d88cf24c5e6e63f7449a3.png",
       "guide": {
         "id": 13150,
         "language": "ko",
@@ -402,6 +405,7 @@
       "star": 5,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1411",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/d5e2a4a3f93538f69107a2ee95222de4.png",
       "guide": {
         "id": 13131,
         "language": "ko",
@@ -523,7 +527,8 @@
           "name": "들은 대로, 본 대로, 말한 대로",
           "core": true
         }
-      ]
+      ],
+      "stale": true
     },
     {
       "id": "1304",
@@ -532,6 +537,7 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1304",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/f0f853fc28b06aab285db5ab274bec52.png",
       "guide": {
         "id": 13011,
         "language": "ko",
@@ -653,6 +659,7 @@
       "star": 5,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1404",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/dfed76d9925a4a98924242b231e236cc.png",
       "guide": {
         "id": 13024,
         "language": "ko",
@@ -782,6 +789,7 @@
       "star": 5,
       "element": "glacio",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1104",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/a5c8de9c8a8d60b02481274bc7f05671.png",
       "guide": {
         "id": 13027,
         "language": "ko",
@@ -909,6 +917,7 @@
       "star": 4,
       "element": "havoc",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1602",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/5b341b6f1c5e1f43640081bed20ef61c.png",
       "guide": {
         "id": 13022,
         "language": "ko",
@@ -1039,6 +1048,7 @@
       "star": 5,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1211",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/7cd3a060b03a576b87151cadde4434f5.png",
       "guide": {
         "id": 13142,
         "language": "ko",
@@ -1168,6 +1178,7 @@
       "star": 4,
       "element": "havoc",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1601",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/80e25dc73edb84d45d2ca8a60a01ec6b.png",
       "guide": {
         "id": 13018,
         "language": "ko",
@@ -1278,6 +1289,7 @@
       "star": 5,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1308",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/46a2036c6e6e5a89133570f18abe6d7f/12f4a3c1249a4d44190e7757b314ac53.png",
       "guide": {
         "id": 13144,
         "language": "ko",
@@ -1408,6 +1420,7 @@
       "star": 5,
       "element": "havoc",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1606",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/8c0be7d51ff69ecaf9f6dd6a8825f804.png",
       "guide": {
         "id": 13004,
         "language": "ko",
@@ -1534,6 +1547,7 @@
       "star": 4,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1504",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/16d26d0d0948c1242774840c50601c97.png",
       "guide": {
         "id": 13002,
         "language": "ko",
@@ -1666,6 +1680,7 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1511",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/46a2036c6e6e5a89133570f18abe6d7f/b7ee163d2126c08e328d59c8f2d84469.png",
       "guide": {
         "id": 13143,
         "language": "ko",
@@ -1791,6 +1806,7 @@
       "star": 5,
       "element": "glacio",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1109",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/63f36b9a6b6602c22ac8055fbaa367b6/77e6b7f90219f64bba05731581f5090f.png",
       "guide": {
         "id": 13145,
         "language": "ko",
@@ -1903,7 +1919,8 @@
           "name": "아지랑이 같은 시간 속 바라보는 시선",
           "core": true
         }
-      ]
+      ],
+      "stale": true
     },
     {
       "id": "1510",
@@ -1912,6 +1929,7 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1510",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/53996829319d425f877060d282523896.png",
       "guide": {
         "id": 13139,
         "language": "ko",
@@ -2036,6 +2054,7 @@
       "star": 5,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1207",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/fe170cf89d5648970e857b721bb117f8.png",
       "guide": {
         "id": 13122,
         "language": "ko",
@@ -2180,6 +2199,7 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1509",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/acd70405164cb93b7dffe29fb3f6acb8.png",
       "guide": {
         "id": 13134,
         "language": "ko",
@@ -2260,6 +2280,7 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1512",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/a8dfb8a5fca67d2590e31e2b031bd971/6cc2275c788f35471d114c4b72dfdf4f.png",
       "guide": null,
       "targets": [],
       "echo_slots": [],
@@ -2276,6 +2297,7 @@
       "star": 5,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1209",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/34bf12f0ca96c0ad5bbfd06f57f8e564.png",
       "guide": {
         "id": 13135,
         "language": "ko",
@@ -2407,6 +2429,7 @@
       "star": 4,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1204",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/50a37085725e57ca1904015e848d5d07.png",
       "guide": {
         "id": 13025,
         "language": "ko",
@@ -2528,6 +2551,7 @@
       "star": 5,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1408",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/e2d9a74d8323aed853d6a1e999a9a56b.png",
       "guide": {
         "id": 13115,
         "language": "ko",
@@ -2642,6 +2666,7 @@
       "star": 5,
       "element": "havoc",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1604",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/7352939906e901a783483aa9abfdc738.png",
       "guide": {
         "id": 13035,
         "language": "ko",
@@ -2773,6 +2798,7 @@
       "star": 5,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1309",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/46a2036c6e6e5a89133570f18abe6d7f/7bb61d835380e06fad688a778964e88a.png",
       "guide": {
         "id": 13147,
         "language": "ko",
@@ -2905,6 +2931,7 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1502",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/ebc1ec3a5f3ce13058390564e0513cd3.png",
       "guide": {
         "id": 13019,
         "language": "ko",
@@ -3040,6 +3067,7 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1503",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/deb60fc64c2de8328301b889518f593f.png",
       "guide": {
         "id": 13015,
         "language": "ko",
@@ -3163,6 +3191,7 @@
       "star": 4,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1307",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/2fdb664642d57f6fe3a444c595821059.png",
       "guide": {
         "id": 13133,
         "language": "ko",
@@ -3280,6 +3309,7 @@
       "star": 5,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1206",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/12af3a43a139b880f2f538677170f066.png",
       "guide": {
         "id": 13006,
         "language": "ko",
@@ -3409,6 +3439,7 @@
       "star": 4,
       "element": "glacio",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1102",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/016f91853740e75f2548041f7b86db3b.png",
       "guide": {
         "id": 13017,
         "language": "ko",
@@ -3538,6 +3569,7 @@
       "star": 5,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1305",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/1395ae6839b12de38062b75d2fd9d25f.png",
       "guide": {
         "id": 13009,
         "language": "ko",
@@ -3662,6 +3694,7 @@
       "star": 5,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1407",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/716270ae8422a47578106b2b9cd0f74d.png",
       "guide": {
         "id": 13120,
         "language": "ko",
@@ -3788,6 +3821,7 @@
       "star": 4,
       "element": "glacio",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1103",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/a47bcae3046ffd93badb14bfa62ca24c.png",
       "guide": {
         "id": 13020,
         "language": "ko",
@@ -3905,6 +3939,7 @@
       "star": 5,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1312",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/47b38add35af39ee8218fe1733ab4d54/54fd2e32125570d522a2215931905740.png",
       "guide": {
         "id": 13152,
         "language": "ko",
@@ -3980,6 +4015,7 @@
       "star": 5,
       "element": "glacio",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1110",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/5776bc9b9fe180db76ecf76add47bf44/6941a971665e80a206db56b0ad3c59b7.png",
       "guide": {
         "id": 13148,
         "language": "ko",
@@ -4101,6 +4137,7 @@
       "star": 5,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1412",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/a3b0035d8d82501df8c7f8fd5591fb39.png",
       "guide": {
         "id": 13140,
         "language": "ko",
@@ -4211,7 +4248,8 @@
           "name": "함의가 빛나면, 광휘가 떠오르니",
           "core": true
         }
-      ]
+      ],
+      "stale": true
     },
     {
       "id": "1306",
@@ -4220,6 +4258,7 @@
       "star": 5,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1306",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/359c1bbf33fa9be011924f70565f913c.png",
       "guide": {
         "id": 13126,
         "language": "ko",
@@ -4350,6 +4389,7 @@
       "star": 4,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1403",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/3fbfcf454c32a1b6d81aa5fd20ac90a4.png",
       "guide": {
         "id": 13023,
         "language": "ko",
@@ -4475,6 +4515,7 @@
       "star": 5,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1203",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/52f422d633124cf6e287e57dda5cb98f.png",
       "guide": {
         "id": 13021,
         "language": "ko",
@@ -4594,6 +4635,7 @@
       "star": 4,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1402",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/87d919a165e38fd43355d8bbec5a3e2e.png",
       "guide": {
         "id": 13013,
         "language": "ko",
@@ -4720,6 +4762,7 @@
       "star": 5,
       "element": "havoc",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1610",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/46a2036c6e6e5a89133570f18abe6d7f/605b547fe33aa6a8ffd6db8c94e24ada.png",
       "guide": {
         "id": 13146,
         "language": "ko",
@@ -4850,6 +4893,7 @@
       "star": 5,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1210",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/5a3397804e89114246e0a908c1a754b1.png",
       "guide": {
         "id": 13138,
         "language": "ko",
@@ -4979,10 +5023,11 @@
       "star": 5,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1311",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/2bd0b218329cc047e2b294056dcc5181/0e707e81e4a7c7b133dbf5c962baeed0.png",
       "guide": {
         "id": 13151,
         "language": "ko",
-        "likes": 334,
+        "likes": 335,
         "modified_at": 1794397342
       },
       "targets": [
@@ -5103,6 +5148,7 @@
       "star": 4,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1303",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/99755b6393f1bbc4fadb4be5cb3f4d25.png",
       "guide": {
         "id": 13029,
         "language": "ko",
@@ -5233,6 +5279,7 @@
       "star": 5,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1410",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/0b8b32ec96d68a517072c0d83846be60.png",
       "guide": {
         "id": 13127,
         "language": "ko",
@@ -5369,6 +5416,7 @@
       "star": 4,
       "element": "glacio",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1106",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/6b06a64f95dc353896e12377a74cb26a.png",
       "guide": {
         "id": 13007,
         "language": "ko",
@@ -5485,6 +5533,7 @@
       "star": 5,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1302",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/628f4043213e83a3ba475bad8907f5b8.png",
       "guide": {
         "id": 13028,
         "language": "ko",
@@ -5622,6 +5671,7 @@
       "star": 5,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1205",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/6b08d1da05d2ce8bf65033419bd3ab90.png",
       "guide": {
         "id": 13012,
         "language": "ko",
@@ -5746,6 +5796,7 @@
       "star": 5,
       "element": "glacio",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1105",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/c8f2296790674a0b95dd8b328a10f448.png",
       "guide": {
         "id": 13010,
         "language": "ko",
@@ -5881,6 +5932,7 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1507",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/e0d01f1b2ae2b6adfd257c349484d292.png",
       "guide": {
         "id": 13033,
         "language": "ko",
@@ -6006,6 +6058,7 @@
       "star": 5,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1413",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/01096f1f2c9f8e865a4054b6ec9d48e8/2403117c01187d1932832b3a7069c255.png",
       "guide": {
         "id": 13149,
         "language": "ko",
@@ -6136,6 +6189,7 @@
       "star": 5,
       "element": "havoc",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1508",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/ba81bbe33358b2f73201b58f51df43bb.png",
       "guide": {
         "id": 13132,
         "language": "ko",
@@ -6267,6 +6321,7 @@
       "star": 4,
       "element": "fusion",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1202",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/e05a962eda74b62db0f8ada80845e1c4.png",
       "guide": {
         "id": 13014,
         "language": "ko",
@@ -6403,6 +6458,7 @@
       "star": 5,
       "element": "aero",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1409",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/ba71005399dfcad6ff518511069c6047.png",
       "guide": {
         "id": 13121,
         "language": "ko",
@@ -6532,6 +6588,7 @@
       "star": 5,
       "element": "glacio",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1107",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/625ace038419ed5f732b60e0fa60d00a.png",
       "guide": {
         "id": 13031,
         "language": "ko",
@@ -6661,6 +6718,7 @@
       "star": 5,
       "element": "havoc",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1603",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/c4cb80b5c5cfe32ba1308f10dd509e1d.png",
       "guide": {
         "id": 13032,
         "language": "ko",
@@ -6793,6 +6851,7 @@
       "star": 5,
       "element": "electro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1301",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/26174bff9a90260842db44a840da1525.png",
       "guide": {
         "id": 13026,
         "language": "ko",
@@ -6928,6 +6987,7 @@
       "star": 5,
       "element": "havoc",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1607",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/c529907cec256dc427728b03f491b179.png",
       "guide": {
         "id": 13005,
         "language": "ko",
@@ -7048,10 +7108,11 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1505",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/890adae97f3ec5f380008a743cbbc563.png",
       "guide": {
         "id": 13008,
         "language": "ko",
-        "likes": 1227,
+        "likes": 1228,
         "modified_at": 1794397349
       },
       "targets": [
@@ -7164,6 +7225,7 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1506",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/b18600fa14f98402ba75b5661494b3ee.png",
       "guide": {
         "id": 13003,
         "language": "ko",
@@ -7283,6 +7345,7 @@
       "star": 5,
       "element": "havoc",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1608",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/246a6e7486ae99e97fb5f9f1e28bf5c2.png",
       "guide": {
         "id": 13125,
         "language": "ko",
@@ -7405,6 +7468,7 @@
       "star": 5,
       "element": "glacio",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1108",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/cca7f28cb5e35e396e2f027394780b9a.png",
       "guide": {
         "id": 13141,
         "language": "ko",
@@ -7522,5 +7586,52 @@
         }
       ]
     }
-  ]
+  ],
+  "echo_images": {
+    "거짓의 신왕": "https://guide-res.aki-game.net/introduction/material/4c864dae50bc3d969d24d8f67a302edd/7f2bc47910cdc10d346b241f5b877b14.png",
+    "공명 메아리 · 펜리코": "https://guide-res.aki-game.net/introduction/material/c95a4a33202d2d96c0507f06760f87bb/3b43fc28971eb65284b84d52a1f28885.png",
+    "공명의 메아리 · 데니아": "https://guide-res.aki-game.net/introduction/material/04082f72b98685d77b2c17dcf63417e2/da36120870e6a1929c33a3eb1430b552.png",
+    "공명의 메아리 · 명식 · 레비아탄": "https://guide-res.aki-game.net/introduction/material/5c79e7083baf81a45843e44ff0bdf7f4/4aa2b1b96c341e14619702f63df0a922.png",
+    "공명의 메아리 · 명식 · 허무의 신": "https://guide-res.aki-game.net/introduction/material/04082f72b98685d77b2c17dcf63417e2/8081238c0445080be0decacbf34552f0.png",
+    "공명의 메아리 · 악몽 아담 · 스매셔": "https://guide-res.aki-game.net/introduction/material/54f91f2af554b82b370dad3b91ceffc9/a76b654595406510d1e9848cd7410e7c.png",
+    "공명의 메아리 · 태초의 여우의 별자리 · 천연": "https://guide-res.aki-game.net/introduction/material/1c27ce1fe7e633679092f5e5500e55c5/cbd6adafcc618566b3afa059291c182b.png",
+    "공명의 메아리 · 플뢰르 드 리스": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/9c313cbc186fdc76481456664dfb73ad.png",
+    "글로모스": "https://guide-res.aki-game.net/introduction/material/94d1a1a3f3bbec1f2f2276bbe8f458ac/afb0fd0ae89cbe6e52930d0f0a75e7fa.png",
+    "돌아갈 곳이 없는 오류": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/d908f5ddd741a499100fe82a8e54a021.png",
+    "리액터 허스크": "https://guide-res.aki-game.net/introduction/material/fb999546dfb46ffe46987bd52b0810d3/226275363edc607f126957093227335f.png",
+    "만와뢰 · 잔해": "https://guide-res.aki-game.net/introduction/material/01df3b8679baec0ef6c69d49152d3c91/786293d9ec44f9ed335cb45ab94b6331.png",
+    "무망자": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/b443559b4fda50bccff40fbe8b9e8aef.png",
+    "바다의 여인": "https://guide-res.aki-game.net/introduction/material/4c864dae50bc3d969d24d8f67a302edd/540e316703a090b5b7db0357ec0a2e9c.png",
+    "반디의 군세": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/8bdf590c80e7c6f623ea62fa3e872f59.png",
+    "보이드 모스": "https://guide-res.aki-game.net/introduction/material/04082f72b98685d77b2c17dcf63417e2/b5629b5e7f623e04ab1ab14b39df5001.png",
+    "봉정계유": "https://guide-res.aki-game.net/introduction/material/01df3b8679baec0ef6c69d49152d3c91/08f38655b6997ddc317fd657898288eb.png",
+    "시길룸": "https://guide-res.aki-game.net/introduction/material/94d1a1a3f3bbec1f2f2276bbe8f458ac/21020714a1b037e2dd29663553120d03.png",
+    "악몽 · 뇌운의 비늘": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/a01dd069a584a959af6692a4e47fd176.png",
+    "악몽 · 애곡하는 아익스": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/9aadf508ea76f4577c22141efe8d39d9.png",
+    "악몽 · 음험한 백로": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/5d558e2c7d1e74e09434b846ade544c1.png",
+    "악몽 · 지옥불 기사": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/f7e254be0eacd91a0f0f1d26fa471317.png",
+    "악몽 · 천둥의 비늘": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/33ba5a1e0aa32d8d51546cdecba97340.png",
+    "악몽 · 켈피": "https://guide-res.aki-game.net/introduction/material/aaa57ef8003da1dc7f657c2bdd2dddc1/9343689718e659ff8c5cf05c9bad7b62.png",
+    "악몽 · 크라운리스": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/ce1f2d7954dcddf9e4e16eb2b5ffcf10.png",
+    "악몽 · 폭주의 고릴라": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/af9af2b2f76e00cb4fd8d16499c8f57d.png",
+    "악몽 · 헤카테": "https://guide-res.aki-game.net/introduction/material/c95a4a33202d2d96c0507f06760f87bb/5db5bd41dd3723edb098bab92a90cdf1.png",
+    "애곡하는 아익스": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/efbe7d9fc8d3459331a7611e1a0104df.png",
+    "영광의 사자": "https://guide-res.aki-game.net/introduction/material/aaa57ef8003da1dc7f657c2bdd2dddc1/ce2ea44491888f7cf71f8654dfc3fc42.png",
+    "용의 별자리": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/2c25dd7af6bb973507a34f5936790026.png",
+    "음험한 백로": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/cbb3e9ccc7ba7463e69e84649d270d89.png",
+    "이성(異性) 무장": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/381a49f5bba1c253180192c8f8472512.png",
+    "절식백": "https://guide-res.aki-game.net/introduction/material/1c27ce1fe7e633679092f5e5500e55c5/0f75360b3ebd90369120dfe630d42e03.png",
+    "지옥불 기사": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/ef91cfe0534fe14ebf81b5969d8600f7.png",
+    "천괴중루": "https://guide-res.aki-game.net/introduction/material/01df3b8679baec0ef6c69d49152d3c91/65ef1dcbfed1327b010b48ed74d92d96.png",
+    "천둥의 비늘": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/94882ea8a92c0d95bf27ecf95fd01949.png",
+    "카피타네우스": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/6d59aa2889d24dafff97a562feb44f82.png",
+    "코로사우루스": "https://guide-res.aki-game.net/introduction/material/4c864dae50bc3d969d24d8f67a302edd/ef00cbbeceb5476cc419943d2d55fdaa.png",
+    "타종 거북이": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/45220b36fdf02fbbefa9272c26837db5.png",
+    "탄식의 고룡": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/d7b9fe0723a538032c71685ff675501a.png",
+    "트윈 노바 · 네뷸러스 캐논": "https://guide-res.aki-game.net/introduction/material/059b5e1c81ea6c250dc095bb9c0ee331/3e2c57c6b608690aeac5a97eb359d0c5.png",
+    "폭주의 고릴라": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/b4aa7bc23b055188b9fa730134c8aad6.png",
+    "하늘의 기관 인형 · 겁살": "https://guide-res.aki-game.net/introduction/material/d6962e1fbd0d0f0e249387d0ea4ba19b/c93e4cedbd4b823f7062d5edbe74cb24.png",
+    "하이와티아": "https://guide-res.aki-game.net/introduction/material/fb999546dfb46ffe46987bd52b0810d3/388735477a69f8673e761783cd96a358.png",
+    "헤카테": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/4c6f03d68d4a3fdf07e3a5a255e75965.png"
+  }
 }
