@@ -1057,10 +1057,23 @@ def _echo_from_dict(d: dict) -> Echo:
                 name=d.get("name", ""), level=d.get("level"))
 
 
+APP_ICON = Path(__file__).resolve().parent.parent / "assets" / "icon.ico"  # 갈브레나 도트 아이콘 (tools/make_icon.py)
+APP_USER_MODEL_ID = "wuwastat.build-grader"
+
+
 def main() -> int:
+    if sys.platform == "win32":
+        # pythonw로 실행해도 작업 표시줄에 파이썬 대신 이 프로그램 아이콘이 보이게 한다
+        try:
+            import ctypes
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_USER_MODEL_ID)
+        except (AttributeError, OSError):
+            pass
     app = QApplication(sys.argv)
     app.setApplicationName("wuwastat")
     app.setOrganizationName("wuwastat")
+    if APP_ICON.is_file():
+        app.setWindowIcon(QIcon(str(APP_ICON)))
     win = MainWindow()
     win.show()
     return app.exec()

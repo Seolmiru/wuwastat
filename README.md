@@ -73,6 +73,11 @@ python -m venv .venv
 - 이미지를 새로 받을 때(개발자): `python -m wuwastat.scraper --export-slim --download-images`
   (공식 CDN의 https 주소만 받고, 5MB 이하의 실제 이미지인지 확인한 뒤 160px PNG로 저장)
 
+## 아이콘
+
+갈브레나 초상화를 32×32 도트 그림으로 바꾼 아이콘입니다 (`assets/icon.ico`, `assets/icon.png`).
+다시 만들려면 `python tools/make_icon.py`를 실행하세요.
+
 ## 캐릭터 데이터
 
 [명조 공식 공략 사이트](https://wuwaguide.kurogames.com/ko/)에서 캐릭터마다 추천 수가 가장 많은 한국어 공략을 가져옵니다.
@@ -166,5 +171,6 @@ wuwastat/
   scoring.py   등급 계산, 교체 우선순위, 육성 가이드
   chain.py     공명 체인(돌파) DPS 상승률 추정
   ui.py        PySide6 화면
+tools/         개발용 스크립트 (아이콘 생성)
 tests/         단위 테스트 (python -m pytest tests)
 ```

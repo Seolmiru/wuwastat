@@ -442,3 +442,14 @@ def test_game_window_detection_by_title_and_class():
     assert is_game_window("명조", "SomethingElse")  # 제목이 정확히 게임 이름
     assert not is_game_window("Wuthering Waves 공략 - Chrome", "Chrome_WidgetWin_1")
     assert not is_game_window("명조 육성 등급 계산기 v0.1.0", "Qt6QWindowIcon")
+
+
+def test_app_icon_bundled():
+    from PIL import Image
+    from wuwastat.ui import APP_ICON
+
+    ico = Image.open(APP_ICON)
+    assert ico.format == "ICO"
+    assert {(16, 16), (32, 32), (48, 48), (256, 256)} <= set(ico.info["sizes"])
+    ico.size = (32, 32)
+    assert len(set(ico.convert("RGBA").getdata())) <= 32  # 32px는 색 수를 줄인 도트 그림
