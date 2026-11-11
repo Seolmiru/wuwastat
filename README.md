@@ -34,7 +34,7 @@ python -m venv .venv
 2. **캐릭터 총 스탯**: 게임의 캐릭터 속성 상세 화면 스크린샷을 `스크린샷 열기`로 열거나, 끌어다 놓거나, 복사한 뒤 `Ctrl+V`로 붙여넣습니다.
 3. **장착 에코**: 에코 상세 화면 스크린샷을 탭마다 하나씩 넣거나, `에코 스크린샷 여러 장 열기`로 최대 5장을 한 번에 넣습니다.
 4. OCR이 잘못 읽은 값은 표에서 바로 고칠 수 있습니다. 값을 고치면 결과가 자동으로 다시 계산됩니다.
-5. 입력한 값은 캐릭터별로 자동 저장됩니다 (`%APPDATA%\wuwastat\builds`).
+5. 입력한 값은 캐릭터별로 자동 저장됩니다 (`%APPDATA%\wuwastat\wuwastat\builds`).
 
 ## 세팅 자동 측정
 
@@ -139,8 +139,8 @@ python -m venv .venv
 - 인터넷 통신은 두 가지뿐이며 모두 HTTPS입니다.
   - `캐릭터 데이터 업데이트`: 공식 공략 서버(`guide-server.aki-game.net`). 응답은 10MB로 제한하고, 캐릭터 ID는 숫자만 받습니다.
   - 초상화 이미지: 공식 이미지 서버(`guide-res.aki-game.net`)만 허용합니다. 5MB 이하의 실제 이미지인지 확인한 뒤
-    PC 캐시 폴더(`%LOCALAPPDATA%\wuwastat\cache\images`)에 저장합니다.
-- 입력값은 `%APPDATA%\wuwastat\builds`에 캐릭터별 JSON으로 저장합니다. 파일이 손상되면 무시하고 새로 시작합니다.
+    PC 캐시 폴더(`%LOCALAPPDATA%\wuwastat\wuwastat\cache\images`)에 저장합니다.
+- 입력값은 `%APPDATA%\wuwastat\wuwastat\builds`에 캐릭터별 JSON으로 저장합니다. 파일이 손상되면 무시하고 새로 시작합니다.
 - 캐릭터 정보의 링크는 공식 공략 사이트(https)만 엽니다.
 
 ## 구조
