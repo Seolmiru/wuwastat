@@ -8,9 +8,23 @@
 - 공식 공략의 **추천 스탯 대비 달성도**와 부족한 수치 (서브옵션 몇 줄이 더 필요한지)
 - **에코별 점수**와 **교체 우선순위**: 가장 먼저 바꿔야 할 에코, 바꾸면 오르는 점수
 
-## 실행
+## 설치 (권장: 포터블 ZIP)
 
-`run.bat`을 더블클릭하세요. 처음 실행할 때 가상환경을 만들고 패키지를 설치합니다.
+Python이나 Git을 설치할 필요가 없습니다.
+
+1. [Releases](../../releases) 페이지에서 `wuwastat-<버전>-win64.zip`을 내려받습니다.
+2. **ZIP 파일 우클릭 > 속성 > 아래쪽 '차단 해제' 체크 > 확인** (인터넷에서 받은 파일 경고를 없앱니다)
+3. 짧은 경로에 압축을 풉니다 (예: `C:\wuwastat`).
+4. `wuwastat.bat`을 더블클릭합니다.
+
+- 필요 조건: Windows 10/11 64비트, Windows 한국어 OCR 언어팩 (아래 참고)
+- 실행되는 프로그램은 ZIP 안의 `python\pythonw.exe`이며 Python 재단이 서명한 공식 파일입니다.
+  이 프로젝트가 만든 실행 파일(.exe)은 없어서 코드 서명 없이도 배포할 수 있습니다.
+- 업데이트: 새 버전 ZIP을 새 폴더에 풀어 쓰면 됩니다. 입력값은 `%APPDATA%\wuwastat\wuwastat\builds`에 그대로 남습니다.
+
+## 실행 (소스에서, 개발자용)
+
+Git으로 받은 경우 `run.bat`을 더블클릭하세요. 처음 실행할 때 가상환경을 만들고 패키지를 설치합니다 (Python 3.11 이상 필요).
 
 직접 실행하려면:
 
@@ -149,6 +163,21 @@ python -m venv .venv
 
 패키지 버전은 `requirements.txt`에 검증한 버전으로 고정되어 있습니다. 올릴 때는 테스트를 통과하는지 확인한 뒤 바꾸세요.
 
+## 배포 (새 버전 내기)
+
+1. `wuwastat/__init__.py`의 `__version__`을 올리고 커밋합니다 (예: `0.2.0`).
+2. 같은 이름의 태그를 만들어 올립니다.
+   ```
+   git tag v0.2.0
+   git push origin v0.2.0
+   ```
+3. GitHub Actions(`.github/workflows/release.yml`)가 테스트 → 포터블 ZIP 빌드 → Releases 업로드를 자동으로 합니다.
+   지인에게는 Releases 페이지 링크만 보내면 됩니다.
+
+직접 만들려면 `python tools/build_portable.py` → `build/wuwastat-<버전>-win64.zip`.
+빌드는 python.org의 공식 임베디드 Python을 받아 Python 재단 서명을 확인한 뒤, 고정된 버전의 패키지를 넣고
+쓰지 않는 Qt 구성요소(QML, 디자이너 도구 등)를 지웁니다.
+
 ## 개인정보와 보안
 
 - 스크린샷은 PC 안에서만 처리합니다 (Windows 내장 OCR). 외부로 전송하지 않습니다.
@@ -171,6 +200,7 @@ wuwastat/
   scoring.py   등급 계산, 교체 우선순위, 육성 가이드
   chain.py     공명 체인(돌파) DPS 상승률 추정
   ui.py        PySide6 화면
-tools/         개발용 스크립트 (아이콘 생성)
+tools/         개발용 스크립트 (아이콘 생성, 포터블 빌드)
+.github/       릴리스 자동화 (GitHub Actions)
 tests/         단위 테스트 (python -m pytest tests)
 ```
