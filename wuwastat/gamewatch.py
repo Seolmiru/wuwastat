@@ -33,7 +33,7 @@ from .parser import echo_from_lines, group_rows, read_lines, totals_from_lines
 
 ATTR_SCREEN_WORDS = ("속성", "상세정보")
 GAME_TITLES = ("Wuthering Waves", "鸣潮", "명조")
-GAME_PROCESSES = ("client-win64-shipping.exe",)
+GAME_WINDOW_CLASS = "UnrealWindow"  # 명조(언리얼 엔진) 게임 창의 창 클래스
 OWN_TITLE_MARKERS = ("등급 계산기", "wuwastat")
 POLL_INTERVAL = 0.5
 ECHO_COUNT = 5
@@ -44,11 +44,13 @@ class WatchError(RuntimeError):
 
 
 # ---------------------------------------------------------------------------
-# 게임 창 찾기 / 캡처 (읽기 전용 Win32 호출만 사용)
+# 게임 창 찾기 / 캡처
+#
+# 게임 프로세스에는 전혀 접근하지 않는다 (OpenProcess, 메모리 읽기, DLL 주입, 후킹 없음).
+# 쓰는 것은 창 관리자 정보 조회(창 목록·제목·클래스·위치·맨 앞 창 여부)와
+# 데스크톱 화면 픽셀 읽기(GDI BitBlt, 화면 녹화·캡처 프로그램과 같은 방식)뿐이다.
 # ---------------------------------------------------------------------------
 user32 = ctypes.WinDLL("user32", use_last_error=True)
-kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
 
 
 @dataclass
@@ -75,20 +77,20 @@ class GameWindow:
         return user32.GetForegroundWindow() == self.hwnd and not user32.IsIconic(self.hwnd)
 
 
-def _process_name(hwnd: int) -> str:
-    pid = wintypes.DWORD()
-    user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
-    h = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid.value)
-    if not h:
-        return ""
-    try:
-        buf = ctypes.create_unicode_buffer(512)
-        size = wintypes.DWORD(len(buf))
-        if kernel32.QueryFullProcessImageNameW(h, 0, buf, ctypes.byref(size)):
-            return buf.value.rsplit("\\", 1)[-1].lower()
-        return ""
-    finally:
-        kernel32.CloseHandle(h)
+def _class_name(hwnd: int) -> str:
+    buf = ctypes.create_unicode_buffer(256)
+    user32.GetClassNameW(hwnd, buf, 256)
+    return buf.value
+
+
+def is_game_window(title: str, class_name: str) -> bool:
+    """명조 게임 창인가. 브라우저 탭 제목('Wuthering Waves - 위키 - Chrome')은 제외한다."""
+    t = title.strip()
+    if any(m in t for m in OWN_TITLE_MARKERS):
+        return False
+    if class_name == GAME_WINDOW_CLASS and any(g.lower() in t.lower() for g in GAME_TITLES):
+        return True
+    return t in GAME_TITLES  # 창 클래스가 다르더라도 제목이 정확히 게임 이름이면
 
 
 def find_game_window() -> GameWindow | None:
@@ -102,14 +104,11 @@ def find_game_window() -> GameWindow | None:
         buf = ctypes.create_unicode_buffer(n + 1)
         user32.GetWindowTextW(hwnd, buf, n + 1)
         title = buf.value
-        if any(m in title for m in OWN_TITLE_MARKERS):
-            return True
-        if _process_name(hwnd) in GAME_PROCESSES or any(t.lower() in title.lower() for t in GAME_TITLES):
+        if is_game_window(title, _class_name(hwnd)):
             found.append(GameWindow(hwnd, title))
         return True
 
     user32.EnumWindows(cb, 0)
-    found.sort(key=lambda w: _process_name(w.hwnd) not in GAME_PROCESSES)  # 게임 실행 파일 창 우선
     if not found:
         return None
     found[0].refresh()

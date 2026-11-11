@@ -109,16 +109,6 @@ def _ocr_echo(image, progress):
     return parse_echo(image, progress=progress)
 
 
-def image_cache_dir() -> Path:
-    base = QStandardPaths.writableLocation(QStandardPaths.CacheLocation) or str(Path.home() / ".wuwastat" / "cache")
-    return Path(base) / "images"
-
-
-def _fetch_image(url, cache_dir, progress=None):
-    from .images import fetch
-    return fetch(url, cache_dir)
-
-
 PORTRAIT_SIZE = 120
 ECHO_ICON_SIZE = 72
 
@@ -226,8 +216,6 @@ class EchoEditor(DropMixin, QFrame):
         b_paste.clicked.connect(self.paste)
         b_clear.clicked.connect(self.clear)
         self.image_dropped.connect(self.ocr_requested.emit)
-        self.icon_url: str | None = None
-        self.icon_cost = -1
 
         grid = QGridLayout()
         grid.addWidget(QLabel("이름"), 0, 0)
@@ -683,9 +671,9 @@ class MainWindow(QMainWindow):
         self.all_sets: list[str] = []
         self._loading = False
         self._workers: set[Worker] = set()  # 완료 신호가 전달될 때까지 작업 객체를 붙잡아 둔다
-        self._pixmaps: dict[str, QPixmap | None] = {}  # 이미지 주소 → 그림 (None = 받기 실패)
-        self._pix_waiting: dict[str, list] = {}
-        self.echo_images: dict[str, str] = {}
+        self._pixmaps: dict[str, QPixmap | None] = {}  # 이미지 파일 경로 → 그림 (None = 읽기 실패)
+        from .images import load_echo_index
+        self.echo_index: dict[str, str] = load_echo_index()  # 에코 이름 → assets/echoes 파일 이름
 
         central = QWidget()
         root = QVBoxLayout(central)
@@ -781,7 +769,6 @@ class MainWindow(QMainWindow):
             QTimer.singleShot(300, self._ask_initial_update)
             return
         self.characters, self.meta = load_characters(data_path())
-        self.echo_images = dict(self.meta.get("echo_images") or {})
         # 모든 캐릭터 공략에 나온 세트 이름 (그 외 세트를 고를 수 있게)
         self.all_sets = sorted({n for c in self.characters for n in c.sonata_names})
         prev = self.current.id if self.current else None
@@ -893,70 +880,37 @@ class MainWindow(QMainWindow):
         return Build(self.totals.totals(), [e for ed in self.echo_editors if (e := ed.get_echo())],
                      weapon=weapon, sonata=sonata, chain=chain)
 
-    # ----- 초상화 -----
-    def load_image(self, url: str | None, callback) -> None:
-        """공식 서버 이미지를 백그라운드로 받아 callback(QPixmap | None)을 부른다."""
-        if not url:
-            callback(None)
-            return
-        if url in self._pixmaps:
-            callback(self._pixmaps[url])
-            return
-        waiting = self._pix_waiting.setdefault(url, [])
-        waiting.append(callback)
-        if len(waiting) > 1:
-            return
-        w = Worker(_fetch_image, url, image_cache_dir())
-        w.signals.done.connect(lambda data, url=url: self._image_loaded(url, data))
-        w.signals.error.connect(lambda _m, url=url: self._image_loaded(url, None))
-        self.start_worker(w)
-
-    def _image_loaded(self, url: str, data: bytes | None) -> None:
-        pix = None
-        if data:
-            pix = QPixmap()
-            if not pix.loadFromData(data, "PNG"):
-                pix = None
-        self._pixmaps[url] = pix
-        for cb in self._pix_waiting.pop(url, []):
-            cb(pix)
+    # ----- 초상화 (저장소 assets 폴더의 이미지만 읽는다, 네트워크 없음) -----
+    def pixmap(self, path: Path | None) -> QPixmap | None:
+        if path is None:
+            return None
+        key = str(path)
+        if key not in self._pixmaps:
+            pix = QPixmap(key)
+            self._pixmaps[key] = None if pix.isNull() else pix
+        return self._pixmaps[key]
 
     def show_portrait(self) -> None:
-        c = self.current
-        self.portrait.setPixmap(QPixmap())
-        self.portrait.setText(c.name if c else "")
-        if not c or not c.portrait:
-            return
+        from .images import portrait_path
 
-        def done(pix, cid=c.id):
-            if self.current and self.current.id == cid and pix is not None:
-                self.portrait.setPixmap(pix.scaled(PORTRAIT_SIZE, PORTRAIT_SIZE, Qt.KeepAspectRatio,
-                                                   Qt.SmoothTransformation))
-        self.load_image(c.portrait, done)
+        c = self.current
+        pix = self.pixmap(portrait_path(c.id)) if c else None
+        if pix is None:
+            self.portrait.setPixmap(QPixmap())
+            self.portrait.setText(c.name if c else "")
+        else:
+            self.portrait.setPixmap(pix.scaled(PORTRAIT_SIZE, PORTRAIT_SIZE, Qt.KeepAspectRatio,
+                                               Qt.SmoothTransformation))
 
     def refresh_echo_icons(self) -> None:
-        """에코 이름에 맞는 공식 초상화를 에코 탭과 결과 표에 표시한다."""
-        from .images import match_echo_image
+        """에코 이름에 맞는 초상화를 에코 탭과 결과 표에 표시한다. 이미지가 없는 에코는 코스트만."""
+        from .images import echo_image_path
 
         for i, ed in enumerate(self.echo_editors):
             e = ed.get_echo()
-            url = match_echo_image(e.name, self.echo_images) if e else None
-            cost = e.cost if e else 0
-            if url == ed.icon_url and cost == ed.icon_cost:
-                if url and url in self._pixmaps:
-                    self.results.set_echo_icon(i, self._pixmaps[url])
-                continue
-            ed.icon_url, ed.icon_cost = url, cost
-            ed.set_icon(None, cost)
-            self.results.set_echo_icon(i, None)
-            if not url:
-                continue
-
-            def done(pix, i=i, url=url, cost=cost):
-                if self.echo_editors[i].icon_url == url:
-                    self.echo_editors[i].set_icon(pix, cost)
-                    self.results.set_echo_icon(i, pix)
-            self.load_image(url, done)
+            pix = self.pixmap(echo_image_path(e.name, self.echo_index)) if e else None
+            ed.set_icon(pix, e.cost if e else 0)
+            self.results.set_echo_icon(i, pix)
 
     def run_eval(self) -> None:
         if not self.current:

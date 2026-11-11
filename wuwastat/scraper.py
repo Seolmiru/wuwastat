@@ -432,6 +432,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="전체 데이터 저장 위치 (기본: data/characters.local.json, 저장소 제외)")
     ap.add_argument("--export-slim", action="store_true",
                     help="저장소용 data/characters.json (숫자와 이름만)도 함께 갱신")
+    ap.add_argument("--download-images", action="store_true",
+                    help="캐릭터·에코 초상화를 공식 CDN에서 받아 assets 폴더에 저장 (개발자용)")
     args = ap.parse_args(argv)
 
     def progress(i: int, n: int, name: str) -> None:
@@ -442,6 +444,10 @@ def main(argv: list[str] | None = None) -> int:
     path = save(data, args.output)
     if args.export_slim:
         print(f"저장소용 데이터 저장: {save(slim(data), BUNDLED_OUTPUT)}")
+    if args.download_images:
+        from .images import download_assets
+        n_p, n_e = download_assets(data)
+        print(f"초상화 {n_p}개, 에코 이미지 {n_e}개 저장: assets/")
     no_guide = [c["name"] for c in data["characters"] if not c["guide"]]
     print(f"저장 완료: {path} ({data['count']}명)")
     if no_guide:

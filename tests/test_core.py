@@ -280,7 +280,7 @@ def test_build_file_rejects_path_characters():
     from wuwastat.ui import build_file
 
     assert build_file("1208").name == "1208.json"
-    for bad in ("../evil", "..\evil", "a/b", "C:x", "", "1" * 40):
+    for bad in ("../evil", r"..\evil", "a/b", "C:x", "", "1" * 40):
         assert build_file(bad) is None
 
 
@@ -357,21 +357,22 @@ def test_chain_estimate_needs_full_data():
     assert ev.chain_gain is None and ev.chain_grade is None
 
 
-# --- 초상화 이미지 -------------------------------------------------------------
-def test_image_host_allowlist_and_validation(tmp_path):
+# --- 초상화 이미지 (저장소 파일만 사용) --------------------------------------
+def test_image_download_allowlist_and_validation():
     from wuwastat import images
 
     assert images.is_allowed("https://guide-res.aki-game.net/introduction/material/a/b.png")
     for bad in ("http://guide-res.aki-game.net/a.png", "https://evil.example.com/a.png",
                 "file:///C:/a.png", "https://guide-res.aki-game.net.evil.com/a.png", ""):
         assert not images.is_allowed(bad)
-    assert images.fetch("https://evil.example.com/a.png", tmp_path) is None  # 요청 자체를 안 함
+    assert images.fetch_remote("https://evil.example.com/a.png") is None  # 요청 자체를 안 함
     assert images._validate(b"<html>not an image</html>") is None
     import io
     from PIL import Image
     buf = io.BytesIO()
-    Image.new("RGB", (8, 8), (255, 0, 0)).save(buf, "PNG")
-    assert images._validate(buf.getvalue()).startswith(b"\x89PNG")
+    Image.new("RGB", (300, 300), (255, 0, 0)).save(buf, "PNG")
+    out = images._validate(buf.getvalue())
+    assert out[1:4] == b"PNG" and Image.open(io.BytesIO(out)).size == (160, 160)
 
 
 def test_echo_image_matching_tolerates_ocr_typos():
@@ -385,11 +386,59 @@ def test_echo_image_matching_tolerates_ocr_typos():
     assert match_echo_image("", imgs) is None
 
 
-def test_bundled_image_links_are_official():
+def test_bundled_images_present():
     import json
-    from wuwastat.images import is_allowed
+    from wuwastat import images
     from wuwastat.models import BUNDLED_DATA
 
     data = json.loads(BUNDLED_DATA.read_text(encoding="utf-8"))
-    urls = [c["portrait"] for c in data["characters"] if c.get("portrait")] + list(data.get("echo_images", {}).values())
-    assert len(urls) > 50 and all(is_allowed(u) for u in urls)
+    with_portrait = [c for c in data["characters"] if c.get("portrait")]
+    assert with_portrait and all(images.portrait_path(c["id"]) for c in with_portrait)
+    index = images.load_echo_index()
+    assert len(index) >= 40 and all((images.ECHO_DIR / f).is_file() for f in index.values())
+    assert images.echo_image_path("코로사우루스", index) is not None
+    assert images.portrait_path("../x") is None
+
+
+def test_app_does_not_download_images():
+    """앱 화면 코드는 이미지를 내려받지 않는다 (저장소 파일만 읽음)."""
+    from pathlib import Path
+    import wuwastat
+
+    ui_src = (Path(wuwastat.__file__).parent / "ui.py").read_text(encoding="utf-8")
+    for banned in ("fetch_remote", "download_assets", "urlopen", "urllib"):
+        assert banned not in ui_src
+
+
+# --- 세팅 자동 측정: 게임에 대한 접근 범위 ------------------------------------
+def test_gamewatch_never_touches_game_process_or_input():
+    """자동 측정은 창 정보 조회와 화면 픽셀 읽기만 한다."""
+    import ast
+    from pathlib import Path
+    import wuwastat
+
+    src = (Path(wuwastat.__file__).parent / "gamewatch.py").read_text(encoding="utf-8")
+    code = ast.unparse(ast.parse(src))  # 주석과 문서 문자열의 설명 문구는 검사에서 뺀다
+    tree = ast.parse(src)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Expr) and isinstance(getattr(node, "value", None), ast.Constant):
+            node.value.value = ""
+    code = ast.unparse(tree)
+    banned = ("SendInput", "keybd_event", "mouse_event", "PostMessage", "SendMessage", "SetForegroundWindow",
+              "OpenProcess", "ReadProcessMemory", "WriteProcessMemory", "VirtualAlloc", "CreateRemoteThread",
+              "SetWindowsHookEx", "LoadLibrary", "kernel32", "keyboard", "pyautogui", "pydirectinput",
+              "urllib", "socket", "requests", ".save(")
+    for b in banned:
+        assert b not in code, b
+    used = set(__import__("re").findall(r"user32\.(\w+)", code))
+    assert used <= {"IsWindow", "GetClientRect", "ClientToScreen", "GetForegroundWindow", "IsIconic",
+                    "GetClassNameW", "IsWindowVisible", "GetWindowTextLengthW", "GetWindowTextW", "EnumWindows"}, used
+
+
+def test_game_window_detection_by_title_and_class():
+    from wuwastat.gamewatch import is_game_window
+
+    assert is_game_window("Wuthering Waves  ", "UnrealWindow")
+    assert is_game_window("명조", "SomethingElse")  # 제목이 정확히 게임 이름
+    assert not is_game_window("Wuthering Waves 공략 - Chrome", "Chrome_WidgetWin_1")
+    assert not is_game_window("명조 육성 등급 계산기 v0.1.0", "Qt6QWindowIcon")
