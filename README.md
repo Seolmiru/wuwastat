@@ -38,17 +38,21 @@ python -m venv .venv
 
 ## 캐릭터 데이터
 
-`data/characters.json`에는 [명조 공식 공략 사이트](https://wuwaguide.kurogames.com/ko/)에서 가져온 캐릭터별 정보가 들어 있습니다.
+[명조 공식 공략 사이트](https://wuwaguide.kurogames.com/ko/)에서 캐릭터마다 추천 수가 가장 많은 한국어 공략을 가져옵니다.
 
-- 추천 스탯 (예: 크리티컬 ≥ 70%, 크리티컬 피해 ≥ 240%, 공명 효율 ≥ 120%)
-- 코스트별 추천 에코 메인옵션, 메인 에코, 세트
-- 서브옵션 우선순위 (예: `크확/크피>공격력 백분율>강공격 피해 보너스>공명 효율`)
+| 파일 | 내용 | 저장소 |
+|---|---|---|
+| `data/characters.json` | 계산에 필요한 숫자와 이름만: 추천 스탯 수치, 코스트별 추천 메인옵션, 서브옵션 우선순위, 메인 에코·세트·무기·공명 체인 이름 | 포함 |
+| `data/characters.local.json` | 앱에서 `캐릭터 데이터 업데이트`를 누르면 받는 전체 데이터 (공략 설명 글, 무기·공명 체인 효과 문구 포함) | 제외 (.gitignore) |
 
-캐릭터마다 추천 수가 가장 많은 한국어 공략을 씁니다. 새 캐릭터가 나오면 앱의
-`캐릭터 데이터 업데이트` 버튼을 누르거나 아래 명령을 실행하세요.
+앱은 `characters.local.json`이 있으면 그것을 씁니다. 공명 체인 효과 문구가 필요한 **돌파 효율 계산은 업데이트를 한 번 한 뒤에**
+동작합니다. 공략 설명 글은 작성자와 쿠로게임즈의 저작물이므로 저장소에는 올리지 않습니다.
+
+명령으로 업데이트하려면:
 
 ```
-.venv\Scripts\python -m wuwastat.scraper
+.venv\Scripts\python -m wuwastat.scraper                 # 전체 데이터 → data/characters.local.json
+.venv\Scripts\python -m wuwastat.scraper --export-slim   # 저장소용 data/characters.json 도 함께 갱신
 ```
 
 ## 점수 계산

@@ -5,3 +5,4 @@ __pycache__/
 pytest-cache-files-*/
 data/*.tmp
 .idea/
+data/characters.local.json

@@ -28,7 +28,9 @@ from . import stats as S
 
 API_BASES = ["https://guide-server.aki-game.net", "https://guide-server-1.aki-game.net"]
 GUIDE_PAGE = "https://wuwaguide.kurogames.com/ko/?role_id={id}"
-DEFAULT_OUTPUT = Path(__file__).resolve().parent.parent / "data" / "characters.json"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DEFAULT_OUTPUT = DATA_DIR / "characters.local.json"  # 전체 데이터 (저장소 제외)
+BUNDLED_OUTPUT = DATA_DIR / "characters.json"  # 저장소용: 숫자와 이름만
 PREFERRED_LANG = "ko"
 
 # roleAttribute.gbId 앞부분 → 스탯 키 (다른 언어 공략일 때 이름 대신 사용)
@@ -352,16 +354,58 @@ def save(data: dict, path: Path = DEFAULT_OUTPUT) -> Path:
     return path
 
 
+def slim(data: dict) -> dict:
+    """저장소에 올릴 데이터: 계산에 쓰는 숫자와 이름만 남기고 공략 설명 글은 뺀다.
+
+    빼는 것: 공략 제목·작성자, 서브옵션 우선순위 원문, 무기 효과·추천 설명, 공명 체인 효과·추천 설명, 이미지 주소.
+    빠진 내용은 앱에서 '캐릭터 데이터 업데이트'를 누르면 공식 사이트에서 받아 로컬 파일에만 저장한다.
+    """
+    chars = []
+    for c in data.get("characters", []):
+        g = c.get("guide")
+        chars.append({
+            "id": c["id"],
+            "name": c.get("name", ""),
+            "name_en": c.get("name_en", ""),
+            "star": c.get("star"),
+            "element": c.get("element", ""),
+            "source_url": c.get("source_url", ""),
+            "guide": {k: g.get(k) for k in ("id", "language", "likes", "modified_at")} if g else None,
+            "targets": [{k: t[k] for k in ("stat", "value", "op")} for t in c.get("targets", [])],
+            "echo_slots": c.get("echo_slots", []),
+            "main_echo": c.get("main_echo", ""),
+            "sonata": c.get("sonata", []),
+            "substat_priority": c.get("substat_priority", []),
+            "weapons": [{k: w.get(k) for k in ("name", "star", "recommended", "signature")}
+                        for w in c.get("weapons", [])],
+            "chains": [{k: ch.get(k) for k in ("seq", "name", "core")} for ch in c.get("chains", [])],
+            **({"stale": True} if c.get("stale") else {}),
+        })
+    return {
+        "source": data.get("source"),
+        "fetched_at": data.get("fetched_at"),
+        "count": len(chars),
+        "slim": True,
+        "characters": chars,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="공식 공략 사이트에서 캐릭터 추천 스탯 수집")
-    ap.add_argument("-o", "--output", type=Path, default=DEFAULT_OUTPUT)
+    ap.add_argument("-o", "--output", type=Path, default=DEFAULT_OUTPUT,
+                    help="전체 데이터 저장 위치 (기본: data/characters.local.json, 저장소 제외)")
+    ap.add_argument("--export-slim", action="store_true",
+                    help="저장소용 data/characters.json (숫자와 이름만)도 함께 갱신")
     args = ap.parse_args(argv)
 
     def progress(i: int, n: int, name: str) -> None:
         print(f"[{i}/{n}] {name}", flush=True)
 
-    data = scrape_all(progress, previous=load_previous(args.output))
+    previous = load_previous(args.output) or load_previous(BUNDLED_OUTPUT)
+    data = scrape_all(progress, previous=previous)
     path = save(data, args.output)
+    if args.export_slim:
+        print(f"저장소용 데이터 저장: {save(slim(data), BUNDLED_OUTPUT)}")
     no_guide = [c["name"] for c in data["characters"] if not c["guide"]]
     print(f"저장 완료: {path} ({data['count']}명)")
     if no_guide:

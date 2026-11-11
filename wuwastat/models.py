@@ -8,7 +8,19 @@ from pathlib import Path
 
 from . import stats as S
 
-DEFAULT_DATA = Path(__file__).resolve().parent.parent / "data" / "characters.json"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+# 저장소에 포함된 기본 데이터: 숫자(추천 스탯 등)와 이름만 담는다
+BUNDLED_DATA = DATA_DIR / "characters.json"
+# '캐릭터 데이터 업데이트'로 받은 전체 데이터 (공략 설명 글 포함). 저장소에 올리지 않는다 (.gitignore)
+LOCAL_DATA = DATA_DIR / "characters.local.json"
+
+
+def data_path() -> Path:
+    """업데이트로 받은 전체 데이터가 있으면 그것을, 없으면 저장소 기본 데이터를 쓴다."""
+    return LOCAL_DATA if LOCAL_DATA.exists() else BUNDLED_DATA
+
+
+DEFAULT_DATA = BUNDLED_DATA  # 예전 이름 호환
 
 
 @dataclass
@@ -131,8 +143,8 @@ class Build:
     chain: int | None = None  # 공명 체인(돌파) 단계 0~6
 
 
-def load_characters(path: Path = DEFAULT_DATA) -> tuple[list[Character], dict]:
-    raw = json.loads(Path(path).read_text(encoding="utf-8"))
+def load_characters(path: Path | None = None) -> tuple[list[Character], dict]:
+    raw = json.loads(Path(path or data_path()).read_text(encoding="utf-8"))
     chars = [Character.from_dict(c) for c in raw.get("characters", [])]
     meta = {k: v for k, v in raw.items() if k != "characters"}
     return chars, meta

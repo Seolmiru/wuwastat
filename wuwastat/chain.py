@@ -192,6 +192,8 @@ def estimate_one(description: str, shares: dict[str, float], ctx: StatContext) -
 
 
 def estimate_chains(char: Character, totals: dict[str, float] | None = None) -> list[ChainEstimate]:
+    if not any(c.description for c in char.chains):
+        return []  # 효과 문구가 없는 데이터 (저장소 기본 데이터) → 업데이트 후 계산
     shares = skill_shares(char)
     ctx = StatContext.from_totals(totals or {})
     out = []

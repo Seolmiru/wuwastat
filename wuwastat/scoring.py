@@ -347,6 +347,8 @@ def chain_summary(char: Character, seq: int, limit: int = 120) -> str:
     if m:
         return m.group(1).strip()
     desc = next((c.description for c in char.chains if c.seq == seq), "").replace("\n", " ")
+    if not desc:
+        return "효과 설명은 '캐릭터 데이터 업데이트' 후에 볼 수 있습니다."
     return desc if len(desc) <= limit else desc[:limit].rstrip() + "…"
 
 
@@ -485,7 +487,7 @@ def _apply_chain(ev: Evaluation, char: Character, build: Build, weights: dict[st
     if not char.chains:
         return
     ev.chain_estimates = estimate_chains(char, build.totals)
-    if build.chain is None:
+    if build.chain is None or not ev.chain_estimates:
         return
     gain = cumulative_gain(ev.chain_estimates, build.chain)
     per_line = _line_dps_gain(weights, build.totals)

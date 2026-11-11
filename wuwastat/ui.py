@@ -24,7 +24,7 @@ from PySide6.QtWidgets import (
 
 from . import __version__
 from . import stats as S
-from .models import DEFAULT_DATA, Build, Character, Echo, StatLine, load_characters
+from .models import LOCAL_DATA, Build, Character, Echo, StatLine, data_path, load_characters
 from .scoring import Evaluation, evaluate
 
 IMAGE_FILTER = "이미지 (*.png *.jpg *.jpeg *.bmp *.webp)"
@@ -111,8 +111,8 @@ def _ocr_echo(image, progress):
 
 def _scrape(progress):
     from .scraper import load_previous, save, scrape_all
-    data = scrape_all(lambda i, n, name: progress((i, n, name)), previous=load_previous(DEFAULT_DATA))
-    save(data, DEFAULT_DATA)
+    data = scrape_all(lambda i, n, name: progress((i, n, name)), previous=load_previous(data_path()))
+    save(data, LOCAL_DATA)
     return data
 
 
@@ -460,8 +460,10 @@ class CharacterInfo(QTextBrowser):
                          "기본 딜러 기준(크리티컬 > 공격력% > 공명 효율)으로 계산합니다.</p>")
         else:
             g = c.guide
-            parts.append(f"<p><b>공략</b>: <a href='{e(c.source_url)}'>{e(g.get('title') or '')}</a><br>"
-                         f"<span style='color:gray'>작성: {e(g.get('author') or '-')} · 추천 {g.get('likes', 0)}</span></p>")
+            title = g.get("title") or "공식 공략 사이트에서 보기"
+            author = f"작성: {e(g['author'])} · " if g.get("author") else ""
+            parts.append(f"<p><b>공략</b>: <a href='{e(c.source_url)}'>{e(title)}</a><br>"
+                         f"<span style='color:gray'>{author}추천 {g.get('likes', 0)}</span></p>")
         if c.targets:
             parts.append("<h3>추천 스탯 (Lv.90)</h3><ul>")
             for t in c.targets:
@@ -476,8 +478,10 @@ class CharacterInfo(QTextBrowser):
         if c.main_echo or c.sonata:
             parts.append(f"<h3>에코 세트</h3><p>메인 에코: {e(c.main_echo or '-')}<br>"
                          f"세트: {e(', '.join(c.sonata) or '-')}</p>")
-        if c.substat_priority_text:
-            parts.append(f"<h3>서브옵션 우선순위</h3><p>{e(c.substat_priority_text)}</p>")
+        prio = c.substat_priority_text or " > ".join(
+            " / ".join(S.label(k) for k in tier) for tier in c.substat_priority)
+        if prio:
+            parts.append(f"<h3>서브옵션 우선순위</h3><p>{e(prio)}</p>")
         if c.weapons:
             parts.append("<h3>추천 무기</h3><ol>")
             for w in c.weapons:
@@ -559,6 +563,9 @@ class ResultsPanel(QWidget):
         cap = ("<br><span style='color:#e67e22'>추천 스탯을 모두 채우지 못해 등급이 A로 제한됐습니다</span>"
                if ev.grade_capped else "")
         chain = ""
+        if ev.character.chains and not ev.chain_estimates:
+            chain = ("<br><span style='color:gray'>돌파 효율은 '캐릭터 데이터 업데이트'로 공명 체인 효과 문구를 "
+                     "받은 뒤에 계산합니다.</span>")
         if ev.chain_estimates:
             per = " · ".join(f"{e.seq}돌 +{e.gain * 100:.0f}%{'*' if e.estimated_default else ''}"
                              for e in ev.chain_estimates)
@@ -696,11 +703,11 @@ class MainWindow(QMainWindow):
 
     # ----- 데이터 -----
     def load_data(self) -> None:
-        if not DEFAULT_DATA.exists():
+        if not data_path().exists():
             self.info.setHtml("<p>캐릭터 데이터가 없습니다. <b>캐릭터 데이터 업데이트</b>를 눌러 공식 공략 사이트에서 받아오세요.</p>")
             QTimer.singleShot(300, self._ask_initial_update)
             return
-        self.characters, self.meta = load_characters(DEFAULT_DATA)
+        self.characters, self.meta = load_characters(data_path())
         # 모든 캐릭터 공략에 나온 세트 이름 (그 외 세트를 고를 수 있게)
         self.all_sets = sorted({n for c in self.characters for n in c.sonata_names})
         prev = self.current.id if self.current else None

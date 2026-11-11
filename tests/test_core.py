@@ -305,3 +305,53 @@ def test_scraper_drops_unsafe_role_ids(monkeypatch):
     monkeypatch.setattr(scraper, "_get", lambda path, lang="ko", timeout=20: avatars if "avatar" in path else [])
     data = scraper.scrape_all(workers=1)
     assert [c["id"] for c in data["characters"]] == ["1208"]
+
+
+# --- 저장소용 데이터 (숫자와 이름만) --------------------------------------------
+def test_slim_keeps_only_numbers_and_names():
+    from wuwastat.scraper import slim
+
+    full = {"source": "s", "fetched_at": "t", "characters": [{
+        "id": "1", "name": "이름", "name_en": "Name", "star": 5, "element": "fusion", "icon": "http://img",
+        "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1",
+        "guide": {"id": 9, "language": "ko", "title": "작성자 공략 제목", "author": "작성자", "likes": 3, "modified_at": 1},
+        "targets": [{"stat": "crit_rate", "value": 70.0, "op": ">=", "label": "크리티컬"}],
+        "echo_slots": [{"cost": 4, "main": "crit_rate"}], "main_echo": "에코", "sonata": ["세트 5세트"],
+        "substat_priority": [["crit_rate"]], "substat_priority_text": "공략 원문",
+        "weapons": [{"name": "무기", "star": 5, "recommended": True, "signature": True, "effect": "효과 원문"}],
+        "weapon_text": "무기 추천 원문",
+        "chains": [{"seq": 1, "name": "체인", "description": "효과 원문", "core": True}],
+        "chain_text": "돌파 추천 원문",
+    }]}
+    out = slim(full)
+    text = str(out)
+    for leaked in ("원문", "작성자", "http://img"):
+        assert leaked not in text
+    c = out["characters"][0]
+    assert c["targets"] == [{"stat": "crit_rate", "value": 70.0, "op": ">="}]
+    assert c["weapons"][0] == {"name": "무기", "star": 5, "recommended": True, "signature": True}
+    assert c["chains"][0] == {"seq": 1, "name": "체인", "core": True}
+
+
+def test_bundled_data_has_no_guide_text():
+    import json
+    from wuwastat.models import BUNDLED_DATA
+
+    data = json.loads(BUNDLED_DATA.read_text(encoding="utf-8"))
+    assert data.get("slim") is True and data["count"] >= 50
+    banned = {"substat_priority_text", "weapon_text", "chain_text", "description", "effect", "title", "author", "icon"}
+    for c in data["characters"]:
+        keys = set(c) | {k for w in c.get("weapons", []) for k in w} | {k for ch in c.get("chains", []) for k in ch}
+        keys |= set(c.get("guide") or {})
+        assert not keys & banned, (c["name"], keys & banned)
+
+
+def test_chain_estimate_needs_full_data():
+    from wuwastat.chain import estimate_chains
+    from wuwastat.models import Chain
+
+    c = phoebe()
+    c.chains = [Chain(1, "a", "", True)]  # 저장소 기본 데이터: 효과 문구 없음
+    assert estimate_chains(c) == []
+    ev = evaluate(c, Build({S.CRIT_RATE: 62.0}, [], chain=1))
+    assert ev.chain_gain is None and ev.chain_grade is None
