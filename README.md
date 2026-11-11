@@ -10,6 +10,8 @@
 
 ## 설치 (권장: 포터블 ZIP)
 
+지인용 자세한 안내: [docs/INSTALL.md](docs/INSTALL.md) · 배포 절차: [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)
+
 Python이나 Git을 설치할 필요가 없습니다.
 
 1. [Releases](../../releases) 페이지에서 `wuwastat-<버전>-win64.zip`을 내려받습니다.
