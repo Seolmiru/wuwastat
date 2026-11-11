@@ -175,7 +175,7 @@ def test_unmet_target_caps_grade_at_a():
     ev = evaluate(c, Build({S.CRIT_RATE: 69.9, S.CRIT_DMG: 300.0}, [top] * 5))
     assert ev.total_score >= 80 and ev.grade == "A" and ev.grade_capped
     ev2 = evaluate(c, Build({S.CRIT_RATE: 70.0, S.CRIT_DMG: 300.0}, [top] * 5))
-    assert ev2.grade in ("S", "SS", "SSS") and not ev2.grade_capped
+    assert ev2.grade == "S" and not ev2.grade_capped
 
 
 def test_energy_regen_advice_is_substat_only():
@@ -453,3 +453,31 @@ def test_app_icon_bundled():
     assert {(16, 16), (32, 32), (48, 48), (256, 256)} <= set(ico.info["sizes"])
     ico.size = (32, 32)
     assert len(set(ico.convert("RGBA").getdata())) <= 32  # 32px는 색 수를 줄인 도트 그림
+
+
+def test_echo_grade_is_pure_roll_quality():
+    from wuwastat.scoring import roll_score, roll_tier
+    c = phoebe()
+    maxed = echo(4, (S.CRIT_DMG, 44.0), (S.DEF_PCT, 14.7), (S.HP_PCT, 11.6), (S.ENERGY_REGEN, 12.4),
+                 (S.BASIC_DMG, 10.9), (S.HP_FLAT, 320))
+    assert roll_tier(S.DEF_PCT, 14.7) == "최상" and roll_tier(S.HP_FLAT, 320) is None
+    assert evaluate_echo(c, maxed, 0).grade == "S"  # 쓸모없는 옵션이어도 수치가 높으면 S
+    low = echo(4, (S.CRIT_DMG, 44.0), (S.CRIT_RATE, 6.3), (S.CRIT_DMG, 13.8), (S.ATK_PCT, 7.1), (S.ENERGY_REGEN, 6.8))
+    assert roll_score(low) < 45 and evaluate_echo(c, low, 0).grade == "C"
+
+
+def test_all_targets_met_guarantees_s():
+    c = phoebe()
+    junk = echo(4, (S.CRIT_DMG, 44.0), (S.DEF_FLAT, 50), (S.HP_FLAT, 430), (S.HP_PCT, 8.6), (S.DEF_PCT, 10.9), (S.ATK_FLAT, 40))
+    ev = evaluate(c, Build({S.CRIT_RATE: 70.0, S.CRIT_DMG: 300.0}, [junk] * 5))
+    assert 90 <= ev.total_score < 92 and ev.grade == "S"
+
+
+def test_user_extra_substats_count_as_useful():
+    c = phoebe()
+    c.substat_priority = [[S.CRIT_RATE, S.CRIT_DMG], [S.ATK_PCT]]
+    assert substat_weights(c).get(S.HEAVY_DMG, 0) == 0
+    c.extra_substats = [S.HEAVY_DMG]
+    assert substat_weights(c)[S.HEAVY_DMG] > 0
+    e = echo(4, (S.CRIT_DMG, 44.0), (S.HEAVY_DMG, 9.4))
+    assert not any("쓸모없는" in n for n in evaluate_echo(c, e, 0).notes)

@@ -4,13 +4,18 @@
 - 서브옵션 가치 = Σ (값 / 최대 롤 값 × 우선순위 가중치). 메인옵션이 추천과 다르면 ×0.6.
 - 이 가치를 '새 에코를 끝까지 강화했을 때 나올 수 있는 모든 에코' 분포와 비교해 백분위로 바꾼다.
   분포는 쿠로게임즈 공식 확률(서브옵션 13종 균등·중복 없음, 수치별 확률)로 계산한다.
-- 에코 점수 = 백분위 (예: 상위 10% 에코 = 90점). 유효 옵션 4~5줄 같은 에코는 극히 드물기 때문에
-  절대 기준 대신 '얼마나 얻기 어려운 에코인가'로 평가한다.
+- 에코 점수 = 백분위 (예: 상위 10% 에코 = 90점). 종합 점수와 교체 우선순위에 쓴다.
+
+에코 등급 (순수 수치)
+- 유효 옵션과 무관하게 % 서브옵션 각 줄이 공식 수치표 8단계(최하/중옵/상옵/최상) 중 어디인지만 본다.
+- 줄 점수 = (단계+1)/8×100, 평균 → S ≥ 90, A ≥ 80, B ≥ 70, 그 아래 C (종합 등급과 동일). 고정 수치 옵션은 제외.
 
 종합 점수
 - 목표 달성도 = 100 - (부족한 수치를 서브옵션 줄 수로 환산한 값 × 12)
 - 에코 항목 = 에코 평균 백분위를 50점(아무 에코 수준)→0, 95점(모두 상위 5%)→100 으로 환산
 - 종합 = 목표 달성도 50% + 에코 항목 50%
+- 종합 등급: S ≥ 90, A ≥ 80, B ≥ 70, 그 아래 C
+- 추천 스탯을 모두 채우면 최소 90점(S), 90~100점은 에코 항목으로 나눈다
 - 추천 스탯을 하나라도 못 채우면 등급은 최대 A
 """
 
@@ -35,10 +40,12 @@ ECHO_FULL_SCORE = 95.0  # 에코 평균 백분위가 이 이상이면 에코 항
 GOOD_ECHO_PERCENTILE = 92.0  # 교체 목표로 삼는 에코 수준 (상위 8%, S급)
 UNMET_GRADE_CAP = "A"
 
-GRADES = [(95, "SSS"), (88, "SS"), (80, "S"), (70, "A"), (60, "B"), (45, "C"), (0, "D")]
-# 에코 등급: 백분위 기준 (SSS 상위 1%, SS 상위 3%, S 상위 8%, A 상위 20%, B 상위 40%, C 상위 65%)
-ECHO_GRADES = [(99, "SSS"), (97, "SS"), (92, "S"), (80, "A"), (60, "B"), (35, "C"), (0, "D")]
-GRADE_ORDER = ["D", "C", "B", "A", "S", "SS", "SSS"]
+GRADES = [(90, "S"), (80, "A"), (70, "B"), (0, "C")]
+# 에코 등급: 유효 옵션과 무관한 '순수 수치' 점수 기준 (roll_score, 0~100)
+ECHO_GRADES = GRADES  # 종합 등급과 같은 기준 (S ≥ 90, A ≥ 80, B ≥ 70, 그 아래 C)
+GRADE_ORDER = ["C", "B", "A", "S"]
+# 수치 단계 (공식 수치표의 8단계를 2개씩 묶음)
+ROLL_TIERS = ["최하", "중옵", "상옵", "최상"]
 CRIT_PAIR = {S.CRIT_RATE, S.CRIT_DMG}
 
 
@@ -60,6 +67,11 @@ def substat_weights(char: Character) -> dict[str, float]:
         tw = TIER_WEIGHTS[min(i, len(TIER_WEIGHTS) - 1)]
         for key in tier:
             w.setdefault(key, tw)
+    # 유저가 직접 추가한 유효 옵션: 공략 우선순위 바로 다음 등급으로 본다
+    extra_w = TIER_WEIGHTS[min(len(priority), len(TIER_WEIGHTS) - 1)]
+    for key in char.extra_substats:
+        if key in S.SUBSTAT_MAX:
+            w.setdefault(key, extra_w)
     # 총 스탯 목표에 있지만 우선순위 문구에 없는 스탯 (예: HP 목표)
     for t in char.targets:
         key = {S.ATK: S.ATK_PCT, S.HP: S.HP_PCT, S.DEF: S.DEF_PCT}.get(t.stat, t.stat)
@@ -78,6 +90,28 @@ def _ideal(weights: dict[str, float]) -> float:
 def substat_value(stat: str, value: float, weights: dict[str, float]) -> float:
     mx = S.SUBSTAT_MAX.get(stat)
     return weights.get(stat, 0.0) * min(value / mx, 1.2) if mx else 0.0
+
+
+def roll_index(stat: str, value: float) -> int | None:
+    """서브옵션 수치가 공식 수치표 8단계 중 몇 번째(0~7)인지. 가장 가까운 값으로 맞춘다."""
+    rolls = S.SUBSTAT_ROLLS.get(stat)
+    if not rolls or stat in S.FLAT_TO_PCT:  # 고정 수치 옵션은 % 수치표에 없으므로 제외
+        return None
+    return min(range(len(rolls)), key=lambda i: abs(rolls[i] - value))
+
+
+def roll_tier(stat: str, value: float) -> str | None:
+    i = roll_index(stat, value)
+    return None if i is None else ROLL_TIERS[i // 2]
+
+
+def roll_score(echo: Echo) -> float | None:
+    """유효 옵션과 무관하게 % 서브옵션 수치만 보고 매기는 점수 (0~100).
+
+    각 줄 = (단계 + 1) / 8 × 100 → 최하 12.5/25, 중옵 37.5/50, 상옵 62.5/75, 최상 87.5/100. 평균을 낸다.
+    """
+    pts = [(i + 1) / 8 * 100 for l in echo.substats if (i := roll_index(l.stat, l.value)) is not None]
+    return sum(pts) / len(pts) if pts else None
 
 
 # ---------------------------------------------------------------------------
@@ -155,6 +189,7 @@ class EchoEval:
     recommended_mains: list[str]
     substats: list[SubstatEval]
     notes: list[str] = field(default_factory=list)
+    roll_score: float | None = None  # 유효 옵션과 무관한 순수 수치 점수 (등급 기준)
 
     @property
     def top_percent(self) -> float:
@@ -247,7 +282,9 @@ def evaluate_echo(char: Character, echo: Echo, index: int, weights: dict[str, fl
         notes.append("쓸모없는 서브옵션: " + ", ".join(f"{S.label(s.stat)} {S.fmt(s.stat, s.value)}" for s in useless))
     if weights.get(S.CRIT_RATE, 0) >= 0.8 and not any(s.stat in CRIT_PAIR for s in subs):
         notes.append("크리티컬 계열 서브옵션이 없습니다")
-    return EchoEval(index, echo, score, raw, grade_of(score, ECHO_GRADES), main_ok, rec, subs, notes)
+    rs = roll_score(echo)
+    grade = grade_of(rs, ECHO_GRADES) if rs is not None else "-"
+    return EchoEval(index, echo, score, raw, grade, main_ok, rec, subs, notes, rs)
 
 
 # ---------------------------------------------------------------------------
@@ -396,6 +433,17 @@ def combine(target_score: float | None, echo_score: float | None) -> float:
     return sum(s * w for s, w in parts) / sum(w for _, w in parts) if parts else 0.0
 
 
+MET_FLOOR = 90.0  # 추천 스탯을 모두 채우면 받는 최소 점수 (S)
+
+
+def total_score(target_score: float | None, echo_score: float | None, all_met: bool) -> float:
+    """추천 스탯을 모두 채우면 90점(S) 보장, 그 위 10점은 에코 품질로 나눈다. 아니면 combine 그대로."""
+    if all_met:
+        echo = echo_component(echo_score) if echo_score is not None else 100.0
+        return MET_FLOOR + (100 - MET_FLOOR) * echo / 100
+    return combine(target_score, echo_score)
+
+
 def evaluate(char: Character, build: Build) -> Evaluation:
     weights = substat_weights(char)
 
@@ -408,9 +456,10 @@ def evaluate(char: Character, build: Build) -> Evaluation:
     echoes = [evaluate_echo(char, e, i, weights) for i, e in enumerate(build.echoes)]
     echo_score = sum(e.score for e in echoes) / len(echoes) if echoes else None
 
-    total = combine(target_score, echo_score)
-    grade = grade_of(total)
     unmet = [t for t in known if not t.achieved]
+    all_met = bool(known) and not unmet
+    total = total_score(target_score, echo_score, all_met)
+    grade = grade_of(total)
     capped = bool(unmet) and cap_grade(grade, UNMET_GRADE_CAP) != grade
     if unmet:
         grade = cap_grade(grade, UNMET_GRADE_CAP)
@@ -431,15 +480,15 @@ def evaluate(char: Character, build: Build) -> Evaluation:
     want_subs = "크리티컬/크리티컬 피해" if weights.get(S.CRIT_RATE, 0) >= 0.8 else \
         ", ".join(S.label(k) for k, v in sorted(weights.items(), key=lambda kv: -kv[1])[:2])
     missing_names = [t.label for t in unmet]
-    good_label = f"상위 {100 - GOOD_ECHO_PERCENTILE:.0f}%({grade_of(GOOD_ECHO_PERCENTILE, ECHO_GRADES)}급)"
+    good_label = f"상위 {100 - GOOD_ECHO_PERCENTILE:.0f}%"
     for rank, e in enumerate(replace_order[:3]):
         if e.score >= GOOD_ECHO_PERCENTILE and e.main_ok:
             break
-        new_total = combine(target_score, (echo_score or 0) + max(GOOD_ECHO_PERCENTILE - e.score, 0) / n)
+        new_total = total_score(target_score, all_met=all_met, echo_score=(echo_score or 0) + max(GOOD_ECHO_PERCENTILE - e.score, 0) / n)
         beat = 100 - e.score  # 새 에코가 이보다 좋을 확률
         want_main = ", ".join(S.label(m) for m in e.recommended_mains) or "-"
         needs = _replacement_needs(e.echo, targets, e.main_ok)
-        detail = (f"상위 {e.top_percent:.0f}% 수준({e.grade}) 에코입니다. 새 에코를 끝까지 강화하면 "
+        detail = (f"상위 {e.top_percent:.0f}% 수준 에코입니다. 새 에코를 끝까지 강화하면 "
                   f"약 {beat:.0f}% 확률로 이보다 좋은 에코가 나옵니다. "
                   f"메인옵션 {want_main}에 서브옵션 {want_subs}가 붙은 에코를 노리세요."
                   + (f" 이 에코의 서브옵션이 빠지므로, 목표를 채우려면 새 에코 서브옵션에 {needs}이(가) 필요합니다." if needs else "")

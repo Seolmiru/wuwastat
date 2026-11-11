@@ -70,6 +70,7 @@ class Character:
     sonata: list[str] = field(default_factory=list)
     substat_priority: list[list[str]] = field(default_factory=list)
     substat_priority_text: str = ""
+    extra_substats: list[str] = field(default_factory=list)  # 공략에 없지만 유저가 유효하다고 추가한 옵션
     weapons: list[Weapon] = field(default_factory=list)
     weapon_text: str = ""
     chains: list[Chain] = field(default_factory=list)
