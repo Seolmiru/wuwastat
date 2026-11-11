@@ -35,7 +35,7 @@ ATTR_SCREEN_WORDS = ("속성", "상세정보")
 GAME_TITLES = ("Wuthering Waves", "鸣潮", "명조")
 GAME_WINDOW_CLASS = "UnrealWindow"  # 명조(언리얼 엔진) 게임 창의 창 클래스
 OWN_TITLE_MARKERS = ("등급 계산기", "wuwastat")
-POLL_INTERVAL = 0.5
+POLL_INTERVAL = 0.2
 ECHO_COUNT = 5
 
 
@@ -222,6 +222,79 @@ def is_complete_echo(e: Echo) -> bool:
 # ---------------------------------------------------------------------------
 # 감시 루프
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# 빠른 화면 판별: 화면 전체 대신 정해진 작은 영역만 읽는다 (게임 창 크기에 대한 비율, 16:9 기준)
+# ---------------------------------------------------------------------------
+REGION_ATTR_HEADER = (0.00, 0.00, 0.25, 0.12)  # '속성 상세정보' 제목
+REGION_ATTR_PANEL = (0.00, 0.10, 0.34, 0.62)   # 캐릭터 이름 + 스탯 6줄
+REGION_ECHO_SEARCH = (0.55, 0.00, 1.00, 0.55)  # 에코 상세 패널이 나오는 오른쪽 위
+# 화면이 멈췄는지 볼 영역: 움직이는 캐릭터·에코 모델을 피해 글자가 있는 곳만
+STABLE_ATTR = (0.23, 0.32, 0.31, 0.57)  # 스탯 숫자 열 (캐릭터 그림이 겹쳐도 영향이 작은 곳)
+STABLE_ECHO = (0.74, 0.08, 1.00, 0.50)
+STABLE_DIFF = 6.0      # 축소 그림의 평균 밝기 차이가 이보다 작으면 '멈춤'
+SAME_DIFF = 3.0        # 속성 화면: 이미 읽은 화면과 이보다 작게 다르면 다시 읽지 않음
+SAME_PANEL_DIFF = 1.5  # 에코: 상세 패널 그림이 이보다 작게 다르면 같은 에코 (다른 에코는 7 이상, 잡음은 0.2 정도)
+TOTALS_RETRY = 3       # 총 스탯이 덜 읽히면 조용히 다시 읽는 횟수
+
+CORE_TOTALS = (S.HP, S.ATK, S.DEF, S.ENERGY_REGEN, S.CRIT_RATE, S.CRIT_DMG)
+PLAUSIBLE = {  # 레벨 90 캐릭터 총 스탯으로 그럴듯한 범위
+    S.HP: (2000, 80000), S.ATK: (200, 8000), S.DEF: (200, 8000),
+    S.ENERGY_REGEN: (100, 400), S.CRIT_RATE: (5, 130), S.CRIT_DMG: (150, 600),
+}
+
+
+def crop_rel(img: Image.Image, box: tuple[float, float, float, float]) -> Image.Image:
+    w, h = img.size
+    return img.crop((int(box[0] * w), int(box[1] * h), int(box[2] * w), int(box[3] * h)))
+
+
+def thumb(img: Image.Image, box: tuple[float, float, float, float]):
+    import numpy as np
+    return np.asarray(crop_rel(img, box).convert("L").resize((64, 40)), dtype=np.float32)
+
+
+def panel_thumb(img: Image.Image, box: tuple[int, int, int, int]):
+    import numpy as np
+    return np.asarray(img.crop(box).convert("L").resize((96, 80)), dtype=np.float32)
+
+
+def thumb_diff(a, b) -> float:
+    import numpy as np
+    if a is None or b is None or a.shape != b.shape:
+        return 255.0
+    return float(np.abs(a - b).mean())
+
+
+def classify_screen(img: Image.Image) -> tuple[str | None, list[Word]]:
+    """'attr' (속성 상세정보) / 'echo' (에코 상세 패널) / None. 에코면 검색 영역의 단어(전체 좌표)도 돌려준다."""
+    head_img = crop_rel(img, REGION_ATTR_HEADER)
+    for variant in ("mask", "raw"):  # 흰 제목 글자: 색 마스크가 가장 정확하고, 안 되면 원본으로 한 번 더
+        text = _norm("".join(w.text for w in recognize(head_img, variant=variant)))
+        if all(k in text for k in ATTR_SCREEN_WORDS):
+            return "attr", []
+    region = crop_rel(img, REGION_ECHO_SEARCH)
+    ox, oy = int(REGION_ECHO_SEARCH[0] * img.width), int(REGION_ECHO_SEARCH[1] * img.height)
+    words = [Word(w.text, w.x + ox, w.y + oy, w.w, w.h) for w in recognize(region, variant="clean")]
+    if echo_panel_box(img.size, words):
+        return "echo", words
+    return None, []
+
+
+def totals_complete(totals: dict[str, float]) -> bool:
+    return all(k in totals and PLAUSIBLE[k][0] <= totals[k] <= PLAUSIBLE[k][1] for k in CORE_TOTALS)
+
+
+def read_attribute_panel(img: Image.Image, characters: list[Character]) -> tuple[Character | None, str, dict]:
+    """속성 화면의 왼쪽 스탯 패널만 잘라 캐릭터 이름과 총 스탯을 읽는다."""
+    panel = crop_rel(img, REGION_ATTR_PANEL)
+    char, seen = detect_character(recognize(panel, variant="clean"), characters, panel.width)
+    totals = totals_from_lines(read_lines(panel, mode="totals"))
+    return char, seen, totals
+
+
+# ---------------------------------------------------------------------------
+# 감시 루프
+# ---------------------------------------------------------------------------
 @dataclass
 class WatchState:
     character_id: str | None = None
@@ -235,10 +308,14 @@ EventFn = Callable[[tuple], None]
 
 def watch(characters: list[Character], emit: EventFn, cancel: Callable[[], bool],
           interval: float = POLL_INTERVAL) -> WatchState:
-    """감시를 시작한다. 이벤트:
+    """자동 측정을 시작한다. 이벤트:
     ("status", 메시지)
     ("character", 캐릭터 ID 또는 None, 화면에서 읽은 이름, 총 스탯)
     ("echo", 번호(0~4), Echo)
+
+    1. 작은 영역만 읽어 화면 종류를 판별한다 (속성 화면 제목 / 오른쪽 위 에코 패널).
+    2. 글자가 있는 영역의 축소 그림이 연속 두 번 거의 같을 때(화면 전환이 끝났을 때)만 읽는다.
+    3. 한 번 읽은 화면과 같으면 다시 읽지 않는다. 총 스탯은 6개가 그럴듯하게 다 읽혔을 때만 내보낸다.
     """
     state = WatchState()
     win = find_game_window()
@@ -246,9 +323,10 @@ def watch(characters: list[Character], emit: EventFn, cancel: Callable[[], bool]
         raise WatchError("명조 게임 창을 찾지 못했습니다. 게임을 실행한 뒤 다시 시도하세요.")
     emit(("status", "자동 측정 중: 게임에서 캐릭터의 속성 상세정보 화면을 여세요."))
 
-    last_panel_text = None
-    last_attr_text = None
-    pending: tuple | None = None  # 에코 화면 전환 중 덜 그려진 화면을 피하려고 두 번 연속 같으면 확정
+    prev = {"attr": None, "echo": None}   # 직전 프레임의 축소 그림
+    done = {"attr": None, "echo": None}   # 마지막으로 읽은 화면의 축소 그림
+    attr_tries = 0
+    attr_best: dict[str, float] = {}
 
     while not cancel():
         time.sleep(interval)
@@ -259,41 +337,52 @@ def watch(characters: list[Character], emit: EventFn, cancel: Callable[[], bool]
         img = capture(win)
         if img is None:
             continue
-        words = recognize_tiled(img)
+        kind, words = classify_screen(img)
+        if kind is None:
+            prev = {"attr": None, "echo": None}
+            continue
+        t = thumb(img, STABLE_ATTR if kind == "attr" else STABLE_ECHO)
+        moving = thumb_diff(t, prev[kind]) > STABLE_DIFF
+        prev[kind] = t
+        if moving:
+            continue  # 화면이 바뀌는 중: 다음 프레임에서 멈췄는지 다시 본다
+        if kind == "attr" and thumb_diff(t, done["attr"]) < SAME_DIFF:
+            continue  # 이미 읽은 화면
 
-        if is_attribute_screen(words, img.height):
-            pending = None
-            key = _norm("".join(w.text for w in words if w.cx < img.width * 0.45))
-            if key == last_attr_text:
-                continue
-            last_attr_text = key
-            char, seen = detect_character(words, characters, img.width)
-            emit(("status", f"캐릭터 화면 인식: {seen or '이름 확인 불가'} · 총 스탯 읽는 중"))
-            totals = totals_from_lines(read_lines(img, mode="totals"))
+        if kind == "attr":
+            emit(("status", "캐릭터 화면 읽는 중"))
+            char, seen, totals = read_attribute_panel(img, characters)
+            for k, v in totals.items():  # 여러 번 읽으면 그럴듯한 값만 모은다
+                lo, hi = PLAUSIBLE.get(k, (float("-inf"), float("inf")))
+                if lo <= v <= hi:
+                    attr_best[k] = v
+            if not totals_complete(attr_best) and attr_tries < TOTALS_RETRY:
+                attr_tries += 1
+                continue  # 덜 읽혔으면 내보내지 않고 다음 프레임에서 다시
+            done["attr"], attr_tries = t, 0
+            totals, attr_best = dict(attr_best), {}
             cid = char.id if char else None
+            if cid == state.character_id and totals == state.totals:
+                continue  # 같은 캐릭터 화면을 다시 읽은 것: 내보내지 않는다
             if cid != state.character_id:  # 다른 캐릭터로 바뀌면 에코를 새로 모은다
                 state.echoes.clear()
                 state.signatures.clear()
             state.character_id, state.totals = cid, totals
             emit(("character", cid, seen, totals))
-            emit(("status", "총 스탯을 읽었습니다. 에코 화면으로 넘어가 에코를 하나씩 클릭하세요."))
+            missing = [S.label(k) for k in CORE_TOTALS if k not in totals]
+            emit(("status", "총 스탯을 읽었습니다. 에코 화면으로 넘어가 에코를 하나씩 클릭하세요."
+                  + (f" (읽지 못한 스탯: {', '.join(missing)})" if missing else "")))
             continue
 
-        panel = find_echo_panel(img, words)
-        if panel is None:
-            pending = None
-            continue
-        panel_text = _norm("".join(w.text for w in recognize(panel, variant="clean")))
-        if panel_text == last_panel_text:
-            continue  # 화면이 그대로면 다시 읽지 않는다
-        if pending != panel_text:
-            pending = panel_text  # 한 번 더 같은 화면이 보이면 읽는다
-            continue
-        last_panel_text = panel_text
+        box = echo_panel_box(img.size, words)
+        pt = panel_thumb(img, box)
+        if thumb_diff(pt, done["echo"]) < SAME_PANEL_DIFF:
+            continue  # 이미 읽은 에코 화면 (다른 에코를 클릭하면 패널 글자가 바뀐다)
+        done["echo"] = pt
         emit(("status", "에코 읽는 중"))
-        echo = read_echo_panel(panel)
+        echo = read_echo_panel(img.crop(box))
         if not is_complete_echo(echo):
-            emit(("status", "에코를 읽지 못했습니다. 에코 상세 정보가 잘 보이게 해 주세요."))
+            done["echo"] = None  # 다음 프레임에서 다시 시도
             continue
         sig = echo_signature(echo)
         if sig in state.signatures:

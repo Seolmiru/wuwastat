@@ -70,7 +70,7 @@ def _game_frames():
     f = ImageFont.truetype("C:/Windows/Fonts/malgunbd.ttf", 26)
     d.text((105, 52), "속성 상세정보", font=f, fill=(235, 235, 235))
     d.text((212, 200), "갈브레나", font=f, fill=(235, 235, 235))
-    frames = [attr]
+    frames = [attr, attr]  # 같은 화면이 두 번 연속 보여야(화면 전환이 끝나야) 읽는다
     # 코로사우루스는 다른 에코를 본 뒤 한 번 더 연다 → 중복으로 세지 않아야 한다
     order = ["echo_leviathan", "echo_corosaurus", "echo_chameleon", "echo_corosaurus",
              "echo_chameleon_fluid", "echo_drake"]
@@ -149,7 +149,7 @@ def test_watch_loop_on_real_game_screens(monkeypatch):
 
     attr = Image.open(FIXTURES / "game_attr_fox.png").convert("RGB")
     echo = Image.open(FIXTURES / "game_echo_fox.png").convert("RGB")
-    frames = iter([attr, echo, echo])
+    frames = iter([attr, attr, echo, echo])
     win = G.GameWindow(1, "Wuthering Waves", 0, 0, *attr.size)
     monkeypatch.setattr(G, "find_game_window", lambda: win)
     monkeypatch.setattr(G.GameWindow, "refresh", lambda self: True)
@@ -170,3 +170,31 @@ def test_watch_loop_on_real_game_screens(monkeypatch):
     assert char_ev[1] == "1311" and char_ev[3][S.CRIT_RATE] == 75.4  # 여우의 별자리
     echoes = [e[2] for e in events if e[0] == "echo"]
     assert len(echoes) == 1 and echoes[0].main.value == 44.0
+
+
+def test_watch_skips_transition_frames_and_emits_once(monkeypatch):
+    """화면 전환 중(흐린 화면)은 읽지 않고, 같은 캐릭터 화면이 계속 보여도 결과는 한 번만 내보낸다."""
+    from PIL import Image
+    from wuwastat import gamewatch as G
+    from wuwastat.models import load_characters
+
+    attr = Image.open(FIXTURES / "game_attr_fox.png").convert("RGB")
+    faded = Image.blend(attr, Image.new("RGB", attr.size, (0, 0, 0)), 0.55)  # 페이드 인 중인 화면
+    seq = [faded, attr, attr, attr, attr]
+    calls = {"n": 0}
+
+    def capture(w):
+        calls["n"] += 1
+        return seq[min(calls["n"] - 1, len(seq) - 1)]
+
+    win = G.GameWindow(1, "Wuthering Waves", 0, 0, *attr.size)
+    monkeypatch.setattr(G, "find_game_window", lambda: win)
+    monkeypatch.setattr(G.GameWindow, "refresh", lambda self: True)
+    monkeypatch.setattr(G.GameWindow, "is_foreground", property(lambda self: True))
+    monkeypatch.setattr(G, "capture", capture)
+    events = []
+    G.watch(load_characters()[0], events.append, cancel=lambda: calls["n"] >= len(seq), interval=0)
+    chars = [e for e in events if e[0] == "character"]
+    assert len(chars) == 1
+    assert chars[0][3] == {S.HP: 15899, S.ATK: 2090, S.DEF: 1553,
+                           S.ENERGY_REGEN: 110.0, S.CRIT_RATE: 75.4, S.CRIT_DMG: 264.8}
