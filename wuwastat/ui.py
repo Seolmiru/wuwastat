@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 import io
 import json
+import re
 import sys
 import traceback
 from dataclasses import asdict
@@ -39,6 +40,31 @@ def builds_dir() -> Path:
     p = base / "builds"
     p.mkdir(parents=True, exist_ok=True)
     return p
+
+
+SAFE_ID = re.compile(r"[0-9A-Za-z_-]{1,32}")
+ALLOWED_LINK_HOSTS = {"wuwaguide.kurogames.com"}
+
+
+def build_file(char_id: str) -> Path | None:
+    """캐릭터별 입력 저장 파일. ID는 원격 데이터에서 오므로 경로 문자를 허용하지 않는다."""
+    if not SAFE_ID.fullmatch(char_id or ""):
+        return None
+    return builds_dir() / f"{char_id}.json"
+
+
+def open_link(url: QUrl) -> None:
+    """캐릭터 정보의 링크는 공식 공략 사이트(https)만 연다."""
+    if url.scheme() == "https" and url.host() in ALLOWED_LINK_HOSTS:
+        QDesktopServices.openUrl(url)
+
+
+def plain_label(text: str = "") -> QLabel:
+    """OCR 결과나 오류 문구를 보여주는 라벨: HTML로 해석하지 않는다."""
+    lb = QLabel(text)
+    lb.setTextFormat(Qt.PlainText)
+    lb.setWordWrap(True)
+    return lb
 
 
 def qimage_to_pil(img: QImage) -> Image.Image:
@@ -200,7 +226,7 @@ class EchoEditor(DropMixin, QFrame):
             self.subs.append((c, v))
         grid.setColumnStretch(1, 1)
         lay.addLayout(grid)
-        self.status = QLabel("에코 상세 화면 스크린샷을 열거나, 이 영역에 끌어다 놓거나, Ctrl+V로 붙여넣으세요.")
+        self.status = plain_label("에코 상세 화면 스크린샷을 열거나, 이 영역에 끌어다 놓거나, Ctrl+V로 붙여넣으세요.")
         self.status.setWordWrap(True)
         self.status.setStyleSheet("color: gray;")
         lay.addWidget(self.status)
@@ -307,7 +333,7 @@ class TotalsEditor(DropMixin, QGroupBox):
             self.table.setItem(r, 2, t)
         self.table.setMinimumHeight(260)
         lay.addWidget(self.table)
-        self.status = QLabel("캐릭터 속성 상세 화면 스크린샷을 열거나 끌어다 놓으세요. 0은 미입력으로 처리됩니다.")
+        self.status = plain_label("캐릭터 속성 상세 화면 스크린샷을 열거나 끌어다 놓으세요. 0은 미입력으로 처리됩니다.")
         self.status.setWordWrap(True)
         self.status.setStyleSheet("color: gray;")
         lay.addWidget(self.status)
@@ -420,7 +446,7 @@ class CharacterInfo(QTextBrowser):
     def __init__(self):
         super().__init__()
         self.setOpenLinks(False)
-        self.anchorClicked.connect(QDesktopServices.openUrl)
+        self.anchorClicked.connect(open_link)
 
     def show_character(self, c: Character | None) -> None:
         if c is None:
@@ -744,13 +770,18 @@ class MainWindow(QMainWindow):
         self.schedule_eval()
 
     def build_path(self) -> Path | None:
-        return builds_dir() / f"{self.current.id}.json" if self.current else None
+        return build_file(self.current.id) if self.current else None
 
     def load_build(self) -> None:
         self._loading = True
         try:
             p = self.build_path()
-            data = json.loads(p.read_text(encoding="utf-8")) if p and p.exists() else {}
+            try:
+                data = json.loads(p.read_text(encoding="utf-8")) if p and p.exists() else {}
+                if not isinstance(data, dict):
+                    data = {}
+            except (OSError, ValueError):
+                data = {}  # 손상된 저장 파일은 무시하고 빈 입력으로 시작
             self.totals.set_totals(data.get("totals", {}))
             self.gear.set_values(data.get("weapon", ""), data.get("sonata", []), data.get("chain"))
             echoes = data.get("echoes", [])

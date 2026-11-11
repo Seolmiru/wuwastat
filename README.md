@@ -23,6 +23,8 @@ python -m venv .venv
 **필요 조건**
 - Windows 10/11
 - Python 3.11 이상
+- 프로젝트 폴더는 짧은 경로에 두세요 (예: `C:\wuwastat`). 경로가 길면 Windows 경로 길이 제한(260자) 때문에
+  PySide6 설치가 실패할 수 있습니다.
 - Windows 한국어 OCR 언어팩 (한국어 Windows에는 보통 기본으로 설치돼 있습니다.
   없으면 설정 > 시간 및 언어 > 언어 > 한국어 > 언어 옵션에서 설치)
 
@@ -91,6 +93,23 @@ python -m venv .venv
 
 돌파 반영 점수 = 종합 점수 + (0돌 대비 DPS 증가율을 우선순위 1순위 서브옵션 몇 줄 분량인지로 환산 × 6점).
 추천 스탯을 못 채우면 돌파 반영 등급도 최대 A입니다.
+
+## 개발
+
+```
+.venv\Scripts\pip install -r requirements-dev.txt
+.venv\Scripts\python -m pytest tests
+```
+
+패키지 버전은 `requirements.txt`에 검증한 버전으로 고정되어 있습니다. 올릴 때는 테스트를 통과하는지 확인한 뒤 바꾸세요.
+
+## 개인정보와 보안
+
+- 스크린샷은 PC 안에서만 처리합니다 (Windows 내장 OCR). 외부로 전송하지 않습니다.
+- 인터넷 통신은 `캐릭터 데이터 업데이트`를 누를 때 공식 공략 서버(`guide-server.aki-game.net`)에 HTTPS로
+  요청하는 것뿐입니다. 응답은 10MB로 제한하고, 캐릭터 ID는 숫자만 받습니다.
+- 입력값은 `%APPDATA%\wuwastatuilds`에 캐릭터별 JSON으로 저장합니다. 파일이 손상되면 무시하고 새로 시작합니다.
+- 캐릭터 정보의 링크는 공식 공략 사이트(https)만 엽니다.
 
 ## 구조
 

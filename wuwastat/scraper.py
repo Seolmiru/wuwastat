@@ -46,6 +46,8 @@ ECHO_MAIN_GBID = {
     "251": S.AERO_DMG, "261": S.SPECTRO_DMG, "271": S.HAVOC_DMG,
     "100072": S.ATK_PCT, "100022": S.HP_PCT, "100102": S.DEF_PCT,
 }
+MAX_RESPONSE_BYTES = 10 * 1024 * 1024
+ROLE_ID_RE = re.compile(r"\d{1,8}")  # 캐릭터 ID는 숫자만 (저장 파일 이름과 URL에 쓰인다)
 OPERATIONS = {1: "=", 2: "!=", 3: "<", 4: ">", 5: "<=", 6: ">="}
 
 
@@ -66,7 +68,12 @@ def _get(path: str, lang: str = PREFERRED_LANG, timeout: float = 20) -> Any:
         )
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
-                body = json.load(resp)
+                raw = resp.read(MAX_RESPONSE_BYTES + 1)
+            if len(raw) > MAX_RESPONSE_BYTES:
+                raise ApiError(f"{path}: 응답이 너무 큽니다")
+            body = json.loads(raw.decode("utf-8"))
+            if not isinstance(body, dict):
+                raise ApiError(f"{path}: 예상과 다른 응답 형식")
         except Exception as e:  # 네트워크 오류면 다음 도메인으로
             last = e
             continue
@@ -296,10 +303,11 @@ def load_previous(path: Path = DEFAULT_OUTPUT) -> dict | None:
 def scrape_all(progress: Callable[[int, int, str], None] | None = None, workers: int = 4,
                previous: dict | None = None) -> dict:
     """previous: 이전 수집 결과. 공식 목록에서 빠진 캐릭터도 공략이 남아 있으면 계속 수집한다."""
-    avatars = _get("/role/avatar/list")
+    avatars = [a for a in (_get("/role/avatar/list") or [])
+               if isinstance(a, dict) and ROLE_ID_RE.fullmatch(str(a.get("roleGbId", "")))]
     listed = {str(a["roleGbId"]) for a in avatars}
     for rec in (previous or {}).get("characters", []):
-        if str(rec["id"]) not in listed:
+        if str(rec["id"]) not in listed and ROLE_ID_RE.fullmatch(str(rec["id"])):
             avatars.append(_avatar_from_record(rec))
     results: list[dict] = [None] * len(avatars)  # type: ignore[list-item]
     errors: list[str] = []

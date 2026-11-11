@@ -273,3 +273,35 @@ def test_chain_score_not_added_to_stats():
     assert ev2.total_score == ev0.total_score  # 기본 점수/스탯은 그대로
     assert ev2.chain_score > ev0.chain_score
     assert ev2.chain_estimates[1].estimated_default
+
+
+# --- 보안: 외부 데이터 방어 ----------------------------------------------------
+def test_build_file_rejects_path_characters():
+    from wuwastat.ui import build_file
+
+    assert build_file("1208").name == "1208.json"
+    for bad in ("../evil", "..\evil", "a/b", "C:x", "", "1" * 40):
+        assert build_file(bad) is None
+
+
+def test_open_link_only_official_https(monkeypatch):
+    from PySide6.QtCore import QUrl
+    from wuwastat import ui
+
+    opened = []
+    monkeypatch.setattr(ui.QDesktopServices, "openUrl", lambda u: opened.append(u.toString()))
+    ui.open_link(QUrl("https://wuwaguide.kurogames.com/ko/?role_id=1"))
+    ui.open_link(QUrl("http://wuwaguide.kurogames.com/"))
+    ui.open_link(QUrl("https://evil.example.com/"))
+    ui.open_link(QUrl("file:///C:/Windows/System32/cmd.exe"))
+    assert opened == ["https://wuwaguide.kurogames.com/ko/?role_id=1"]
+
+
+def test_scraper_drops_unsafe_role_ids(monkeypatch):
+    from wuwastat import scraper
+
+    avatars = [{"roleGbId": "1208", "texts": [{"language": "ko", "name": "정상"}]},
+               {"roleGbId": "../../x", "texts": [{"language": "ko", "name": "이상"}]}]
+    monkeypatch.setattr(scraper, "_get", lambda path, lang="ko", timeout=20: avatars if "avatar" in path else [])
+    data = scraper.scrape_all(workers=1)
+    assert [c["id"] for c in data["characters"]] == ["1208"]
