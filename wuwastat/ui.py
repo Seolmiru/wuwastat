@@ -26,6 +26,7 @@ from . import __version__
 from . import stats as S
 from .models import LOCAL_DATA, Build, Character, Echo, StatLine, data_path, load_characters
 from . import scoring as sc
+from . import updater
 from .scoring import Evaluation, evaluate
 
 IMAGE_FILTER = "이미지 (*.png *.jpg *.jpeg *.bmp *.webp)"
@@ -161,6 +162,10 @@ class Worker(QRunnable):
             self.signals.error.emit(f"{type(e).__name__}: {e}")
         else:
             self.signals.done.emit(result)
+
+
+def _check_release(progress):
+    return updater.check_latest()
 
 
 def _ocr_totals(image, progress):
@@ -788,8 +793,11 @@ class MainWindow(QMainWindow):
         bar.addSpacing(12)
         self.b_multi = QPushButton("에코 스크린샷 여러 장 열기")
         self.b_update = QPushButton("캐릭터 데이터 업데이트")
+        self.b_app_update = QPushButton("프로그램 업데이트 확인")
+        self.b_app_update.setToolTip("GitHub에서 새 버전을 확인합니다. 서명이 확인된 공식 배포 파일만 설치합니다.")
         bar.addWidget(self.b_multi)
         bar.addWidget(self.b_update)
+        bar.addWidget(self.b_app_update)
         root.addLayout(bar)
 
         watch_bar = QHBoxLayout()
@@ -880,7 +888,115 @@ class MainWindow(QMainWindow):
         self.b_watch.toggled.connect(self.toggle_watch)
         QShortcut(QKeySequence.Paste, self, activated=self.paste_current)
 
+        self._release: updater.Release | None = None  # 설치할 수 있는 새 버전
+        self.b_app_update.clicked.connect(self.on_app_update)
+        updater.cleanup_leftovers(updater.portable_root())
+        QTimer.singleShot(2000, lambda: self.check_app_update(silent=True))
+
         self.load_data()
+
+    # ----- 프로그램 업데이트 -----
+    def check_app_update(self, silent: bool) -> None:
+        """새 버전 확인. silent=True(시작 시)면 새 버전이 있을 때만 버튼으로 알린다."""
+        w = Worker(_check_release)
+
+        def done(rel: updater.Release) -> None:
+            if not updater.is_newer(rel.version):
+                if not silent:
+                    QMessageBox.information(self, "프로그램 업데이트", f"최신 버전(v{__version__})을 쓰고 있습니다.")
+                return
+            if not rel.signed:
+                if not silent:
+                    QMessageBox.information(self, "프로그램 업데이트",
+                                            f"새 버전 v{rel.version}이 올라왔지만 아직 서명 파일이 준비되지 않았습니다.\n"
+                                            "잠시 후 다시 확인해 주세요.")
+                return
+            self._release = rel
+            self.b_app_update.setText(f"새 버전 v{rel.version} 설치")
+            self.b_app_update.setStyleSheet(f"QPushButton {{ background: {WARN_COLOR}; color: white; font-weight: bold; }}")
+            self.statusBar().showMessage(f"새 버전 v{rel.version}이 있습니다. 상단의 '새 버전 설치' 버튼으로 업데이트하세요.")
+            if not silent:
+                self.install_app_update()
+
+        def err(m: str) -> None:
+            if not silent:
+                QMessageBox.warning(self, "프로그램 업데이트", f"새 버전을 확인하지 못했습니다.\n{m}")
+
+        w.signals.done.connect(done)
+        w.signals.error.connect(err)
+        self.start_worker(w)
+
+    def on_app_update(self) -> None:
+        if self._release is not None:
+            self.install_app_update()
+        else:
+            self.check_app_update(silent=False)
+
+    def install_app_update(self) -> None:
+        rel = self._release
+        if rel is None:
+            return
+        root = updater.portable_root()
+        if root is None:
+            if QMessageBox.question(self, "프로그램 업데이트",
+                                    f"새 버전 v{rel.version}이 있습니다.\n소스 코드로 실행 중이라 자동 설치는 할 수 없습니다. "
+                                    "릴리즈 페이지를 열까요?") == QMessageBox.Yes:
+                QDesktopServices.openUrl(QUrl(rel.page_url))
+            return
+        box = QMessageBox(self)
+        box.setWindowTitle("프로그램 업데이트")
+        box.setTextFormat(Qt.PlainText)
+        box.setText(f"새 버전 v{rel.version}을 설치할까요? (지금 v{__version__})")
+        box.setInformativeText("내려받은 파일의 서명을 확인한 뒤 설치하고 프로그램을 다시 시작합니다.\n"
+                               "입력 기록과 설정은 그대로 남습니다.")
+        if rel.notes.strip():
+            box.setDetailedText(rel.notes.strip())
+        box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        if box.exec() != QMessageBox.Yes:
+            return
+
+        dlg = QProgressDialog("새 버전을 내려받는 중...", None, 0, 100, self)
+        dlg.setWindowTitle("프로그램 업데이트")
+        dlg.setWindowModality(Qt.WindowModal)
+        dlg.setMinimumDuration(0)
+        dlg.show()
+        w = Worker(updater.prepare_update, rel, root)
+        labels = {"sig": "서명 파일을 받는 중...", "verify": "서명을 확인하는 중...", "extract": "압축을 푸는 중..."}
+
+        def prog(p) -> None:
+            stage, done_, total = p
+            if stage == "download":
+                if total:
+                    dlg.setMaximum(100)
+                    dlg.setValue(min(int(done_ * 100 / total), 99))
+                dlg.setLabelText(f"새 버전을 내려받는 중... {done_ / 1048576:.1f}"
+                                 + (f" / {total / 1048576:.1f} MB" if total else " MB"))
+            else:
+                dlg.setMaximum(0)
+                dlg.setLabelText(labels.get(stage, ""))
+
+        def done(plan: updater.Plan) -> None:
+            dlg.close()
+            # 안내 창을 먼저 띄운다: 적용기는 시작하자마자 이 프로그램이 끝나기를 기다리기 때문
+            QMessageBox.information(self, "프로그램 업데이트",
+                                    f"v{plan.version} 설치를 위해 프로그램을 닫습니다. 잠시 후 새 버전이 자동으로 실행됩니다.")
+            try:
+                updater.launch_apply(plan)
+            except OSError as e:
+                QMessageBox.warning(self, "업데이트 실패", f"업데이트를 시작하지 못했습니다: {e}")
+                return
+            self.close()
+            QApplication.quit()
+
+        def err(m: str) -> None:
+            dlg.close()
+            QMessageBox.warning(self, "업데이트 실패",
+                                f"{m}\n\n직접 받으려면 릴리즈 페이지에서 새 ZIP을 받으세요:\n{rel.page_url}")
+
+        w.signals.progress.connect(prog)
+        w.signals.done.connect(done)
+        w.signals.error.connect(err)
+        self.start_worker(w)
 
     # ----- 데이터 -----
     def load_data(self) -> None:

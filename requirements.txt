@@ -11,3 +11,7 @@ winrt-Windows.Graphics.Imaging==4!10.0.28000.2957
 winrt-Windows.Media.Ocr==4!10.0.28000.2957
 winrt-Windows.Storage==4!10.0.28000.2957
 winrt-Windows.Storage.Streams==4!10.0.28000.2957
+# 프로그램 업데이트 서명 확인 (Ed25519)
+cryptography==50.0.2
+cffi==2.1.1
+pycparser==3.12

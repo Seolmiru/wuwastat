@@ -7,3 +7,8 @@ data/*.tmp
 .idea/
 data/characters.local.json
 build/
+
+# 서명 비밀 키는 저장소에 두지 않는다
+*.pem
+_update/
+_update_backup/
