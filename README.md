@@ -108,7 +108,7 @@ python -m venv .venv
 - 스크린샷은 PC 안에서만 처리합니다 (Windows 내장 OCR). 외부로 전송하지 않습니다.
 - 인터넷 통신은 `캐릭터 데이터 업데이트`를 누를 때 공식 공략 서버(`guide-server.aki-game.net`)에 HTTPS로
   요청하는 것뿐입니다. 응답은 10MB로 제한하고, 캐릭터 ID는 숫자만 받습니다.
-- 입력값은 `%APPDATA%\wuwastatuilds`에 캐릭터별 JSON으로 저장합니다. 파일이 손상되면 무시하고 새로 시작합니다.
+- 입력값은 `%APPDATA%\wuwastat\builds`에 캐릭터별 JSON으로 저장합니다. 파일이 손상되면 무시하고 새로 시작합니다.
 - 캐릭터 정보의 링크는 공식 공략 사이트(https)만 엽니다.
 
 ## 구조
