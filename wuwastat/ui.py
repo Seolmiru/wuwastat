@@ -109,6 +109,11 @@ def _ocr_echo(image, progress):
     return parse_echo(image, progress=progress)
 
 
+def _watch(characters, cancel, progress):
+    from .gamewatch import watch
+    return watch(characters, progress, cancel)
+
+
 def _scrape(progress):
     from .scraper import load_previous, save, scrape_all
     data = scrape_all(lambda i, n, name: progress((i, n, name)), previous=load_previous(data_path()))
@@ -657,6 +662,21 @@ class MainWindow(QMainWindow):
         bar.addWidget(self.b_update)
         root.addLayout(bar)
 
+        watch_bar = QHBoxLayout()
+        self.b_watch = QPushButton("게임 화면 감시 시작")
+        self.b_watch.setCheckable(True)
+        self.b_watch.setToolTip(
+            "명조 창 화면을 읽기만 해서 캐릭터 화면의 스탯과 에코 화면의 에코를 자동으로 채웁니다.\n"
+            "게임에 클릭이나 키 입력을 보내지 않고, 캡처한 화면은 저장하지 않습니다.")
+        watch_bar.addWidget(self.b_watch)
+        self.watch_label = plain_label(
+            "감시를 시작한 뒤 게임에서 캐릭터 속성 화면을 열고, 에코 화면에서 에코 5개를 차례로 클릭하세요.")
+        self.watch_label.setStyleSheet("color: gray;")
+        watch_bar.addWidget(self.watch_label, 1)
+        root.addLayout(watch_bar)
+        self._watch_stop = None
+        self._watch_cleared = False
+
         split = QSplitter(Qt.Horizontal)
         self.info = CharacterInfo()
         split.addWidget(self.info)
@@ -697,6 +717,7 @@ class MainWindow(QMainWindow):
         self.totals.ocr_requested.connect(self.ocr_totals)
         self.b_update.clicked.connect(self.update_data)
         self.b_multi.clicked.connect(self.open_many_echoes)
+        self.b_watch.toggled.connect(self.toggle_watch)
         QShortcut(QKeySequence.Paste, self, activated=self.paste_current)
 
         self.load_data()
@@ -869,6 +890,75 @@ class MainWindow(QMainWindow):
             if then:
                 then()
         self._start_ocr(_ocr_echo, image, done, ed.status)
+
+    # ----- 게임 화면 감시 -----
+    def toggle_watch(self, on: bool) -> None:
+        import threading
+
+        if not on:
+            if self._watch_stop:
+                self._watch_stop.set()
+            self.b_watch.setText("게임 화면 감시 시작")
+            return
+        if not self.characters:
+            self.b_watch.setChecked(False)
+            return
+        self._watch_stop = threading.Event()
+        self._watch_cleared = False
+        self.b_watch.setText("감시 중지")
+        self.watch_label.setStyleSheet("color: #2980b9;")
+        self.watch_label.setText("게임 창을 찾는 중...")
+        w = Worker(_watch, self.characters, self._watch_stop.is_set)
+        w.signals.progress.connect(self._on_watch_event)
+        w.signals.done.connect(lambda state: self._watch_finished(None))
+        w.signals.error.connect(self._watch_finished)
+        self.start_worker(w)
+
+    def _on_watch_event(self, ev: tuple) -> None:
+        kind = ev[0]
+        if kind == "status":
+            self.watch_label.setText(ev[1])
+        elif kind == "character":
+            _, cid, seen, totals = ev
+            if cid and (not self.current or self.current.id != cid):
+                self.char_combo.setCurrentIndex(max(self.char_combo.findData(cid), 0))
+            elif not cid:
+                self.watch_label.setText(f"캐릭터 이름을 알아보지 못했습니다 ({seen or '-'}). 캐릭터를 직접 고르세요.")
+            self.totals.set_totals(totals)
+            self.totals.status.setText(f"게임 화면에서 {len(totals)}개 스탯을 읽었습니다. 값이 맞는지 확인하세요.")
+            self.totals.status.setStyleSheet("color: #27ae60;")
+            self._watch_cleared = False  # 새 캐릭터 화면을 읽었으면 다음 에코부터 새로 채운다
+        elif kind == "echo":
+            _, idx, echo = ev
+            if not self._watch_cleared:
+                for ed in self.echo_editors:
+                    ed.set_echo(Echo(cost=0))
+                    ed.status.setText("")
+                self._watch_cleared = True
+            ed = self.echo_editors[idx]
+            ed.set_echo(echo)
+            ed.status.setText(f"게임 화면에서 읽었습니다: {echo.name or '이름 없음'} · 코스트 {echo.cost or '?'}")
+            ed.status.setStyleSheet("color: #27ae60;")
+            self.echo_tabs.setCurrentIndex(idx)
+
+    def _watch_finished(self, error: str | None) -> None:
+        if error:
+            self.watch_label.setText(f"감시 종료: {error.split(': ', 1)[-1]}")
+            self.watch_label.setStyleSheet("color: #c0392b;")
+        elif self._watch_stop and self._watch_stop.is_set():
+            self.watch_label.setText("감시를 멈췄습니다.")
+            self.watch_label.setStyleSheet("color: gray;")
+        else:
+            self.watch_label.setStyleSheet("color: #27ae60;")
+        self.b_watch.blockSignals(True)
+        self.b_watch.setChecked(False)
+        self.b_watch.setText("게임 화면 감시 시작")
+        self.b_watch.blockSignals(False)
+
+    def closeEvent(self, e):  # noqa: N802
+        if self._watch_stop:
+            self._watch_stop.set()
+        super().closeEvent(e)
 
     def open_many_echoes(self) -> None:
         paths, _ = QFileDialog.getOpenFileNames(self, "에코 스크린샷 (최대 5장)", "", IMAGE_FILTER)

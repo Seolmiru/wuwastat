@@ -55,3 +55,51 @@ def test_echo_screens(fname):
     assert e.level == 25
     assert (e.main.stat, e.main.value) == main
     assert [(s.stat, s.value) for s in e.substats] == subs
+
+
+def _game_frames():
+    """속성 화면(갈브레나) → 에코 5개를 차례로 연 화면 (같은 에코를 다시 연 화면 포함)."""
+    from PIL import Image
+
+    base = Image.open(FIXTURES / "totals_galbrena.png").convert("RGB")
+    screen = Image.new("RGB", (1920, 1080), (25, 30, 40))
+    attr = screen.copy()
+    attr.paste(base, (180, 330))
+    from PIL import ImageDraw, ImageFont
+    d = ImageDraw.Draw(attr)
+    f = ImageFont.truetype("C:/Windows/Fonts/malgunbd.ttf", 26)
+    d.text((105, 52), "속성 상세정보", font=f, fill=(235, 235, 235))
+    d.text((212, 200), "갈브레나", font=f, fill=(235, 235, 235))
+    frames = [attr]
+    # 코로사우루스는 다른 에코를 본 뒤 한 번 더 연다 → 중복으로 세지 않아야 한다
+    order = ["echo_leviathan", "echo_corosaurus", "echo_chameleon", "echo_corosaurus",
+             "echo_chameleon_fluid", "echo_drake"]
+    for name in order:
+        fr = screen.copy()
+        fr.paste(Image.open(FIXTURES / f"{name}.png").convert("RGB"), (1250, 300))
+        frames += [fr, fr]  # 같은 화면이 두 번 연속 보여야 확정
+    return frames
+
+
+def test_watch_loop_reads_character_and_five_echoes(monkeypatch):
+    from wuwastat import gamewatch as G
+    from wuwastat.models import load_characters
+
+    frames = iter(_game_frames())
+    win = G.GameWindow(1, "Wuthering Waves", 0, 0, 1920, 1080)
+    monkeypatch.setattr(G, "find_game_window", lambda: win)
+    monkeypatch.setattr(G.GameWindow, "refresh", lambda self: True)
+    monkeypatch.setattr(G.GameWindow, "is_foreground", property(lambda self: True))
+    monkeypatch.setattr(G, "capture", lambda w: next(frames))
+    events = []
+    chars, _ = load_characters()
+    state = G.watch(chars, events.append, cancel=lambda: False, interval=0)
+
+    char_ev = next(e for e in events if e[0] == "character")
+    assert char_ev[1] == "1208"  # 갈브레나
+    assert char_ev[3][S.CRIT_DMG] == 267.4 and char_ev[3][S.ATK] == 2182
+    echo_names = [e[2].name for e in events if e[0] == "echo"]
+    assert echo_names == ["공명의 메아리 · 영식 · 레비아탄", "코로사우루스", "악몽 · 그린멜팅카멜레온",
+                          "악몽 · 그린멜팅카멜레온(유체)", "드레이크 · 전도"]
+    assert any(e[0] == "status" and "이미 읽은 에코" in e[1] for e in events)
+    assert len(state.echoes) == 5

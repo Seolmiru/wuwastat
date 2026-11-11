@@ -140,3 +140,28 @@ def recognize(image: Image.Image | str | Path, lang: str = "ko", variant: str = 
     if scale != 1.0:
         words = [Word(w.text, w.x / scale, w.y / scale, w.w / scale, w.h / scale) for w in words]
     return words
+
+
+def recognize_tiled(image: Image.Image, cols: int = 2, rows: int = 2, overlap: float = 0.12,
+                    lang: str = "ko", variant: str = "clean") -> list[Word]:
+    """큰 화면을 겹치는 조각으로 나눠 각각 확대해서 읽는다.
+
+    Windows OCR은 1080p 게임 화면을 통째로 읽으면 작은 글자를 많이 놓치지만,
+    작은 조각은 2배로 확대해서 읽으므로 정확하다. 겹치는 부분에서 두 번 읽힌 단어는 하나만 남긴다.
+    """
+    w, h = image.size
+    tw, th = w / cols, h / rows
+    ox, oy = tw * overlap, th * overlap
+    words: list[Word] = []
+    for r in range(rows):
+        for c in range(cols):
+            x0, y0 = int(max(c * tw - ox, 0)), int(max(r * th - oy, 0))
+            x1, y1 = int(min((c + 1) * tw + ox, w)), int(min((r + 1) * th + oy, h))
+            for wd in recognize(image.crop((x0, y0, x1, y1)), lang=lang, variant=variant):
+                words.append(Word(wd.text, wd.x + x0, wd.y + y0, wd.w, wd.h))
+    unique: list[Word] = []
+    for wd in sorted(words, key=lambda x: -len(x.text)):
+        if any(u.text == wd.text and abs(u.cx - wd.cx) < wd.h and abs(u.cy - wd.cy) < wd.h for u in unique):
+            continue
+        unique.append(wd)
+    return sorted(unique, key=lambda x: (x.y, x.x))
