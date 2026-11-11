@@ -19,9 +19,6 @@ Python이나 Git을 설치할 필요가 없습니다.
 3. 짧은 경로에 압축을 풉니다 (예: `C:\wuwastat`).
 4. `wuwastat.bat`을 더블클릭합니다.
 
-- 필요 조건: Windows 10/11 64비트, Windows 한국어 OCR 언어팩 (아래 참고)
-- 실행되는 프로그램은 ZIP 안의 `python\pythonw.exe`이며 Python 재단이 서명한 공식 파일입니다.
-  이 프로젝트가 만든 실행 파일(.exe)은 없어서 코드 서명 없이도 배포할 수 있습니다.
 - 업데이트: 새 버전 ZIP을 새 폴더에 풀어 쓰면 됩니다. 입력값은 `%APPDATA%\wuwastat\wuwastat\builds`에 그대로 남습니다.
 
 ## 실행 (소스에서, 개발자용)
@@ -56,7 +53,7 @@ python -m venv .venv
 
 스크린샷을 따로 찍지 않고, 게임 화면을 보면서 자동으로 채우는 방법입니다.
 
-1. 명조를 **창 모드나 테두리 없는 창 모드**로 실행합니다. (독점 전체 화면은 캡처가 검게 나올 수 있습니다)
+1. 명조를 실행합니다.
 2. 앱에서 `세팅 자동 측정 시작`을 누릅니다.
 3. 게임에서 캐릭터의 **속성 상세정보** 화면을 엽니다. 캐릭터 이름을 알아보고 총 스탯을 읽습니다.
    - 방랑자는 이름 대신 속성으로 구분합니다.
@@ -86,13 +83,6 @@ python -m venv .venv
   - 출처: 명조 공식 공략 사이트의 이미지 (쿠로게임즈 저작물)
 - 에코 초상화는 공식 공략에 추천으로 나오는 에코(현재 45종, 대부분 4코스트 메인 에코)만 있습니다.
   이미지가 없는 에코는 코스트만 표시합니다. OCR로 읽은 에코 이름이 한두 글자 틀려도 비슷한 이름으로 찾습니다.
-- 이미지를 새로 받을 때(개발자): `python -m wuwastat.scraper --export-slim --download-images`
-  (공식 CDN의 https 주소만 받고, 5MB 이하의 실제 이미지인지 확인한 뒤 160px PNG로 저장)
-
-## 아이콘
-
-갈브레나 초상화를 32×32 도트 그림으로 바꾼 아이콘입니다 (`assets/icon.ico`, `assets/icon.png`).
-다시 만들려면 `python tools/make_icon.py`를 실행하세요.
 
 ## 캐릭터 데이터
 
@@ -155,30 +145,6 @@ python -m venv .venv
 
 돌파 반영 점수 = 종합 점수 + (0돌 대비 DPS 증가율을 우선순위 1순위 서브옵션 몇 줄 분량인지로 환산 × 6점).
 추천 스탯을 못 채우면 돌파 반영 등급도 최대 A입니다.
-
-## 개발
-
-```
-.venv\Scripts\pip install -r requirements-dev.txt
-.venv\Scripts\python -m pytest tests
-```
-
-패키지 버전은 `requirements.txt`에 검증한 버전으로 고정되어 있습니다. 올릴 때는 테스트를 통과하는지 확인한 뒤 바꾸세요.
-
-## 배포 (새 버전 내기)
-
-1. `wuwastat/__init__.py`의 `__version__`을 올리고 커밋합니다 (예: `0.2.0`).
-2. 같은 이름의 태그를 만들어 올립니다.
-   ```
-   git tag v0.2.0
-   git push origin v0.2.0
-   ```
-3. GitHub Actions(`.github/workflows/release.yml`)가 테스트 → 포터블 ZIP 빌드 → Releases 업로드를 자동으로 합니다.
-   지인에게는 Releases 페이지 링크만 보내면 됩니다.
-
-직접 만들려면 `python tools/build_portable.py` → `build/wuwastat-<버전>-win64.zip`.
-빌드는 python.org의 공식 임베디드 Python을 받아 Python 재단 서명을 확인한 뒤, 고정된 버전의 패키지를 넣고
-쓰지 않는 Qt 구성요소(QML, 디자이너 도구 등)를 지웁니다.
 
 ## 개인정보와 보안
 
