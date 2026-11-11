@@ -29,7 +29,7 @@ from PIL import Image, ImageGrab
 from . import stats as S
 from .models import Character, Echo
 from .ocr import Word, recognize, recognize_tiled
-from .parser import echo_from_lines, group_rows, read_lines, totals_from_lines
+from .parser import echo_from_lines, group_rows, read_echo_header, read_lines, totals_from_lines
 
 ATTR_SCREEN_WORDS = ("속성", "상세정보")
 GAME_TITLES = ("Wuthering Waves", "鸣潮", "명조")
@@ -177,21 +177,35 @@ def find_echo_panel(img: Image.Image, words: list[Word]) -> Image.Image | None:
     1080p 에코 상세 패널에서 'COST' 글자 폭은 약 52px이고, 패널은 그 왼쪽 0.6배 ~ 오른쪽 7.4배,
     위쪽 1.3배(에코 이름 줄) ~ 아래쪽 6배(마지막 서브옵션 줄) 범위에 있다.
     """
-    cost = [w for w in words if "COST" in w.text.upper()]
-    if not cost:
-        return None
-    c = min(cost, key=lambda w: w.x)
+    box = echo_panel_box(img.size, words)
+    return img.crop(box) if box else None
+
+
+def _panel_box(c: Word, size: tuple[int, int]) -> tuple[int, int, int, int]:
     unit = c.w
     box = (c.x - 0.6 * unit, c.y - 1.3 * unit, c.x + 7.4 * unit, c.y + 6.0 * unit)
-    box = tuple(int(v) for v in (max(box[0], 0), max(box[1], 0), min(box[2], img.width), min(box[3], img.height)))
-    if box[2] - box[0] < unit * 3 or box[3] - box[1] < unit * 3:
-        return None
-    return img.crop(box)
+    return tuple(int(v) for v in (max(box[0], 0), max(box[1], 0), min(box[2], size[0]), min(box[3], size[1])))
+
+
+def echo_panel_box(size: tuple[int, int], words: list[Word]) -> tuple[int, int, int, int] | None:
+    """화면에 'COST'가 여러 곳(코스트 필터 탭, 'COST 12/12' 등)에 있을 수 있으므로,
+    바로 아래에 % 수치(메인옵션·서브옵션)가 가장 많이 붙어 있는 'COST'를 상세 패널로 고른다."""
+    best, best_score = None, 0
+    for c in (w for w in words if "COST" in w.text.upper()):
+        box = _panel_box(c, size)
+        if box[2] - box[0] < c.w * 3 or box[3] - box[1] < c.w * 3:
+            continue
+        score = sum(1 for w in words
+                    if "%" in w.text and box[0] <= w.cx <= box[2] and c.y + c.h <= w.cy <= box[3])
+        if score > best_score:
+            best, best_score = box, score
+    return best if best_score >= 2 else None
 
 
 def read_echo_panel(panel: Image.Image) -> Echo:
     lines = read_lines(panel, mode="echo")
-    header = "\n".join(r.text for r in group_rows(recognize(panel, variant="clean"))[:3])
+    name, level, cost = read_echo_header(panel)
+    header = f"{name} +{level}\nCOST {cost}" if level is not None else f"{name}\nCOST {cost}"
     return echo_from_lines(lines, header)
 
 

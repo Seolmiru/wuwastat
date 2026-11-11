@@ -19,7 +19,7 @@ from PIL import Image
 
 from . import stats as S
 from .models import Echo, StatLine
-from .ocr import VARIANTS, Word, recognize
+from .ocr import VARIANTS, Word, recognize, recognize_tiled
 
 NUM_RE = re.compile(r"(\d[\d,]*(?:\.\d+)?)\s*(%?)")
 MAX_LABEL_LEN = 14  # 스킬 설명처럼 긴 문장은 스탯 줄이 아니다
@@ -168,6 +168,7 @@ def merge_passes(passes: list[list[ParsedLine]], tol: float) -> list[ParsedLine]
 ProgressFn = Callable[[str], None]
 
 
+TILE_THRESHOLD = 1600
 PERCENT_ONLY = S.PERCENT_STATS - {S.ATK_PCT, S.HP_PCT, S.DEF_PCT}
 _HAS_DIGIT = re.compile(r"\d")
 
@@ -266,10 +267,15 @@ def read_lines(image: Image.Image | str | Path, mode: str = "echo", variants=VAR
     for v in variants:
         if progress:
             progress(f"글자 위치 찾기 ({v})")
-        passes.append(_label_rows(recognize(img, variant=v)))
+        # 게임 전체 화면처럼 큰 이미지는 조각으로 나눠 확대해서 읽는다 (통째로 읽으면 작은 글자를 놓친다)
+        words = recognize_tiled(img, variant=v) if max(img.size) > TILE_THRESHOLD else recognize(img, variant=v)
+        passes.append(_label_rows(words))
     rows = _merge_label_rows(passes)
     if not rows:
         return []
+    # 이름을 못 읽은 줄이 이름을 읽은 줄 바로 옆이면 같은 줄을 반쯤 읽은 것이다 → 버린다
+    known = [r for r in rows if r.family]
+    rows = [r for r in rows if r.family or all(abs(r.cy - k.cy) > 0.8 * k.h for k in known)]
 
     # 값은 오른쪽 정렬이므로 숫자 오른쪽 끝의 중앙값을 기준선으로 쓴다
     rights = [r.num_right for r in rows if r.num_right is not None]
@@ -399,25 +405,70 @@ def echo_from_lines(lines: list[ParsedLine], header_text: str = "", source: str 
 
 
 def parse_echo_header(header_text: str) -> tuple[str, int | None, int]:
-    """에코 상단 두 줄 '이름 +25' / 'COST 3' → (이름, 레벨, 코스트)"""
-    lines = [_fix_ocr_text(l) for l in header_text.splitlines()]
-    text = " ".join(lines)
-    m = COST_RE.search(text)
+    """에코 상단 '이름 +25' / 'COST 3' → (이름, 레벨, 코스트)
+
+    긴 이름은 두 줄로 나뉘므로('공명의 메아리 · 태초의 여우의 별자리 ·' / '천연 +25') COST 줄 위의 줄을 모두 잇는다.
+    '+25' 뒤에 붙는 글자는 잠금·즐겨찾기 아이콘을 잘못 읽은 것이라 버린다.
+    """
+    lines = [_fix_ocr_text(l).strip() for l in header_text.splitlines() if l.strip()]
+    cost_idx = next((i for i, l in enumerate(lines) if COST_RE.search(l)), None)
+    m = COST_RE.search(lines[cost_idx]) if cost_idx is not None else None
     cost = int(m.group(1)) if m and m.group(1) in "134" else 0
-    name, level = "", None
-    for line in lines:
+    name_lines = lines[:cost_idx] if cost_idx is not None else lines[:2]
+    parts, level = [], None
+    for line in name_lines:
         lv = re.search(r"\+\s?(\d{1,2})\b", line)
         if lv and int(lv.group(1)) <= 25:
             level = int(lv.group(1))
-            name = line[: lv.start()].strip(" ·-")
-            break
+            line = line[: lv.start()]
+        elif level is None and not re.search(r"[가-힣A-Za-z]{2,}", line):
+            continue  # 이름 줄이 아닌 잡음
+        parts.append(line.strip(" -"))
+    name = re.sub(r"\s*·\s*", " · ", " ".join(p for p in parts if p)).strip(" ·")
     return name, level, cost
+
+
+def _header_text(img: Image.Image, variant: str) -> str:
+    return "\n".join(r.text for r in group_rows(recognize(img, variant=variant))[:4])
+
+
+def snap_echo_name(candidates: list[str], known: list[str] | None = None) -> str:
+    """OCR로 읽은 에코 이름 후보들을 공식 에코 이름 목록에서 가장 가까운 이름으로 보정한다.
+
+    에코 이름은 금색 글자라 전처리마다 다르게 읽힌다 ('천연' → '전연', 둘째 줄 누락 등).
+    충분히 비슷한 공식 이름이 없으면 가장 긴 후보를 그대로 쓴다.
+    """
+    if known is None:
+        from .images import load_echo_index
+        known = list(load_echo_index())
+    cands = [c for c in candidates if c]
+    if not cands:
+        return ""
+    norm = lambda s: re.sub(r"[\s·.\-:：()（）]", "", s)  # noqa: E731
+    best, best_r = None, 0.0
+    for c in cands:
+        for k in known:
+            r = SequenceMatcher(None, norm(c), norm(k)).ratio()
+            if r > best_r:
+                best, best_r = k, r
+    return best if best and best_r >= 0.8 else max(cands, key=len)
+
+
+def read_echo_header(img: Image.Image) -> tuple[str, int | None, int]:
+    """에코 이름 / +레벨 / COST: 두 가지 전처리로 읽어 합친다."""
+    names, level, cost = [], None, 0
+    for v in ("clean", "raw"):
+        n, lv, c = parse_echo_header(_header_text(img, v))
+        names.append(n)
+        level = level if level is not None else lv
+        cost = cost or c
+    return snap_echo_name(names), level, cost
 
 
 def parse_echo(image, progress: ProgressFn | None = None) -> Echo:
     img = Image.open(image) if isinstance(image, (str, Path)) else image
     lines = read_lines(img, mode="echo", progress=progress)
     # 이름 / +레벨 / COST 는 스탯 줄이 아니므로 위쪽 줄 원문에서 따로 찾는다
-    rows = group_rows(recognize(img, variant="clean"))
-    header = "\n".join(r.text for r in rows[:3])
+    name, level, cost = read_echo_header(img)
+    header = f"{name} +{level}\nCOST {cost}" if level is not None else f"{name}\nCOST {cost}"
     return echo_from_lines(lines, header, str(image) if isinstance(image, (str, Path)) else "")

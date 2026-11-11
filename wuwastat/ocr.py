@@ -68,7 +68,10 @@ def preprocess(img: Image.Image, variant: str = "clean", max_dim: int = 2600) ->
     if variant in _MASK_THRESHOLD:
         g = _text_mask(img, _MASK_THRESHOLD[variant])
         scale = 1.0
-        if max(g.size) > max_dim:
+        if max(g.size) < 1600:  # 작은 이미지(조각)는 2배로 키워 작은 글자도 읽히게
+            scale = min(2.0, max_dim / max(g.size))
+            g = g.resize((round(g.width * scale), round(g.height * scale)), Image.LANCZOS)
+        elif max(g.size) > max_dim:
             scale = max_dim / max(g.size)
             g = g.resize((round(g.width * scale), round(g.height * scale)), Image.LANCZOS)
         return g.filter(ImageFilter.GaussianBlur(0.5)), scale

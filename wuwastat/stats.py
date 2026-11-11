@@ -172,6 +172,8 @@ def classify_stat_name(text: str, *, percent: bool | None = None, prev: str | No
     upper = t.upper()
     if "크리티컬피해" in t or "크피" in t or "치명타피해" in t:
         return CRIT_DMG
+    if ("크리" in t or "치명" in t) and "피해" in t:  # '크리들犀 피해'처럼 가운데 글자를 잘못 읽은 경우
+        return CRIT_DMG
     if t in ("피해", "피해량") and prev in (CRIT_RATE, CRIT_DMG):
         return CRIT_DMG
     if "크리티컬" in t or "크확" in t or "크리" in t or "치명타" in t:
