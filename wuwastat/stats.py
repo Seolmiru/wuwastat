@@ -109,7 +109,28 @@ SUBSTAT_ROLLS: dict[str, list[float]] = {
     DEF_FLAT: [40, 50, 60, 70],
 }
 SUBSTAT_MAX = {k: v[-1] for k, v in SUBSTAT_ROLLS.items()}
-SUBSTAT_AVG = {k: sum(v) / len(v) for k, v in SUBSTAT_ROLLS.items()}
+
+# 수치별 출현 확률(%). 출처: 쿠로게임즈 한국 확률 공시
+# https://wutheringwaves.kurogames.com/p/language_ko/product_info.html (2. 주파수 조정기 및 튜너 확률 공시)
+# - 서브옵션 13종은 각각 7.6923%로 동일하게 나오고, 한 에코 안에서 같은 종류는 중복되지 않는다.
+_PROB_8 = [6.7961, 7.7670, 20.3883, 24.2718, 17.4757, 14.5631, 5.8252, 2.9126]
+_PROB_CRIT = [23.3333, 23.3333, 23.3333, 8.0, 8.0, 8.0, 3.0, 3.0]
+SUBSTAT_PROBS: dict[str, list[float]] = {
+    CRIT_RATE: _PROB_CRIT,
+    CRIT_DMG: _PROB_CRIT,
+    ATK_FLAT: [6.7961, 52.4272, 37.8641, 2.9126],
+    DEF_FLAT: [14.5631, 44.6602, 32.0388, 8.7379],
+    **{k: _PROB_8 for k in (ATK_PCT, HP_PCT, DEF_PCT, ENERGY_REGEN, HP_FLAT,
+                            BASIC_DMG, HEAVY_DMG, SKILL_DMG, LIBERATION_DMG)},
+}
+SUBSTAT_TYPES = list(SUBSTAT_ROLLS)  # 13종
+SUBSTATS_PER_ECHO = 5
+# 1줄의 기대값 (확률 가중 평균)
+SUBSTAT_EXPECTED = {
+    k: sum(v * p for v, p in zip(SUBSTAT_ROLLS[k], SUBSTAT_PROBS[k])) / sum(SUBSTAT_PROBS[k])
+    for k in SUBSTAT_ROLLS
+}
+SUBSTAT_AVG = SUBSTAT_EXPECTED  # 예전 이름 호환
 
 # 메인옵션 최대치 (+25)
 MAIN_STAT_MAX: dict[int, dict[str, float]] = {

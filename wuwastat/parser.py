@@ -64,7 +64,7 @@ def group_rows(words: list[Word]) -> list[Row]:
 
 
 def _fix_ocr_text(t: str) -> str:
-    t = t.replace("％", "%").replace("，", ",").replace("。", ".").replace("•", "·")
+    t = t.replace("％", "%").replace("，", ",").replace("。", ".").replace("•", "·").replace("十", "+")
     t = re.sub(r"(?<=\d)[oO](?=[\d.%])", "0", t)
     t = re.sub(r"(?<=\d)\s+(?=\.\d)", "", t)
     t = re.sub(r"(?<=\d\.)\s+(?=\d)", "", t)
@@ -361,29 +361,63 @@ def infer_cost(main: StatLine | None, secondary: StatLine | None) -> int:
     return 0
 
 
+_ALL_MAIN_STATS = {k for d in S.MAIN_STAT_MAX.values() for k in d}
+
+
+def _is_secondary(p: ParsedLine) -> bool:
+    """메인옵션 바로 아래 고정 부옵션: 공격력(100/150) 또는 HP(2280) 고정 수치."""
+    return not p.percent and p.value > 0 and p.stat in (S.ATK_FLAT, S.HP_FLAT, UNKNOWN)
+
+
+def _find_main(lines: list[ParsedLine]) -> int | None:
+    """'% 메인옵션 + 바로 다음 줄 고정 부옵션' 쌍의 위치. 그 위의 이름/레벨/COST 줄은 무시한다."""
+    for i, p in enumerate(lines[:-1]):
+        if p.percent and p.stat in _ALL_MAIN_STATS and _is_secondary(lines[i + 1]):
+            return i
+    for i, p in enumerate(lines):  # 부옵션 줄을 못 읽은 경우: 첫 % 메인옵션
+        if p.percent and p.stat in _ALL_MAIN_STATS:
+            return i
+    return None
+
+
 def echo_from_lines(lines: list[ParsedLine], header_text: str = "", source: str = "") -> Echo:
-    """에코 상세 화면: 첫 줄 = 메인옵션, 둘째 줄 = 고정 부옵션, 나머지 = 서브옵션(최대 5개)."""
-    main = StatLine(lines[0].stat, lines[0].value) if lines else None
-    rest = lines[1:]
-    secondary = None
-    if rest and rest[0].stat in (S.ATK_FLAT, S.HP_FLAT, UNKNOWN) and not rest[0].percent:
+    """에코 상세 화면: 메인옵션 1개 + (고정 부옵션은 건너뜀) + 서브옵션 5개."""
+    idx = _find_main(lines)
+    main = StatLine(lines[idx].stat, lines[idx].value) if idx is not None else None
+    rest = lines[idx + 1:] if idx is not None else lines
+    secondary = None  # 코스트 추정에만 쓴다
+    if rest and _is_secondary(rest[0]):
         stat = rest[0].stat or (S.HP_FLAT if rest[0].value >= 300 else S.ATK_FLAT)  # 1코스트 HP 고정치는 수백~2280
         secondary = StatLine(stat, rest[0].value)
         rest = rest[1:]
-    subs = [StatLine(p.stat, p.value) for p in rest if p.stat in S.SUBSTAT_MAX or p.stat == UNKNOWN][:5]
+    subs = [StatLine(p.stat, p.value) for p in rest
+            if p.value > 0 and (p.stat in S.SUBSTAT_MAX or p.stat == UNKNOWN)][:5]
 
-    m = COST_RE.search(header_text)
-    cost = int(m.group(1)) if m and m.group(1) in "134" else infer_cost(main, secondary)
-    level = None
-    lv = re.search(r"\+\s?(\d{1,2})\b", header_text)
-    if lv and int(lv.group(1)) <= 25:
-        level = int(lv.group(1))
-    return Echo(cost=cost, main=main, substats=subs, level=level, source=source)
+    name, level, header_cost = parse_echo_header(header_text)
+    cost = header_cost or infer_cost(main, secondary)
+    return Echo(cost=cost, main=main, substats=subs, name=name, level=level, source=source)
+
+
+def parse_echo_header(header_text: str) -> tuple[str, int | None, int]:
+    """에코 상단 두 줄 '이름 +25' / 'COST 3' → (이름, 레벨, 코스트)"""
+    lines = [_fix_ocr_text(l) for l in header_text.splitlines()]
+    text = " ".join(lines)
+    m = COST_RE.search(text)
+    cost = int(m.group(1)) if m and m.group(1) in "134" else 0
+    name, level = "", None
+    for line in lines:
+        lv = re.search(r"\+\s?(\d{1,2})\b", line)
+        if lv and int(lv.group(1)) <= 25:
+            level = int(lv.group(1))
+            name = line[: lv.start()].strip(" ·-")
+            break
+    return name, level, cost
 
 
 def parse_echo(image, progress: ProgressFn | None = None) -> Echo:
     img = Image.open(image) if isinstance(image, (str, Path)) else image
     lines = read_lines(img, mode="echo", progress=progress)
-    # COST / +레벨 표시는 숫자만 있어 스탯 줄로 안 잡히므로 원문에서 따로 찾는다
-    header = " ".join(w.text for w in recognize(img, variant="clean"))
+    # 이름 / +레벨 / COST 는 스탯 줄이 아니므로 위쪽 줄 원문에서 따로 찾는다
+    rows = group_rows(recognize(img, variant="clean"))
+    header = "\n".join(r.text for r in rows[:3])
     return echo_from_lines(lines, header, str(image) if isinstance(image, (str, Path)) else "")

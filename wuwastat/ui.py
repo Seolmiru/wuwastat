@@ -16,7 +16,7 @@ from PySide6.QtCore import QBuffer, QIODevice, QObject, QRunnable, QStandardPath
 from PySide6.QtGui import QDesktopServices, QFont, QImage, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QAbstractItemView, QApplication, QComboBox, QCompleter, QDoubleSpinBox, QFileDialog, QFrame, QGridLayout,
-    QGroupBox, QHBoxLayout, QHeaderView, QLabel, QMainWindow, QMessageBox, QProgressBar, QProgressDialog,
+    QGroupBox, QHBoxLayout, QHeaderView, QLabel, QLineEdit, QMainWindow, QMessageBox, QProgressBar, QProgressDialog,
     QPushButton, QScrollArea, QSplitter, QTableWidget, QTableWidgetItem, QTabWidget, QTextBrowser, QVBoxLayout,
     QWidget,
 )
@@ -84,8 +84,8 @@ def _ocr_echo(image, progress):
 
 
 def _scrape(progress):
-    from .scraper import save, scrape_all
-    data = scrape_all(lambda i, n, name: progress((i, n, name)))
+    from .scraper import load_previous, save, scrape_all
+    data = scrape_all(lambda i, n, name: progress((i, n, name)), previous=load_previous(DEFAULT_DATA))
     save(data, DEFAULT_DATA)
     return data
 
@@ -173,23 +173,28 @@ class EchoEditor(DropMixin, QFrame):
         self.image_dropped.connect(self.ocr_requested.emit)
 
         grid = QGridLayout()
-        grid.addWidget(QLabel("코스트"), 0, 0)
+        grid.addWidget(QLabel("이름"), 0, 0)
+        self.name = QLineEdit()
+        self.name.setPlaceholderText("(선택 사항)")
+        self.name.editingFinished.connect(self.changed.emit)
+        grid.addWidget(self.name, 0, 1, 1, 2)
+        grid.addWidget(QLabel("코스트"), 1, 0)
         self.cost = QComboBox()
         for c in ("", "4", "3", "1"):
             self.cost.addItem(c or "(선택)", int(c) if c else 0)
-        grid.addWidget(self.cost, 0, 1)
-        grid.addWidget(QLabel("메인옵션"), 1, 0)
+        grid.addWidget(self.cost, 1, 1)
+        grid.addWidget(QLabel("메인옵션"), 2, 0)
         self.main = StatCombo()
         self.main_val = ValueSpin()
-        grid.addWidget(self.main, 1, 1)
-        grid.addWidget(self.main_val, 1, 2)
+        grid.addWidget(self.main, 2, 1)
+        grid.addWidget(self.main_val, 2, 2)
         self.subs: list[tuple[StatCombo, ValueSpin]] = []
         for i in range(5):
-            grid.addWidget(QLabel(f"서브옵션 {i + 1}"), 2 + i, 0)
+            grid.addWidget(QLabel(f"서브옵션 {i + 1}"), 3 + i, 0)
             c, v = StatCombo(), ValueSpin()
             c.set_keys(SUBSTAT_KEYS)
-            grid.addWidget(c, 2 + i, 1)
-            grid.addWidget(v, 2 + i, 2)
+            grid.addWidget(c, 3 + i, 1)
+            grid.addWidget(v, 3 + i, 2)
             c.currentIndexChanged.connect(lambda _=0, c=c, v=v: (v.set_stat(c.key()), self.changed.emit()))
             v.valueChanged.connect(lambda *_: self.changed.emit())
             self.subs.append((c, v))
@@ -229,9 +234,10 @@ class EchoEditor(DropMixin, QFrame):
         self.status.setText("")
 
     def set_echo(self, e: Echo) -> None:
-        widgets = [self.cost, self.main, self.main_val] + [w for pair in self.subs for w in pair]
+        widgets = [self.name, self.cost, self.main, self.main_val] + [w for pair in self.subs for w in pair]
         for w in widgets:
             w.blockSignals(True)
+        self.name.setText(e.name or "")
         self.cost.setCurrentIndex(max(self.cost.findData(e.cost or 0), 0))
         self._cost_changed_silent()
         self.main.set_key(e.main.stat if e.main else "")
@@ -257,7 +263,7 @@ class EchoEditor(DropMixin, QFrame):
         cost = self.cost.currentData() or 0
         if main is None and not subs:
             return None
-        return Echo(cost=cost, main=main, substats=subs)
+        return Echo(cost=cost, main=main, substats=subs, name=self.name.text().strip())
 
 
 class TotalsEditor(DropMixin, QGroupBox):
@@ -339,6 +345,74 @@ class TotalsEditor(DropMixin, QGroupBox):
         return {k: sp.value() for k, sp in self.spins.items() if sp.value() > 0}
 
 
+class GearEditor(QGroupBox):
+    """장착 무기 / 에코 세트(최대 2개 조합) / 공명 체인(돌파). 스크린샷에서 읽지 않으므로 직접 고른다."""
+
+    changed = Signal()
+    OTHER = "__other__"
+
+    def __init__(self):
+        super().__init__("무기 · 에코 세트 · 돌파")
+        grid = QGridLayout(self)
+        self.weapon = QComboBox()
+        self.sonata1 = QComboBox()
+        self.sonata2 = QComboBox()
+        self.chain = QComboBox()
+        self.chain.addItem("(선택 안 함)", None)
+        for i in range(7):
+            self.chain.addItem(f"{i}돌", i)
+        rows = (("무기", self.weapon), ("에코 세트 1", self.sonata1),
+                ("에코 세트 2", self.sonata2), ("돌파", self.chain))
+        for r, (label, w) in enumerate(rows):
+            grid.addWidget(QLabel(label), r, 0)
+            grid.addWidget(w, r, 1)
+            w.currentIndexChanged.connect(lambda *_: self.changed.emit())
+        self.sonata2.setToolTip("3세트 + 2세트처럼 두 세트를 섞어 쓸 때만 고르세요.")
+        grid.setColumnStretch(1, 1)
+
+    def set_character(self, c: Character | None, all_sets: list[str] | None = None) -> None:
+        weapons = [(f"{w.name}{' (전용)' if w.signature else ''}", w.name) for w in (c.weapons if c else [])]
+        rec_sets = list(zip(c.sonata, c.sonata_names)) if c else []
+        others = [n for n in (all_sets or []) if n not in {n for _, n in rec_sets}]
+        sets = [(f"{text} (추천)", name) for text, name in rec_sets] + [(n, n) for n in others]
+        for combo, items, other in ((self.weapon, weapons, "그 외 무기"),
+                                    (self.sonata1, sets, "그 외 세트"), (self.sonata2, sets, "그 외 세트")):
+            combo.blockSignals(True)
+            combo.clear()
+            combo.addItem("(선택 안 함)", "")
+            for text, data in items:
+                combo.addItem(text, data)
+            combo.addItem(other, self.OTHER)
+            combo.blockSignals(False)
+        self.chain.blockSignals(True)
+        self.chain.setCurrentIndex(0)
+        self.chain.blockSignals(False)
+        core = {ch.seq for ch in c.chains if ch.core} if c else set()
+        for i in range(7):
+            self.chain.setItemText(i + 1, f"{i}돌" + (" ★핵심" if i in core else ""))
+
+    def _val(self, combo: QComboBox) -> str:
+        d = combo.currentData() or ""
+        return "(기타)" if d == self.OTHER else d
+
+    def values(self) -> tuple[str, list[str], int | None]:
+        sets = [v for v in (self._val(self.sonata1), self._val(self.sonata2)) if v]
+        return self._val(self.weapon), sets, self.chain.currentData()
+
+    def set_values(self, weapon: str, sonata, chain: int | None) -> None:
+        if isinstance(sonata, str):  # 예전 저장 형식
+            sonata = [sonata] if sonata else []
+        sonata = list(sonata) + ["", ""]
+        for combo, v in ((self.weapon, weapon), (self.sonata1, sonata[0]), (self.sonata2, sonata[1])):
+            combo.blockSignals(True)
+            i = combo.findData(self.OTHER if v == "(기타)" else v)
+            combo.setCurrentIndex(max(i, 0))
+            combo.blockSignals(False)
+        self.chain.blockSignals(True)
+        self.chain.setCurrentIndex(max(self.chain.findData(chain), 0) if chain is not None else 0)
+        self.chain.blockSignals(False)
+
+
 # ---------------------------------------------------------------------------
 # 캐릭터 정보 / 결과
 # ---------------------------------------------------------------------------
@@ -378,6 +452,22 @@ class CharacterInfo(QTextBrowser):
                          f"세트: {e(', '.join(c.sonata) or '-')}</p>")
         if c.substat_priority_text:
             parts.append(f"<h3>서브옵션 우선순위</h3><p>{e(c.substat_priority_text)}</p>")
+        if c.weapons:
+            parts.append("<h3>추천 무기</h3><ol>")
+            for w in c.weapons:
+                tag = " <b style='color:#d4a017'>[전용]</b>" if w.signature else \
+                    ("" if w.recommended else " <span style='color:gray'>(대안)</span>")
+                parts.append(f"<li>{e(w.name)} {'★' * (w.star or 0)}{tag}</li>")
+            parts.append("</ol>")
+        if c.chains:
+            core = [str(ch.seq) for ch in c.chains if ch.core]
+            parts.append(f"<h3>공명 체인(돌파)</h3><p>핵심 돌파: <b>{', '.join(core) or '-'}</b></p><ul>")
+            for ch in sorted(c.chains, key=lambda ch: ch.seq):
+                star = " ★" if ch.core else ""
+                parts.append(f"<li><b>{ch.seq}돌{star}</b> {e(ch.name)}</li>")
+            parts.append("</ul>")
+        if c.stale:
+            parts.append("<p style='color:#e67e22'>공식 사이트에서 이 캐릭터 공략을 지금은 받을 수 없어 예전에 받은 데이터를 씁니다.</p>")
         self.setHtml("".join(parts))
 
 
@@ -408,7 +498,7 @@ class ResultsPanel(QWidget):
 
         lay.addWidget(QLabel("<b>에코 점수</b> (교체 우선순위 순)"))
         self.echoes = QTableWidget(0, 5)
-        self.echoes.setHorizontalHeaderLabels(["에코", "코스트", "메인옵션", "점수", "메모"])
+        self.echoes.setHorizontalHeaderLabels(["에코", "코스트", "메인옵션", "등급 (희귀도)", "메모"])
         self._table_style(self.echoes)
         self.echoes.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)
         self.echoes.setWordWrap(True)
@@ -436,10 +526,28 @@ class ResultsPanel(QWidget):
         color = GRADE_COLORS.get(ev.grade, "#333")
         self.grade.setText(ev.grade)
         self.grade.setStyleSheet(f"color: {color};")
-        ts = f"{ev.target_score:.0f}점" if ev.target_score is not None else "입력 없음"
-        es = f"{ev.echo_score:.0f}점 (에코 {len(ev.echoes)}개)" if ev.echo_score is not None else "입력 없음"
+        ts = (f"{ev.target_score:.0f}점" + (f" (서브옵션 약 {ev.missing_lines:.1f}줄 부족)" if ev.missing_lines else "")
+              if ev.target_score is not None else "입력 없음")
+        es = (f"{ev.echo_score:.0f}점 (평균 상위 {100 - ev.echo_score:.0f}%, 에코 {len(ev.echoes)}개)"
+              if ev.echo_score is not None else "입력 없음")
+        cap = ("<br><span style='color:#e67e22'>추천 스탯을 모두 채우지 못해 등급이 A로 제한됐습니다</span>"
+               if ev.grade_capped else "")
+        chain = ""
+        if ev.chain_estimates:
+            per = " · ".join(f"{e.seq}돌 +{e.gain * 100:.0f}%{'*' if e.estimated_default else ''}"
+                             for e in ev.chain_estimates)
+            if ev.chain_gain is not None:
+                cg = GRADE_COLORS.get(ev.chain_grade or "", "#333")
+                chain = (f"<br><b>돌파 반영: <span style='color:{cg}'>{ev.chain_grade}</span> "
+                         f"{ev.chain_score:.1f}점</b> — {ev.chain}돌은 0돌보다 DPS 약 +{ev.chain_gain * 100:.0f}% "
+                         f"(서브옵션 약 {ev.chain_lines:.1f}줄 분량, 추정)")
+            else:
+                chain = "<br><span style='color:gray'>돌파 단계를 고르면 돌파 효율을 반영한 등급도 계산합니다.</span>"
+            chain += f"<br><span style='color:gray;font-size:9pt'>돌파별 DPS 상승(추정): {per}"
+            chain += " (*효과 크기를 문구로 알 수 없어 기본값)</span>" if any(
+                e.estimated_default for e in ev.chain_estimates) else "</span>"
         self.summary.setText(f"<span style='font-size:16pt'><b>종합 {ev.total_score:.1f}점</b></span><br>"
-                             f"목표 스탯 달성도: {ts}<br>에코 평균 점수: {es}")
+                             f"목표 스탯 달성도: {ts}<br>에코 평균 점수: {es}{cap}{chain}")
 
         self.targets.setRowCount(len(ev.targets))
         for r, t in enumerate(ev.targets):
@@ -458,7 +566,8 @@ class ResultsPanel(QWidget):
             main = f"{S.label(e.echo.main.stat)} {S.fmt(e.echo.main.stat, e.echo.main.value)}" if e.echo.main and e.echo.main.stat else "-"
             if not e.main_ok:
                 main += " ⚠"
-            score_item = QTableWidgetItem(f"{e.score:.0f} ({e.grade})")
+            score_item = QTableWidgetItem(f"{e.grade} · 상위 {e.top_percent:.0f}%")
+            score_item.setToolTip(f"서브옵션 가치 {e.raw_score:.1f} / 100 (이론상 최고 100)")
             score_item.setForeground(Qt.GlobalColor.white)
             score_item.setBackground(_qcolor(GRADE_COLORS.get(e.grade, "#555")))
             self.echoes.setItem(r, 0, QTableWidgetItem(f"{e.index + 1}번"))
@@ -490,6 +599,7 @@ class MainWindow(QMainWindow):
         self.characters: list[Character] = []
         self.meta: dict = {}
         self.current: Character | None = None
+        self.all_sets: list[str] = []
         self._loading = False
         self._workers: set[Worker] = set()  # 완료 신호가 전달될 때까지 작업 객체를 붙잡아 둔다
 
@@ -522,6 +632,9 @@ class MainWindow(QMainWindow):
         mid_lay = QVBoxLayout(mid)
         self.totals = TotalsEditor()
         mid_lay.addWidget(self.totals)
+        self.gear = GearEditor()
+        self.gear.changed.connect(self.schedule_eval)
+        mid_lay.addWidget(self.gear)
         echo_box = QGroupBox("장착 에코")
         eb = QVBoxLayout(echo_box)
         self.echo_tabs = QTabWidget()
@@ -562,6 +675,8 @@ class MainWindow(QMainWindow):
             QTimer.singleShot(300, self._ask_initial_update)
             return
         self.characters, self.meta = load_characters(DEFAULT_DATA)
+        # 모든 캐릭터 공략에 나온 세트 이름 (그 외 세트를 고를 수 있게)
+        self.all_sets = sorted({n for c in self.characters for n in c.sonata_names})
         prev = self.current.id if self.current else None
         self.char_combo.blockSignals(True)
         self.char_combo.clear()
@@ -624,6 +739,7 @@ class MainWindow(QMainWindow):
         self.current = next((c for c in self.characters if c.id == cid), None)
         self.info.show_character(self.current)
         self.totals.set_targets(self.current)
+        self.gear.set_character(self.current, self.all_sets)
         self.load_build()
         self.schedule_eval()
 
@@ -636,6 +752,7 @@ class MainWindow(QMainWindow):
             p = self.build_path()
             data = json.loads(p.read_text(encoding="utf-8")) if p and p.exists() else {}
             self.totals.set_totals(data.get("totals", {}))
+            self.gear.set_values(data.get("weapon", ""), data.get("sonata", []), data.get("chain"))
             echoes = data.get("echoes", [])
             for i, ed in enumerate(self.echo_editors):
                 d = echoes[i] if i < len(echoes) and echoes[i] else None
@@ -649,8 +766,9 @@ class MainWindow(QMainWindow):
         if not p:
             return
         echoes = [asdict(ed.get_echo()) if ed.get_echo() else None for ed in self.echo_editors]
-        p.write_text(json.dumps({"totals": build.totals, "echoes": echoes}, ensure_ascii=False, indent=1),
-                     encoding="utf-8")
+        data = {"totals": build.totals, "echoes": echoes,
+                "weapon": build.weapon, "sonata": build.sonata, "chain": build.chain}
+        p.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # ----- 계산 -----
     def schedule_eval(self) -> None:
@@ -658,7 +776,9 @@ class MainWindow(QMainWindow):
             self.eval_timer.start()
 
     def current_build(self) -> Build:
-        return Build(self.totals.totals(), [e for ed in self.echo_editors if (e := ed.get_echo())])
+        weapon, sonata, chain = self.gear.values()
+        return Build(self.totals.totals(), [e for ed in self.echo_editors if (e := ed.get_echo())],
+                     weapon=weapon, sonata=sonata, chain=chain)
 
     def run_eval(self) -> None:
         if not self.current:
@@ -701,7 +821,7 @@ class MainWindow(QMainWindow):
         def done(echo: Echo):
             ed.set_echo(echo)
             unknown = sum(1 for s in echo.substats if not s.stat) + (0 if echo.main and echo.main.stat else 1)
-            msg = f"코스트 {echo.cost or '?'}, 서브옵션 {len(echo.substats)}개를 읽었습니다."
+            msg = f"{echo.name + ' · ' if echo.name else ''}코스트 {echo.cost or '?'}, 서브옵션 {len(echo.substats)}개를 읽었습니다."
             if echo.level is not None:
                 msg += f" (+{echo.level})"
             if unknown or not echo.cost:

@@ -177,6 +177,10 @@ def build_character(avatar: dict, guide_meta: dict | None, info: dict | None) ->
         "sonata": [],
         "substat_priority": [],
         "substat_priority_text": "",
+        "weapons": [],
+        "weapon_text": "",
+        "chains": [],
+        "chain_text": "",
     }
     if not info:
         return record
@@ -214,6 +218,33 @@ def build_character(avatar: dict, guide_meta: dict | None, info: dict | None) ->
     prio_text = _strip_html(_text(info.get("echoTexts"), "recommendDescription", lang))
     record["substat_priority_text"] = prio_text
     record["substat_priority"] = parse_priority(prio_text) if lang == PREFERRED_LANG else []
+
+    # 추천 무기: status 1 = 추천, 2 = 대안. 첫 번째 추천 5성 무기를 전용(종결) 무기로 본다.
+    weapons = []
+    for i, w in enumerate((info.get("weapon") or {}).get("items") or []):
+        weapons.append({
+            "name": _text(w.get("texts"), lang=lang),
+            "star": w.get("star"),
+            "recommended": w.get("status") == 1,
+            "effect": _text(w.get("texts"), "effectDescription", lang),
+        })
+    sig = next((w for w in weapons if w["recommended"] and w["star"] == 5), None)
+    for w in weapons:
+        w["signature"] = w is sig
+    record["weapons"] = weapons
+    record["weapon_text"] = _strip_html(_text(info.get("weaponTexts"), "recommendDescription", lang))
+
+    # 공명 체인(돌파): status 1 = 공략이 꼽은 핵심 체인
+    record["chains"] = [
+        {
+            "seq": int(c.get("resonanceSequence") or 0),
+            "name": _text(c.get("texts"), lang=lang),
+            "description": _text(c.get("texts"), "description", lang),
+            "core": c.get("status") == 1,
+        }
+        for c in (info.get("roleResonance") or {}).get("items") or []
+    ]
+    record["chain_text"] = _strip_html(_text(info.get("roleResonanceTexts"), "recommendDescription", lang))
     return record
 
 
@@ -243,8 +274,33 @@ def fetch_character(avatar: dict) -> dict:
     return build_character(avatar, meta, info)
 
 
-def scrape_all(progress: Callable[[int, int, str], None] | None = None, workers: int = 4) -> dict:
+def _avatar_from_record(rec: dict) -> dict:
+    """이전에 저장한 캐릭터 레코드를 avatar 목록 형식으로 되돌린다."""
+    gbid = next((k for k, v in S.ELEMENT_BY_GBID.items() if v == rec.get("element")), "")
+    return {
+        "roleGbId": rec["id"],
+        "texts": [{"language": "ko", "name": rec.get("name", "")}, {"language": "en", "name": rec.get("name_en", "")}],
+        "star": rec.get("star"),
+        "element": {"gbId": gbid},
+        "cardPictureUrl": rec.get("icon"),
+    }
+
+
+def load_previous(path: Path = DEFAULT_OUTPUT) -> dict | None:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def scrape_all(progress: Callable[[int, int, str], None] | None = None, workers: int = 4,
+               previous: dict | None = None) -> dict:
+    """previous: 이전 수집 결과. 공식 목록에서 빠진 캐릭터도 공략이 남아 있으면 계속 수집한다."""
     avatars = _get("/role/avatar/list")
+    listed = {str(a["roleGbId"]) for a in avatars}
+    for rec in (previous or {}).get("characters", []):
+        if str(rec["id"]) not in listed:
+            avatars.append(_avatar_from_record(rec))
     results: list[dict] = [None] * len(avatars)  # type: ignore[list-item]
     errors: list[str] = []
 
@@ -262,6 +318,13 @@ def scrape_all(progress: Callable[[int, int, str], None] | None = None, workers:
             done += 1
             if progress:
                 progress(done, len(avatars), results[i]["name"] if results[i] else "")
+
+    # 이번에 공략을 못 받았지만 예전 데이터에는 있던 캐릭터는 예전 데이터를 유지한다
+    prev_by_id = {str(c["id"]): c for c in (previous or {}).get("characters", [])}
+    for i, r in enumerate(results):
+        old = prev_by_id.get(str(r["id"])) if r else None
+        if r and not r["guide"] and old and old.get("guide"):
+            results[i] = {**r, **old, "stale": True}
 
     chars = sorted((r for r in results if r), key=lambda c: c["name"])
     return {
@@ -289,7 +352,7 @@ def main(argv: list[str] | None = None) -> int:
     def progress(i: int, n: int, name: str) -> None:
         print(f"[{i}/{n}] {name}", flush=True)
 
-    data = scrape_all(progress)
+    data = scrape_all(progress, previous=load_previous(args.output))
     path = save(data, args.output)
     no_guide = [c["name"] for c in data["characters"] if not c["guide"]]
     print(f"저장 완료: {path} ({data['count']}명)")
