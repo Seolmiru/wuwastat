@@ -10,7 +10,7 @@
 
 ## 설치 (권장: 포터블 ZIP)
 
-지인용 자세한 안내: [docs/INSTALL.md](docs/INSTALL.md) · 배포 절차: [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)
+자세한 안내: [docs/INSTALL.md](docs/INSTALL.md) · 배포 절차: [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)
 
 Python이나 Git을 설치할 필요가 없습니다.
 
