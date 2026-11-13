@@ -190,6 +190,7 @@ def build_character(avatar: dict, guide_meta: dict | None, info: dict | None) ->
         "weapon_text": "",
         "chains": [],
         "chain_text": "",
+        "teams": [],
     }
     if not info:
         return record
@@ -254,8 +255,55 @@ def build_character(avatar: dict, guide_meta: dict | None, info: dict | None) ->
         for c in (info.get("roleResonance") or {}).get("items") or []
     ]
     record["chain_text"] = _strip_html(_text(info.get("roleResonanceTexts"), "recommendDescription", lang))
+    record["teams"] = parse_teams(info.get("teammate"))
+    record["team_members"] = collect_team_members(info.get("teammate"))
     record["echo_images"] = collect_echo_images(info)
     return record
+
+
+def parse_teams(teammate: dict | None) -> list[list[str]]:
+    """추천 파티원 칸 목록. 칸마다 [주 추천 캐릭터 ID, 대체 캐릭터 ID...].
+
+    공략 사이트는 파티원 칸(보통 2칸)마다 주 추천 캐릭터와 대체 캐릭터를 보여준다.
+    """
+    teammate = teammate or {}
+    items = teammate.get("items") or []
+    if not items:  # 모드별 추천만 있는 공략이면 첫 번째 모드를 쓴다
+        modes = teammate.get("modeTeammateRecommends") or []
+        items = next((m.get("items") for m in modes if isinstance(m, dict) and m.get("items")), [])
+    slots: list[list[str]] = []
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        members = [it.get("main")] + list(it.get("spares") or [])
+        ids: list[str] = []
+        for m in members:
+            rid = str((m or {}).get("roleGbId", "")) if isinstance(m, dict) else ""
+            if ROLE_ID_RE.fullmatch(rid) and rid not in ids:
+                ids.append(rid)
+        if ids:
+            slots.append(ids)
+    return slots
+
+
+def collect_team_members(teammate: dict | None) -> dict[str, dict]:
+    """추천 파티원 ID → 이름·초상화 주소. 캐릭터 목록에 없는 파티원(방랑자 등)을 표시할 때 쓴다."""
+    out: dict[str, dict] = {}
+
+    def walk(o: Any) -> None:
+        if isinstance(o, dict):
+            rid = str(o.get("roleGbId", ""))
+            if ROLE_ID_RE.fullmatch(rid) and o.get("texts"):
+                out.setdefault(rid, {"name": _text(o.get("texts")),
+                                     "portrait": o.get("cardPictureUrl") or ""})
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+
+    walk(teammate)
+    return out
 
 
 def collect_echo_images(info: dict) -> dict[str, str]:
@@ -361,8 +409,11 @@ def scrape_all(progress: Callable[[int, int, str], None] | None = None, workers:
 
     chars = sorted((r for r in results if r), key=lambda c: c["name"])
     echo_images: dict[str, str] = dict((previous or {}).get("echo_images", {}))
+    team_members: dict[str, dict] = dict((previous or {}).get("team_members", {}))
     for c in chars:
         echo_images.update(c.pop("echo_images", None) or {})
+        team_members.update(c.pop("team_members", None) or {})
+    known = {str(c["id"]) for c in chars}
     return {
         "source": "https://wuwaguide.kurogames.com/ko/",
         "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -370,6 +421,8 @@ def scrape_all(progress: Callable[[int, int, str], None] | None = None, workers:
         "errors": errors,
         "characters": chars,
         "echo_images": dict(sorted(echo_images.items())),
+        # 캐릭터 목록에 없는 추천 파티원만 (방랑자 등)
+        "team_members": {k: v for k, v in sorted(team_members.items()) if k not in known},
     }
 
 
@@ -408,6 +461,7 @@ def slim(data: dict) -> dict:
             "weapons": [{k: w.get(k) for k in ("name", "star", "recommended", "signature")}
                         for w in c.get("weapons", [])],
             "chains": [{k: ch.get(k) for k in ("seq", "name", "core")} for ch in c.get("chains", [])],
+            "teams": c.get("teams", []),
             **({"stale": True} if c.get("stale") else {}),
         })
     return {
@@ -417,6 +471,8 @@ def slim(data: dict) -> dict:
         "slim": True,
         "characters": chars,
         "echo_images": {k: v for k, v in (data.get("echo_images") or {}).items() if _official_image(v)},
+        "team_members": {k: {"name": v.get("name", ""), "portrait": _official_image(v.get("portrait"))}
+                         for k, v in (data.get("team_members") or {}).items()},
     }
 
 

@@ -1,6 +1,6 @@
 {
   "source": "https://wuwaguide.kurogames.com/ko/",
-  "fetched_at": "2026-11-11T13:13:19+00:00",
+  "fetched_at": "2026-11-13T15:56:00+00:00",
   "count": 61,
   "slim": true,
   "characters": [
@@ -133,6 +133,16 @@
           "name": "영원히 불태워 자신을 증명해",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1411",
+          "1204"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -146,7 +156,7 @@
       "guide": {
         "id": 13030,
         "language": "ko",
-        "likes": 117,
+        "likes": 118,
         "modified_at": 1794397349
       },
       "targets": [
@@ -255,6 +265,17 @@
           "name": "자신을 위하여",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1108",
+          "1305",
+          "1301"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -268,7 +289,7 @@
       "guide": {
         "id": 13150,
         "language": "ko",
-        "likes": 106,
+        "likes": 107,
         "modified_at": 1788941842
       },
       "targets": [
@@ -396,6 +417,17 @@
           "name": "은원을 끝내 매듭 지으며, 이후의 글은 훗날을 기약해",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1410",
+          "1207",
+          "1204"
+        ],
+        [
+          "1505",
+          "1209"
+        ]
       ]
     },
     {
@@ -528,7 +560,16 @@
           "core": true
         }
       ],
-      "stale": true
+      "teams": [
+        [
+          "1412",
+          "1208"
+        ],
+        [
+          "1512",
+          "1505"
+        ]
+      ]
     },
     {
       "id": "1304",
@@ -541,7 +582,7 @@
       "guide": {
         "id": 13011,
         "language": "ko",
-        "likes": 372,
+        "likes": 373,
         "modified_at": 1794397349
       },
       "targets": [
@@ -650,6 +691,17 @@
           "name": "엄동설한 끝에 비추는 봄",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1105",
+          "1607",
+          "1205"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -780,6 +832,16 @@
           "name": "무적",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1204",
+          "1403"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -908,6 +970,16 @@
           "name": "사자의 위엄",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1102",
+          "1105"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -921,7 +993,7 @@
       "guide": {
         "id": 13022,
         "language": "ko",
-        "likes": 95,
+        "likes": 96,
         "modified_at": 1794397342
       },
       "targets": [
@@ -1039,6 +1111,17 @@
           "name": "남겨진 붉은빛 옥패",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1505",
+          "1503"
+        ],
+        [
+          "1606",
+          "1102",
+          "1602"
+        ]
       ]
     },
     {
@@ -1169,6 +1252,17 @@
           "name": "침묵 속에서 태양을 얻기를",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1210",
+          "1510",
+          "1413"
+        ],
+        [
+          "1508",
+          "1209"
+        ]
       ]
     },
     {
@@ -1280,6 +1374,16 @@
           "name": "수호의 성벽",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1107",
+          "1602"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -1293,7 +1397,7 @@
       "guide": {
         "id": 13144,
         "language": "ko",
-        "likes": 232,
+        "likes": 233,
         "modified_at": 1780880175
       },
       "targets": [
@@ -1411,6 +1515,17 @@
           "name": "어쩌면...",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1511",
+          "1404"
+        ],
+        [
+          "1209",
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -1538,6 +1653,16 @@
           "name": "금빛 날개 타고 비상",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1603",
+          "1605"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -1671,6 +1796,17 @@
           "name": "별점 5개 꼭이요",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1107",
+          "1205",
+          "1304"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -1684,7 +1820,7 @@
       "guide": {
         "id": 13143,
         "language": "ko",
-        "likes": 346,
+        "likes": 347,
         "modified_at": 1780880188
       },
       "targets": [
@@ -1797,6 +1933,17 @@
           "name": "I Really Want to Stay At Your House",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1308",
+          "1410",
+          "1204"
+        ],
+        [
+          "1209",
+          "1505"
+        ]
       ]
     },
     {
@@ -1810,7 +1957,7 @@
       "guide": {
         "id": 13145,
         "language": "ko",
-        "likes": 212,
+        "likes": 213,
         "modified_at": 1785326292
       },
       "targets": [
@@ -1920,7 +2067,17 @@
           "core": true
         }
       ],
-      "stale": true
+      "teams": [
+        [
+          "1108",
+          "1412",
+          "1208"
+        ],
+        [
+          "1110",
+          "1505"
+        ]
+      ]
     },
     {
       "id": "1510",
@@ -2045,6 +2202,17 @@
           "name": "빙원 위, 끝없이 펼쳐진 새벽빛",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1211",
+          "1509",
+          "1102"
+        ],
+        [
+          "1209",
+          "1505"
+        ]
       ]
     },
     {
@@ -2058,7 +2226,7 @@
       "guide": {
         "id": 13122,
         "language": "ko",
-        "likes": 781,
+        "likes": 782,
         "modified_at": 1794397361
       },
       "targets": [
@@ -2190,6 +2358,17 @@
           "name": "가장 눈부신 별에게",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1205",
+          "1203",
+          "1202"
+        ],
+        [
+          "1206",
+          "1203"
+        ]
       ]
     },
     {
@@ -2203,8 +2382,8 @@
       "guide": {
         "id": 13134,
         "language": "ko",
-        "likes": 1538,
-        "modified_at": 1783597642
+        "likes": 1540,
+        "modified_at": 1794397349
       },
       "targets": [
         {
@@ -2269,9 +2448,69 @@
           "energy_regen"
         ]
       ],
-      "weapons": [],
-      "chains": [],
-      "stale": true
+      "weapons": [
+        {
+          "name": "스펙트럼 블래스터",
+          "star": 5,
+          "recommended": true,
+          "signature": true
+        },
+        {
+          "name": "부동의 안개",
+          "star": 5,
+          "recommended": false,
+          "signature": false
+        },
+        {
+          "name": "태양 불꽃",
+          "star": 4,
+          "recommended": false,
+          "signature": false
+        }
+      ],
+      "chains": [
+        {
+          "seq": 1,
+          "name": "마음껏 날뛰었어야 했을 찬란한 나날들",
+          "core": true
+        },
+        {
+          "seq": 2,
+          "name": "빛이 엮이는 저편을 향해",
+          "core": true
+        },
+        {
+          "seq": 3,
+          "name": "찰나의 반짝임을 위하여",
+          "core": true
+        },
+        {
+          "seq": 4,
+          "name": "바람결에 흐르는 어두운 그림자",
+          "core": false
+        },
+        {
+          "seq": 5,
+          "name": "자유롭게 그리는 미래",
+          "core": false
+        },
+        {
+          "seq": 6,
+          "name": "「나」라는 이름으로 그려진 진정한 빛",
+          "core": true
+        }
+      ],
+      "teams": [
+        [
+          "1210",
+          "1108",
+          "1510"
+        ],
+        [
+          "1209",
+          "1505"
+        ]
+      ]
     },
     {
       "id": "1512",
@@ -2280,15 +2519,122 @@
       "star": 5,
       "element": "spectro",
       "source_url": "https://wuwaguide.kurogames.com/ko/?role_id=1512",
-      "portrait": "https://guide-res.aki-game.net/introduction/material/a8dfb8a5fca67d2590e31e2b031bd971/6cc2275c788f35471d114c4b72dfdf4f.png",
-      "guide": null,
-      "targets": [],
-      "echo_slots": [],
-      "main_echo": "",
-      "sonata": [],
-      "substat_priority": [],
-      "weapons": [],
-      "chains": []
+      "portrait": "https://guide-res.aki-game.net/introduction/material/3e3c82c93e14f46cfe5d8084026d2dfb/6cc2275c788f35471d114c4b72dfdf4f.png",
+      "guide": {
+        "id": 13153,
+        "language": "ko",
+        "likes": 41,
+        "modified_at": 1794397342
+      },
+      "targets": [
+        {
+          "stat": "energy_regen",
+          "value": 260.0,
+          "op": ">="
+        },
+        {
+          "stat": "hp",
+          "value": 40000.0,
+          "op": ">="
+        }
+      ],
+      "echo_slots": [
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 4,
+          "main": "healing"
+        },
+        {
+          "cost": 3,
+          "main": "energy_regen"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        },
+        {
+          "cost": 1,
+          "main": "hp_pct"
+        }
+      ],
+      "main_echo": "해형살",
+      "sonata": [
+        "추억에 붉게 물든 꽃 5세트"
+      ],
+      "substat_priority": [
+        [
+          "energy_regen"
+        ],
+        [
+          "hp_pct"
+        ]
+      ],
+      "weapons": [
+        {
+          "name": "럴러바이",
+          "star": 5,
+          "recommended": true,
+          "signature": true
+        },
+        {
+          "name": "화려한 악곡",
+          "star": 4,
+          "recommended": false,
+          "signature": false
+        },
+        {
+          "name": "부동의 안개",
+          "star": 5,
+          "recommended": false,
+          "signature": false
+        }
+      ],
+      "chains": [
+        {
+          "seq": 1,
+          "name": "보세요, 꿈의 폐허에 피어난 저 하얀 꽃을",
+          "core": true
+        },
+        {
+          "seq": 2,
+          "name": "들으세요, 요람에서 들려 오는 레퀴엠을",
+          "core": true
+        },
+        {
+          "seq": 3,
+          "name": "당신의 영혼이 더 이상 헤매지 않기를",
+          "core": true
+        },
+        {
+          "seq": 4,
+          "name": "당신의 지난날이 고요한 항구에 잠기기를",
+          "core": false
+        },
+        {
+          "seq": 5,
+          "name": "당신이 끝없는 빛 속에 평안히 잠들기를",
+          "core": false
+        },
+        {
+          "seq": 6,
+          "name": "이토록 고운 꿈이 영영 저물지 않기를",
+          "core": true
+        }
+      ],
+      "teams": [
+        [
+          "1311",
+          "1412",
+          "1208"
+        ],
+        [
+          "1312",
+          "1411"
+        ]
+      ]
     },
     {
       "id": "1209",
@@ -2301,7 +2647,7 @@
       "guide": {
         "id": 13135,
         "language": "ko",
-        "likes": 1284,
+        "likes": 1286,
         "modified_at": 1788940942
       },
       "targets": [
@@ -2420,6 +2766,17 @@
           "name": "뭇별의 끝에 닿을 때까지",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1210",
+          "1510",
+          "1413"
+        ],
+        [
+          "1509",
+          "1211"
+        ]
       ]
     },
     {
@@ -2542,6 +2899,17 @@
           "name": "극노의 침묵",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1404",
+          "1306",
+          "1212"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -2555,7 +2923,7 @@
       "guide": {
         "id": 13115,
         "language": "ko",
-        "likes": 499,
+        "likes": 500,
         "modified_at": 1794397349
       },
       "targets": [
@@ -2657,6 +3025,16 @@
           "name": "바람결에 무너져 내린 모든 것",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1409",
+          "1404"
+        ],
+        [
+          "1407",
+          "1204"
+        ]
       ]
     },
     {
@@ -2670,7 +3048,7 @@
       "guide": {
         "id": 13035,
         "language": "ko",
-        "likes": 474,
+        "likes": 475,
         "modified_at": 1794397341
       },
       "targets": [
@@ -2789,6 +3167,17 @@
           "name": "다크 서지 상승",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1606",
+          "1102",
+          "1602"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -2922,6 +3311,17 @@
           "name": "함 속의 심연",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1311",
+          "1610",
+          "1108"
+        ],
+        [
+          "1110",
+          "1508"
+        ]
       ]
     },
     {
@@ -3058,6 +3458,16 @@
           "name": "먼길의 결말",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1506"
+        ],
+        [
+          "1505",
+          "1503",
+          "1103"
+        ]
       ]
     },
     {
@@ -3182,6 +3592,17 @@
           "name": "수확의 희열",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1605",
+          "1304",
+          "1205"
+        ],
+        [
+          "1102",
+          "1105"
+        ]
       ]
     },
     {
@@ -3196,7 +3617,7 @@
         "id": 13133,
         "language": "ko",
         "likes": 251,
-        "modified_at": 1794397355
+        "modified_at": 1794460061
       },
       "targets": [
         {
@@ -3300,6 +3721,17 @@
           "name": "「천지 혼원 뇌부 도배 요정 천존」",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1311",
+          "1107",
+          "1304"
+        ],
+        [
+          "1309",
+          "1105"
+        ]
       ]
     },
     {
@@ -3313,7 +3745,7 @@
       "guide": {
         "id": 13006,
         "language": "ko",
-        "likes": 341,
+        "likes": 343,
         "modified_at": 1794397361
       },
       "targets": [
@@ -3430,6 +3862,17 @@
           "name": "선장 왈, 「카니발이 곧 세계다!」",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1205",
+          "1102",
+          "1203"
+        ],
+        [
+          "1207",
+          "1505"
+        ]
       ]
     },
     {
@@ -3443,7 +3886,7 @@
       "guide": {
         "id": 13017,
         "language": "ko",
-        "likes": 538,
+        "likes": 539,
         "modified_at": 1794397348
       },
       "targets": [
@@ -3560,6 +4003,17 @@
           "name": "새벽의 햇빛",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1603",
+          "1206",
+          "1607"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -3685,6 +4139,16 @@
           "name": "도시의 연기",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1302",
+          "1405"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -3698,7 +4162,7 @@
       "guide": {
         "id": 13120,
         "language": "ko",
-        "likes": 156,
+        "likes": 157,
         "modified_at": 1794397349
       },
       "targets": [
@@ -3812,6 +4276,14 @@
           "name": "끝나지 않은 피날레",
           "core": false
         }
+      ],
+      "teams": [
+        [
+          "1409"
+        ],
+        [
+          "1408"
+        ]
       ]
     },
     {
@@ -3930,6 +4402,17 @@
           "name": "추구의 각오",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1108",
+          "1107",
+          "1304"
+        ],
+        [
+          "1109",
+          "1105"
+        ]
       ]
     },
     {
@@ -3943,8 +4426,8 @@
       "guide": {
         "id": 13152,
         "language": "ko",
-        "likes": 87,
-        "modified_at": 1792677487
+        "likes": 90,
+        "modified_at": 1794397342
       },
       "targets": [
         {
@@ -4004,9 +4487,75 @@
           "energy_regen"
         ]
       ],
-      "weapons": [],
-      "chains": [],
-      "stale": true
+      "weapons": [
+        {
+          "name": "적막한 어둠",
+          "star": 5,
+          "recommended": true,
+          "signature": true
+        },
+        {
+          "name": "날카로운 봄",
+          "star": 5,
+          "recommended": false,
+          "signature": false
+        },
+        {
+          "name": "예리한 날개깃",
+          "star": 4,
+          "recommended": false,
+          "signature": false
+        },
+        {
+          "name": "천공의 광경",
+          "star": 4,
+          "recommended": false,
+          "signature": false
+        }
+      ],
+      "chains": [
+        {
+          "seq": 1,
+          "name": "스산한 빗속에 몸을 던지고",
+          "core": true
+        },
+        {
+          "seq": 2,
+          "name": "벼락을 가르고 악을 베어내",
+          "core": true
+        },
+        {
+          "seq": 3,
+          "name": "고독한 우산과 홀로 내디뎌",
+          "core": true
+        },
+        {
+          "seq": 4,
+          "name": "받들은 인장을 품에 감싸고",
+          "core": false
+        },
+        {
+          "seq": 5,
+          "name": "무거운 약속을 잊지 않으니",
+          "core": false
+        },
+        {
+          "seq": 6,
+          "name": "아홉개 그림자 함께 따르리",
+          "core": true
+        }
+      ],
+      "teams": [
+        [
+          "1311",
+          "1509",
+          "1102"
+        ],
+        [
+          "1512",
+          "1209"
+        ]
+      ]
     },
     {
       "id": "1110",
@@ -4019,7 +4568,7 @@
       "guide": {
         "id": 13148,
         "language": "ko",
-        "likes": 162,
+        "likes": 164,
         "modified_at": 1785326292
       },
       "targets": [
@@ -4128,6 +4677,16 @@
           "name": "수려한 강산에 마음을 바치리라",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1610",
+          "1108"
+        ],
+        [
+          "1508",
+          "1109"
+        ]
       ]
     },
     {
@@ -4141,7 +4700,7 @@
       "guide": {
         "id": 13140,
         "language": "ko",
-        "likes": 270,
+        "likes": 272,
         "modified_at": 1794397342
       },
       "targets": [
@@ -4249,7 +4808,17 @@
           "core": true
         }
       ],
-      "stale": true
+      "teams": [
+        [
+          "1411",
+          "1509"
+        ],
+        [
+          "1512",
+          "1209",
+          "1505"
+        ]
+      ]
     },
     {
       "id": "1306",
@@ -4380,6 +4949,17 @@
           "name": "찬란한 빛 속에 새긴 이름",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1410",
+          "1302",
+          "1204"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -4506,6 +5086,16 @@
           "name": "엘리트 상인",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1404",
+          "1408"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -4626,6 +5216,16 @@
           "name": "그늘이와 구름이가 세계를 구한다!",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1205",
+          "1102"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -4753,6 +5353,16 @@
           "name": "아름다움에게 바치는 찬가",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1205",
+          "1605"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -4884,6 +5494,17 @@
           "name": "바라건대, 푸른 울림 길이 영원히 빛나기를",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1110",
+          "1505"
+        ],
+        [
+          "1508",
+          "1204",
+          "1410"
+        ]
       ]
     },
     {
@@ -4897,7 +5518,7 @@
       "guide": {
         "id": 13138,
         "language": "ko",
-        "likes": 2526,
+        "likes": 2529,
         "modified_at": 1794397361
       },
       "targets": [
@@ -5014,6 +5635,17 @@
           "name": "봄바람이 그대의 여정을 축복하리",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1509",
+          "1211",
+          "1207"
+        ],
+        [
+          "1209",
+          "1508"
+        ]
       ]
     },
     {
@@ -5027,7 +5659,7 @@
       "guide": {
         "id": 13151,
         "language": "ko",
-        "likes": 335,
+        "likes": 340,
         "modified_at": 1794397342
       },
       "targets": [
@@ -5050,7 +5682,7 @@
       "echo_slots": [
         {
           "cost": 4,
-          "main": "crit_rate"
+          "main": "crit_dmg"
         },
         {
           "cost": 3,
@@ -5139,6 +5771,17 @@
           "name": "조월 그 이름은 기대에 응답 하리라",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1312",
+          "1304",
+          "1309"
+        ],
+        [
+          "1512",
+          "1110"
+        ]
       ]
     },
     {
@@ -5270,6 +5913,15 @@
           "name": "평화를 위하여",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1304"
+        ],
+        [
+          "1503",
+          "1505"
+        ]
       ]
     },
     {
@@ -5407,6 +6059,17 @@
           "name": "내가 머무는 곳, 그곳이야말로 변치 않는 유일한 진실",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1306",
+          "1212",
+          "1404"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -5524,6 +6187,14 @@
           "name": "천년의 단잠",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1302"
+        ],
+        [
+          "1105"
+        ]
       ]
     },
     {
@@ -5662,6 +6333,16 @@
           "name": "정의의 이행",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1305",
+          "1301"
+        ],
+        [
+          "1503",
+          "1505"
+        ]
       ]
     },
     {
@@ -5787,6 +6468,17 @@
           "name": "치밀한 계획",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1206",
+          "1102",
+          "1402"
+        ],
+        [
+          "1207",
+          "1505"
+        ]
       ]
     },
     {
@@ -5923,6 +6615,17 @@
           "name": "전이모사(傳移模寫)",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1107",
+          "1304"
+        ],
+        [
+          "1505",
+          "1503",
+          "1307"
+        ]
       ]
     },
     {
@@ -5936,7 +6639,7 @@
       "guide": {
         "id": 13033,
         "language": "ko",
-        "likes": 743,
+        "likes": 745,
         "modified_at": 1775617618
       },
       "targets": [
@@ -6049,6 +6752,16 @@
           "name": "급한 일? 퇴근!",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1506",
+          "1501"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -6062,7 +6775,7 @@
       "guide": {
         "id": 13149,
         "language": "ko",
-        "likes": 199,
+        "likes": 200,
         "modified_at": 1787145414
       },
       "targets": [
@@ -6180,6 +6893,16 @@
           "name": "혼탁한 세월을 깨끗이 씻어내네",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1211",
+          "1509"
+        ],
+        [
+          "1209",
+          "1505"
+        ]
       ]
     },
     {
@@ -6193,7 +6916,7 @@
       "guide": {
         "id": 13132,
         "language": "ko",
-        "likes": 2416,
+        "likes": 2418,
         "modified_at": 1790696676
       },
       "targets": [
@@ -6312,6 +7035,16 @@
           "name": "이제 잃었던 희망의 빛을 되찾으리",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1610",
+          "1409"
+        ],
+        [
+          "1110",
+          "1407"
+        ]
       ]
     },
     {
@@ -6449,6 +7182,17 @@
           "name": "종영의 컴백 쿠키영상",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1207",
+          "1601"
+        ],
+        [
+          "1505",
+          "1503",
+          "1103"
+        ]
       ]
     },
     {
@@ -6579,6 +7323,17 @@
           "name": "자유를 위한 멈추지 않는 싸움",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1407",
+          "1102"
+        ],
+        [
+          "1508",
+          "1505",
+          "1408"
+        ]
       ]
     },
     {
@@ -6709,6 +7464,17 @@
           "name": "종막 앞에 선 예전 그대로의 나",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1105",
+          "1601"
+        ],
+        [
+          "1505",
+          "1503",
+          "1307"
+        ]
       ]
     },
     {
@@ -6842,6 +7608,17 @@
           "name": "그저 그대의 수많은 만개를 기다리리라",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1505",
+          "1503"
+        ],
+        [
+          "1606",
+          "1102",
+          "1602"
+        ]
       ]
     },
     {
@@ -6978,6 +7755,16 @@
           "name": "마지막 기회",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1302",
+          "1405"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -7099,6 +7886,17 @@
           "name": "추락, 추락... 더 깊은 환상 속으로",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1608",
+          "1304",
+          "1107"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -7112,7 +7910,7 @@
       "guide": {
         "id": 13008,
         "language": "ko",
-        "likes": 1228,
+        "likes": 1230,
         "modified_at": 1794397349
       },
       "targets": [
@@ -7216,6 +8014,16 @@
           "name": "새로운 세상으로",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1212",
+          "1507"
+        ],
+        [
+          "1410",
+          "1506"
+        ]
       ]
     },
     {
@@ -7229,7 +8037,7 @@
       "guide": {
         "id": 13003,
         "language": "ko",
-        "likes": 475,
+        "likes": 476,
         "modified_at": 1794397349
       },
       "targets": [
@@ -7336,6 +8144,16 @@
           "name": "고요한 창가에서 들려오는 노랫소리",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1507",
+          "1502"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -7349,7 +8167,7 @@
       "guide": {
         "id": 13125,
         "language": "ko",
-        "likes": 1778,
+        "likes": 1780,
         "modified_at": 1794397342
       },
       "targets": [
@@ -7459,6 +8277,16 @@
           "name": "안식과 종말을 벗어나는 심야",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1411",
+          "1607"
+        ],
+        [
+          "1505",
+          "1503"
+        ]
       ]
     },
     {
@@ -7472,7 +8300,7 @@
       "guide": {
         "id": 13141,
         "language": "ko",
-        "likes": 1387,
+        "likes": 1393,
         "modified_at": 1785341073
       },
       "targets": [
@@ -7584,6 +8412,16 @@
           "name": "설령 그 끝이 영원한 밤에 기다린다 해도",
           "core": true
         }
+      ],
+      "teams": [
+        [
+          "1109",
+          "1509"
+        ],
+        [
+          "1110",
+          "1508"
+        ]
       ]
     }
   ],
@@ -7619,6 +8457,7 @@
     "영광의 사자": "https://guide-res.aki-game.net/introduction/material/aaa57ef8003da1dc7f657c2bdd2dddc1/ce2ea44491888f7cf71f8654dfc3fc42.png",
     "용의 별자리": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/2c25dd7af6bb973507a34f5936790026.png",
     "음험한 백로": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/cbb3e9ccc7ba7463e69e84649d270d89.png",
+    "이름없는 탐색자": "https://guide-res.aki-game.net/introduction/material/94d1a1a3f3bbec1f2f2276bbe8f458ac/d683f29db2518d21dd77489aaa799f50.png",
     "이성(異性) 무장": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/381a49f5bba1c253180192c8f8472512.png",
     "절식백": "https://guide-res.aki-game.net/introduction/material/1c27ce1fe7e633679092f5e5500e55c5/0f75360b3ebd90369120dfe630d42e03.png",
     "지옥불 기사": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/ef91cfe0534fe14ebf81b5969d8600f7.png",
@@ -7632,6 +8471,17 @@
     "폭주의 고릴라": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/b4aa7bc23b055188b9fa730134c8aad6.png",
     "하늘의 기관 인형 · 겁살": "https://guide-res.aki-game.net/introduction/material/d6962e1fbd0d0f0e249387d0ea4ba19b/c93e4cedbd4b823f7062d5edbe74cb24.png",
     "하이와티아": "https://guide-res.aki-game.net/introduction/material/fb999546dfb46ffe46987bd52b0810d3/388735477a69f8673e761783cd96a358.png",
+    "해형살": "https://guide-res.aki-game.net/introduction/material/1c27ce1fe7e633679092f5e5500e55c5/af4f22aaa167ad4c863ce7c41948c7d5.png",
     "헤카테": "https://guide-res.aki-game.net/introduction/material/526f4dcd93bf086e215372c967ae67b5/4c6f03d68d4a3fdf07e3a5a255e75965.png"
+  },
+  "team_members": {
+    "1501": {
+      "name": "방랑자 · 회절",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/3952a43dc10d6b5babe8e84c88517126.png"
+    },
+    "1605": {
+      "name": "방랑자 · 인멸",
+      "portrait": "https://guide-res.aki-game.net/introduction/material/43865e670f6c369a47b31994276a5a4f/2c61221d59040bad9e51035e9ac4f913.png"
+    }
   }
 }

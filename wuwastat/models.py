@@ -13,6 +13,8 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 BUNDLED_DATA = DATA_DIR / "characters.json"
 # '캐릭터 데이터 업데이트'로 받은 전체 데이터 (공략 설명 글 포함). 저장소에 올리지 않는다 (.gitignore)
 LOCAL_DATA = DATA_DIR / "characters.local.json"
+# 직접 입력한 추천 파티 모드 (공식 공략에 없는 정보)
+PARTY_MODES = DATA_DIR / "party_modes.json"
 
 
 def data_path() -> Path:
@@ -75,6 +77,7 @@ class Character:
     weapon_text: str = ""
     chains: list[Chain] = field(default_factory=list)
     chain_text: str = ""
+    teams: list[list[str]] = field(default_factory=list)  # 추천 파티원 칸별 [주 추천 ID, 대체 ID...]
     stale: bool = False  # 공식 사이트에서 사라져 예전 데이터를 쓰는 중
 
     @property
@@ -108,8 +111,27 @@ class Character:
             weapon_text=d.get("weapon_text", ""),
             chains=[Chain(**c) for c in d.get("chains", [])],
             chain_text=d.get("chain_text", ""),
+            teams=[[str(i) for i in slot] for slot in d.get("teams", []) if slot],
             stale=bool(d.get("stale", False)),
         )
+
+    def recommended_parties(self) -> list[tuple[str, ...]]:
+        """추천 파티 조합 (자기 자신 포함 ID 목록).
+
+        첫 조합은 칸마다 주 추천 캐릭터. 이후 한 칸씩 대체 캐릭터로 바꾼 조합을 칸 순서대로 더한다.
+        예) 에이메스 - 린네 - 모니에 / 에이메스 - 데니아 - 모니에 / 에이메스 - 루파 - 모니에 / 에이메스 - 린네 - 치사
+        """
+        if not self.teams:
+            return []
+        base = [slot[0] for slot in self.teams]
+        parties = [tuple([self.id, *base])]
+        for i, slot in enumerate(self.teams):
+            for alt in slot[1:]:
+                members = list(base)
+                members[i] = alt
+                if alt not in base:
+                    parties.append(tuple([self.id, *members]))
+        return parties
 
     def recommended_mains(self, cost: int) -> set[str]:
         return {s.main for s in self.echo_slots if s.cost == cost}
@@ -146,6 +168,33 @@ class Build:
     chain: int | None = None  # 공명 체인(돌파) 단계 0~6
 
 
+def load_party_modes(names: dict[str, str], path: Path | None = None) -> list[tuple[str, str, str]]:
+    """party_modes.json → [(함께 쓰는 캐릭터 ID, 모드를 고르는 캐릭터 ID, 모드)]. names: ID → 이름."""
+    try:
+        raw = json.loads(Path(path or PARTY_MODES).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    by_name = {v: k for k, v in names.items()}
+    out = []
+    for r in raw.get("rules", []) if isinstance(raw, dict) else []:
+        if not isinstance(r, dict):
+            continue
+        a, b, mode = by_name.get(str(r.get("with", ""))), by_name.get(str(r.get("member", ""))), str(r.get("mode", ""))
+        if a and b and mode:
+            out.append((a, b, mode))
+    return out
+
+
+def party_modes(party: tuple[str, ...] | list[str], rules: list[tuple[str, str, str]]) -> dict[str, str]:
+    """파티 안에서 모드를 고르는 캐릭터 ID → 모드. 같은 캐릭터에 규칙이 여럿 맞으면 먼저 적힌 것."""
+    members = set(party)
+    out: dict[str, str] = {}
+    for a, b, mode in rules:
+        if a in members and b in members and b not in out:
+            out[b] = mode
+    return out
+
+
 def load_characters(path: Path | None = None) -> tuple[list[Character], dict]:
     raw = json.loads(Path(path or data_path()).read_text(encoding="utf-8"))
     chars = [Character.from_dict(c) for c in raw.get("characters", [])]
@@ -153,4 +202,4 @@ def load_characters(path: Path | None = None) -> tuple[list[Character], dict]:
     return chars, meta
 
 
-__all__ = ["Target", "EchoSlot", "Character", "StatLine", "Echo", "Build", "load_characters", "S"]
+__all__ = ["Target", "EchoSlot", "Character", "StatLine", "Echo", "Build", "load_characters", "load_party_modes", "party_modes", "S"]

@@ -19,19 +19,30 @@ from PySide6.QtWidgets import (
     QAbstractItemView, QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QCompleter, QDoubleSpinBox, QFileDialog, QFrame, QGridLayout,
     QGroupBox, QHBoxLayout, QHeaderView, QLabel, QLineEdit, QMainWindow, QMessageBox, QProgressBar, QProgressDialog,
     QPushButton, QScrollArea, QSplitter, QTableWidget, QTableWidgetItem, QTabWidget, QTextBrowser, QVBoxLayout,
-    QToolButton, QWidget,
+    QSizePolicy, QToolButton, QWidget,
 )
 
 from . import __version__
 from . import stats as S
-from .models import LOCAL_DATA, Build, Character, Echo, StatLine, data_path, load_characters
+from .models import LOCAL_DATA, Build, Character, Echo, StatLine, data_path, load_characters, load_party_modes, party_modes
 from . import scoring as sc
 from . import updater
 from .scoring import Evaluation, evaluate
 
 IMAGE_FILTER = "이미지 (*.png *.jpg *.jpeg *.bmp *.webp)"
 GRADE_COLORS = {"S": "#c0392b", "A": "#8e44ad", "B": "#2980b9", "C": "#27ae60", "-": "#7f8c8d"}
-MUTED_COLOR = "#7a8794"  # 보조 문구 (밝은/어두운 배경 모두에서 읽히는 회색)
+# 화면 색 (어두운 테마 하나로 고정해 어떤 Windows 설정에서도 같은 대비로 보이게 한다)
+BG = "#15171c"          # 창 바탕
+PANEL = "#1f2229"       # 카드(구역) 바탕
+PANEL_ALT = "#262a32"   # 표 줄무늬, 탭 등
+INPUT_BG = "#181a20"
+BORDER = "#363b46"
+TEXT = "#e9ecf1"
+ACCENT = "#4da3ff"      # 구역 제목, 주요 버튼, 선택 표시
+MUTED_COLOR = "#a6b0bd"  # 보조 문구 (어두운 바탕에서도 읽히도록 밝은 회색)
+# 캐릭터 속성별 강조색
+ELEMENT_COLORS = {"glacio": "#5cc8f0", "fusion": "#f07848", "electro": "#b77cf5",
+                  "aero": "#4fd9a8", "spectro": "#ecc94b", "havoc": "#e0609a"}
 WARN_COLOR = "#e67e22"
 APP_FONT_PT = 11  # 기본 글자 크기
 FONT_PT_RANGE = (8, 20)
@@ -61,20 +72,69 @@ def apply_font_pt(pt: int) -> None:
     font = app.font()
     font.setPointSize(pt)
     app.setFont(font)
-    app.setStyleSheet(APP_STYLE)  # 스타일 다시 적용해 모든 위젯 글꼴 갱신
+    app.setStyleSheet(app_style(pt))  # 스타일 다시 적용해 모든 위젯 글꼴 갱신
     QSettings().setValue("ui/font_pt", pt)
     for f in list(_font_listeners):
         f()
-APP_STYLE = """
-QGroupBox { font-weight: bold; margin-top: 10px; padding-top: 6px; }
-QGroupBox::title { subcontrol-origin: margin; left: 8px; padding: 0 4px; }
-QHeaderView::section { font-weight: bold; padding: 4px 6px; }
-QTableWidget { gridline-color: palette(midlight); }
-QTabBar::tab { padding: 6px 14px; }
-QTabBar::tab:selected { font-weight: bold; }
-QPushButton { padding: 5px 12px; }
-QComboBox, QAbstractSpinBox, QLineEdit { min-height: 24px; padding: 1px 4px; }
+def app_style(pt: int | None = None) -> str:
+    """전체 화면 스타일. 구역은 카드로 나누고, 제목·주요 버튼·선택 상태에 강조색을 쓴다."""
+    pt = pt or base_pt()
+    return f"""
+QToolTip {{ background: {PANEL_ALT}; color: {TEXT}; border: 1px solid {ACCENT}; padding: 4px; }}
+QGroupBox {{ background: {PANEL}; border: 1px solid {BORDER}; border-top: 3px solid {ACCENT}; border-radius: 8px;
+            margin-top: 6px; padding: {pt * 2 + 14}px 8px 8px 8px; font-weight: bold; font-size: {pt + 2}pt; }}
+QGroupBox[untitled="true"] {{ padding-top: 8px; }}
+QGroupBox::title {{ subcontrol-origin: padding; subcontrol-position: top left; left: 10px; top: 8px;
+                   color: {ACCENT}; }}
+QLabel {{ background: transparent; }}
+QHeaderView::section {{ background: #2d323c; color: {TEXT}; font-weight: bold; padding: 6px 8px;
+                       border: none; border-right: 1px solid {BORDER}; border-bottom: 2px solid {ACCENT}; }}
+QTableWidget {{ background: {INPUT_BG}; alternate-background-color: {PANEL_ALT}; gridline-color: {BORDER};
+               border: 1px solid {BORDER}; border-radius: 6px; }}
+QTabWidget::pane {{ border: 1px solid {BORDER}; border-radius: 6px; background: {PANEL}; top: -1px; }}
+QTabBar::tab {{ background: {PANEL_ALT}; color: {MUTED_COLOR}; padding: 7px 16px; margin-right: 2px;
+               border: 1px solid {BORDER}; border-bottom: none; border-top-left-radius: 6px; border-top-right-radius: 6px; }}
+QTabBar::tab:selected {{ background: {PANEL}; color: {TEXT}; font-weight: bold; border-top: 3px solid {ACCENT}; }}
+QTabBar::tab:hover:!selected {{ color: {TEXT}; }}
+QPushButton {{ background: #2d323c; color: {TEXT}; border: 1px solid #454c5a; border-radius: 6px; padding: 6px 14px; }}
+QPushButton:hover {{ background: #384050; border-color: {ACCENT}; }}
+QPushButton:pressed {{ background: #232831; }}
+QPushButton[primary="true"] {{ background: {ACCENT}; color: white; border-color: {ACCENT}; font-weight: bold; }}
+QPushButton[primary="true"]:hover {{ background: #6cb4ff; }}
+QPushButton[primary="true"]:checked {{ background: #d9534f; border-color: #d9534f; }}
+QComboBox, QLineEdit {{ background: {INPUT_BG}; color: {TEXT}; border: 1px solid #454c5a;
+                        border-radius: 5px; min-height: 26px; padding: 1px 6px; }}
+QComboBox:focus, QLineEdit:focus {{ border-color: {ACCENT}; }}
+QAbstractSpinBox {{ min-height: 26px; }}
+QComboBox QAbstractItemView {{ background: {PANEL}; color: {TEXT}; selection-background-color: {ACCENT};
+                               border: 1px solid {BORDER}; }}
+QProgressBar {{ background: {INPUT_BG}; border: 1px solid {BORDER}; border-radius: 5px; text-align: center;
+               color: white; font-weight: bold; margin: 3px 4px; }}
+QTextBrowser {{ background: {PANEL}; border: 1px solid {BORDER}; border-radius: 8px; padding: 6px; }}
+QScrollArea {{ border: none; background: transparent; }}
+QScrollArea > QWidget > QWidget {{ background: transparent; }}
+QSplitter::handle {{ background: {BG}; width: 6px; }}
+QStatusBar {{ background: #101216; color: {MUTED_COLOR}; }}
 """
+
+
+def apply_theme(app: QApplication) -> None:
+    """Fusion 스타일 + 어두운 팔레트 (Windows 밝은/어두운 모드와 관계없이 같은 모습)."""
+    from PySide6.QtGui import QColor, QPalette
+    app.setStyle("Fusion")
+    pal = QPalette()
+    roles = {QPalette.Window: BG, QPalette.WindowText: TEXT, QPalette.Base: INPUT_BG,
+             QPalette.AlternateBase: PANEL_ALT, QPalette.Text: TEXT, QPalette.Button: "#2d323c",
+             QPalette.ButtonText: TEXT, QPalette.Highlight: ACCENT, QPalette.HighlightedText: "#ffffff",
+             QPalette.ToolTipBase: PANEL_ALT, QPalette.ToolTipText: TEXT, QPalette.PlaceholderText: "#7d8794",
+             QPalette.Link: ACCENT, QPalette.Mid: BORDER, QPalette.Midlight: BORDER}
+    for role, color in roles.items():
+        pal.setColor(role, QColor(color))
+    pal.setColor(QPalette.Disabled, QPalette.Text, QColor("#6b7380"))
+    pal.setColor(QPalette.Disabled, QPalette.ButtonText, QColor("#6b7380"))
+    app.setPalette(pal)
+    app.setStyleSheet(app_style())
+
 # 서브옵션 우선순위 1순위부터 (밝은/어두운 배경 모두에서 잘 보이는 진한 색)
 PRIORITY_COLORS = ["#e74c3c", "#e67e22", "#d4a017", "#27ae60", "#2e86de", "#8e44ad"]
 SUBSTAT_KEYS = [S.CRIT_RATE, S.CRIT_DMG, S.ATK_PCT, S.ATK_FLAT, S.HP_PCT, S.HP_FLAT, S.DEF_PCT, S.DEF_FLAT,
@@ -186,7 +246,7 @@ def portrait_label(size: int) -> QLabel:
     lb = QLabel()
     lb.setFixedSize(size, size)
     lb.setAlignment(Qt.AlignCenter)
-    lb.setStyleSheet("border: 1px solid #555; border-radius: 6px; color: #7a8794;")
+    lb.setStyleSheet(f"border: 1px solid {BORDER}; border-radius: 6px; color: {MUTED_COLOR}; background: {INPUT_BG};")
     return lb
 
 
@@ -333,7 +393,7 @@ class EchoEditor(DropMixin, QFrame):
         lay.addLayout(grid)
         self.status = plain_label("에코 상세 화면 스크린샷을 열거나, 이 영역에 끌어다 놓거나, Ctrl+V로 붙여넣으세요.")
         self.status.setWordWrap(True)
-        self.status.setStyleSheet("color: #7a8794;")
+        self.status.setStyleSheet(f"color: {MUTED_COLOR};")
         lay.addWidget(self.status)
         lay.addStretch()
 
@@ -433,6 +493,8 @@ class TotalsEditor(DropMixin, QGroupBox):
         self.table.verticalHeader().setDefaultSectionSize(36)
         self.table.setAlternatingRowColors(True)
         self.spins: dict[str, ValueSpin] = {}
+        self._targets: dict = {}
+        self.changed.connect(self._mark_targets)
         for r, key in enumerate(S.TOTAL_STAT_KEYS):
             item = QTableWidgetItem(S.label(key))
             item.setFlags(Qt.ItemIsEnabled)
@@ -450,7 +512,7 @@ class TotalsEditor(DropMixin, QGroupBox):
         lay.addWidget(self.table)
         self.status = plain_label("캐릭터 속성 상세 화면 스크린샷을 열거나 끌어다 놓으세요. 0은 미입력으로 처리됩니다.")
         self.status.setWordWrap(True)
-        self.status.setStyleSheet("color: #7a8794;")
+        self.status.setStyleSheet(f"color: {MUTED_COLOR};")
         lay.addWidget(self.status)
 
     def _open(self) -> None:
@@ -465,8 +527,21 @@ class TotalsEditor(DropMixin, QGroupBox):
             return
         self.ocr_requested.emit(qimage_to_pil(img))
 
+    def _mark_targets(self) -> None:
+        """목표 칸 색: 달성하면 초록, 모자라면 주황, 입력 전이면 강조색."""
+        from PySide6.QtGui import QColor
+        for r, key in enumerate(S.TOTAL_STAT_KEYS):
+            t = self._targets.get(key)
+            item = self.table.item(r, 2)
+            if not t:
+                continue
+            cur = self.spins[key].value()
+            ok = cur > 0 and (cur > t.value if t.op == ">" else cur >= t.value)
+            item.setForeground(QColor("#2ecc71" if ok else "#f39c12" if cur > 0 else ACCENT))
+
     def set_targets(self, char: Character | None) -> None:
         targets = {t.stat: t for t in (char.targets if char else [])}
+        self._targets = targets
         bold = QFont()
         bold.setBold(True)
         for r, key in enumerate(S.TOTAL_STAT_KEYS):
@@ -474,6 +549,8 @@ class TotalsEditor(DropMixin, QGroupBox):
             self.table.item(r, 2).setText(f"{'≥' if t and t.op == '>=' else '>' if t else ''} "
                                           f"{S.fmt(key, t.value)}" if t else "")
             self.table.item(r, 0).setFont(bold if t else QFont())
+            self.table.item(r, 2).setFont(bold)
+        self._mark_targets()
 
     def set_totals(self, totals: dict[str, float]) -> None:
         for key, sp in self.spins.items():
@@ -562,18 +639,39 @@ class CharacterInfo(QTextBrowser):
         super().__init__()
         self.setOpenLinks(False)
         self.anchorClicked.connect(open_link)
+        # 내용 높이에 맞춘다 (왼쪽 칸 전체가 스크롤되므로 이 칸 안에 스크롤바를 두지 않는다)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+    def _fit_height(self) -> None:
+        doc = self.document()
+        doc.setTextWidth(self.viewport().width())
+        m = self.contentsMargins()
+        self.setFixedHeight(int(doc.size().height()) + m.top() + m.bottom() + 4)
+
+    def resizeEvent(self, e):  # noqa: N802
+        super().resizeEvent(e)
+        self._fit_height()
+
+    def setHtml(self, text: str) -> None:  # noqa: N802
+        super().setHtml(text)
+        self._fit_height()
 
     def show_character(self, c: Character | None) -> None:
         if c is None:
             self.setHtml("<p>캐릭터를 선택하세요.</p>")
             return
         e = html.escape
-        parts = [f"<h2>{e(c.name)} <span style='font-size:{fs(0)}; color:{MUTED_COLOR}'>"
-                 f"{'★' * (c.star or 0)} {e(S.ELEMENT_KO.get(c.element, ''))}</span></h2>"]
+        ec = ELEMENT_COLORS.get(c.element, ACCENT)
+        star_color = "#f5c542" if (c.star or 0) >= 5 else "#b98cf0"
+        parts = [f"<p style='margin:0'><span style='font-size:{fs(8)}; font-weight:bold; color:{ec}'>{e(c.name)}</span></p>"
+                 f"<p style='margin:2px 0 8px 0'><span style='font-size:{fs(1)}; color:{star_color}'>{'★' * (c.star or 0)}</span>"
+                 f"&nbsp;&nbsp;<span style='font-size:{fs(0)}; font-weight:bold; color:#15171c; background-color:{ec}'>"
+                 f"&nbsp;{e(S.ELEMENT_KO.get(c.element, ''))}&nbsp;</span></p>"]
         if not c.guide:
             parts.append(f"<p style='color:{WARN_COLOR}'>공식 공략이 아직 없어 기본 딜러 기준으로 계산합니다.</p>")
         if c.substat_priority:
-            parts.append("<h3>서브옵션 우선순위</h3><table cellspacing='0' cellpadding='5'>")
+            parts.append(f"<p style='margin:10px 0 2px 0; font-size:{fs(2)}; font-weight:bold; color:{ACCENT}'>서브옵션 우선순위</p>" "<table cellspacing='0' cellpadding='5'>")
             for i, tier in enumerate(c.substat_priority):
                 color = PRIORITY_COLORS[min(i, len(PRIORITY_COLORS) - 1)]
                 names = " / ".join(e(S.label(k)) for k in tier)
@@ -586,11 +684,156 @@ class CharacterInfo(QTextBrowser):
                          f"<span style='font-weight:bold; color:{PRIORITY_COLORS[min(len(c.substat_priority), len(PRIORITY_COLORS) - 1)]}'>"
                          f"{names}</span></p>")
         if not c.substat_priority and c.substat_priority_text:
-            parts.append(f"<h3>서브옵션 우선순위</h3><p style='font-size:{fs(3)}; font-weight:bold; color:{PRIORITY_COLORS[0]}'>"
+            parts.append(f"<p style='margin:10px 0 2px 0; font-size:{fs(2)}; font-weight:bold; color:{ACCENT}'>서브옵션 우선순위</p>" f"<p style='font-size:{fs(3)}; font-weight:bold; color:{PRIORITY_COLORS[0]}'>"
                          f"{e(c.substat_priority_text)}</p>")
         if c.stale:
             parts.append(f"<p style='color:{WARN_COLOR}'>공식 사이트에서 이 캐릭터 공략을 지금은 받을 수 없어 예전에 받은 데이터를 씁니다.</p>")
         self.setHtml("".join(parts))
+
+
+PARTY_ICON_SIZE = 52
+
+
+class PartyPanel(QGroupBox):
+    """공략 사이트처럼 추천 파티를 초상화로 보여준다. 예) 에이메스 - 린네 - 모니에"""
+
+    def __init__(self, pixmap_for: Callable[[str], "QPixmap | None"]):
+        super().__init__("추천 파티")
+        self._pixmap_for = pixmap_for
+        self._lay = QVBoxLayout(self)
+        self._lay.setSpacing(6)
+
+    def _clear(self) -> None:
+        while self._lay.count():
+            item = self._lay.takeAt(0)
+            w = item.widget()
+            if w is not None:
+                w.hide()
+                w.setParent(None)
+                w.deleteLater()
+
+    def _member(self, cid: str, name: str, mode: str = "") -> QWidget:
+        box = QWidget()
+        box.setFixedWidth(PARTY_ICON_SIZE + 14)  # 이름이 길어도 줄 폭이 늘지 않게 (긴 이름은 두 줄)
+        v = QVBoxLayout(box)
+        v.setContentsMargins(0, 0, 0, 0)
+        v.setSpacing(1)
+        icon = portrait_label(PARTY_ICON_SIZE)
+        pix = self._pixmap_for(cid)
+        if pix is None:
+            icon.setText(name[:3])
+        else:
+            icon.setPixmap(pix.scaled(PARTY_ICON_SIZE, PARTY_ICON_SIZE, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        icon.setToolTip(name)
+        v.addWidget(icon, 0, Qt.AlignHCenter)
+        lb = QLabel(name)
+        lb.setAlignment(Qt.AlignCenter)
+        lb.setWordWrap(True)
+        lb.setStyleSheet(f"font-size: {fs(-2)};")
+        v.addWidget(lb)
+        if mode:
+            ml = QLabel(mode)
+            ml.setAlignment(Qt.AlignCenter)
+            # 이름보다 크게, 배경 칸을 둘러 한눈에 보이게 한다
+            ml.setStyleSheet(f"font-size: {fs(1)}; font-weight: bold; color: white; background: {WARN_COLOR};"
+                             " border-radius: 4px; padding: 1px 6px;")
+            ml.setToolTip(f"{name}: {mode} 모드 선택")
+            v.addWidget(ml, 0, Qt.AlignHCenter)
+        return box
+
+    def show_character(self, c: Character | None, names: dict[str, str],
+                       rules: list[tuple[str, str, str]] | None = None) -> None:
+        self._clear()
+        parties = c.recommended_parties() if c else []
+        self.setVisible(bool(parties))
+        for party in parties:
+            modes = party_modes(party, rules or [])
+            row = QWidget()
+            h = QHBoxLayout(row)
+            h.setContentsMargins(0, 0, 0, 0)
+            h.setSpacing(4)
+            for i, cid in enumerate(party):
+                if i:
+                    dash = QLabel("-")
+                    dash.setStyleSheet(f"color: {MUTED_COLOR}; font-weight: bold;")
+                    dash.setFixedSize(dash.sizeHint().width(), PARTY_ICON_SIZE)  # 줄이 좁아도 사라지지 않게  # 초상화 높이 가운데에 맞춘다
+                    h.addWidget(dash, 0, Qt.AlignTop)
+                h.addWidget(self._member(cid, names.get(cid, cid), modes.get(cid, "")), 0, Qt.AlignTop)
+            h.addStretch(1)
+            row.setToolTip(" - ".join(names.get(cid, cid) + (f" ({modes[cid]})" if cid in modes else "")
+                                      for cid in party))
+            self._lay.addWidget(row)
+
+
+class RainbowLabel(QWidget):
+    """이스터 에그: 10번 클릭하면 글자가 무지개색으로 출렁이고, 그 상태에서 한 번 더 누르면 꺼진다."""
+
+    CLICKS = 10
+
+    def __init__(self, text: str):
+        super().__init__()
+        self.text = text
+        self.clicks = 0
+        self.phase = 0.0
+        self.timer = QTimer(self, interval=33)  # 약 30fps
+        self.timer.timeout.connect(self._tick)
+        self.setCursor(Qt.PointingHandCursor)
+        self._update_size()
+
+    @property
+    def active(self) -> bool:
+        return self.timer.isActive()
+
+    def _font(self) -> QFont:
+        f = QFont(self.font())
+        f.setPointSize(13 if self.active else 8)
+        f.setBold(self.active)
+        return f
+
+    def _update_size(self) -> None:
+        from PySide6.QtGui import QFontMetrics
+        fm = QFontMetrics(self._font())
+        wave = 10 if self.active else 0
+        self.setFixedHeight(fm.height() + wave * 2 + 4)
+        self.setMinimumWidth(fm.horizontalAdvance(self.text) + 8)
+        self.update()
+
+    def mousePressEvent(self, e):  # noqa: N802
+        if e.button() != Qt.LeftButton:
+            return
+        if self.active:
+            self.timer.stop()
+            self.clicks = 0
+        else:
+            self.clicks += 1
+            if self.clicks >= self.CLICKS:
+                self.phase = 0.0
+                self.timer.start()
+        self._update_size()
+
+    def _tick(self) -> None:
+        self.phase += 0.12
+        self.update()
+
+    def paintEvent(self, _e):  # noqa: N802
+        import math
+        from PySide6.QtGui import QColor, QFontMetrics, QPainter
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        font = self._font()
+        p.setFont(font)
+        fm = QFontMetrics(font)
+        if not self.active:
+            p.setPen(QColor(MUTED_COLOR))
+            p.drawText(2, fm.ascent() + 2, self.text)
+            return
+        x, base = 4, fm.ascent() + 12
+        for i, ch in enumerate(self.text):
+            hue = (i * 0.09 + self.phase * 0.15) % 1.0
+            dy = math.sin(self.phase + i * 0.7) * 8  # 출렁출렁
+            p.setPen(QColor.fromHslF(hue, 0.9, 0.62))
+            p.drawText(int(x), int(base + dy), ch)
+            x += fm.horizontalAdvance(ch)
 
 
 class ResultsPanel(QWidget):
@@ -606,8 +849,9 @@ class ResultsPanel(QWidget):
             self.grade.setFont(f)
         grade_font()
         _font_listeners.append(grade_font)
-        self.grade.setMinimumWidth(140)
+        self.grade.setFixedSize(132, 132)
         self.grade.setAlignment(Qt.AlignCenter)
+        self._grade_style("-")
         top.addWidget(self.grade)
         self.summary = QLabel("")
         self.summary.setWordWrap(True)
@@ -630,9 +874,37 @@ class ResultsPanel(QWidget):
         self.echoes.setWordWrap(True)
         lay.addWidget(self.echoes)
 
-        lay.addWidget(section_label("육성 가이드"))
+        # 장착 에코처럼 접고 펼 수 있는 제목
+        advice_toggle = QToolButton()
+        advice_toggle.setText("육성 가이드")
+        advice_toggle.setCheckable(True)
+        advice_toggle.setChecked(True)
+        advice_toggle.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        advice_toggle.setArrowType(Qt.DownArrow)
+        advice_toggle.setAutoRaise(True)
+
+        def toggle_style() -> None:
+            advice_toggle.setStyleSheet(
+                f"QToolButton {{ font-weight: bold; font-size: {base_pt() + 3}pt; color: {TEXT}; border: none;"
+                f" border-left: 4px solid {ACCENT}; padding: 2px 0 2px 6px; margin-top: 10px; }}")
+        toggle_style()
+        _font_listeners.append(toggle_style)
+        lay.addWidget(advice_toggle, 0, Qt.AlignLeft)
         self.advice = QTextBrowser()
         lay.addWidget(self.advice, 1)
+        self._advice_spacer = QWidget()  # 접었을 때 남는 공간을 채운다
+        lay.addWidget(self._advice_spacer, 0)
+
+        def toggle_advice(on: bool) -> None:
+            self.advice.setVisible(on)
+            advice_toggle.setArrowType(Qt.DownArrow if on else Qt.RightArrow)
+            lay.setStretchFactor(self._advice_spacer, 0 if on else 1)
+        advice_toggle.toggled.connect(toggle_advice)
+
+    def _grade_style(self, grade: str) -> None:
+        color = GRADE_COLORS.get(grade, "#3a404b")
+        self.grade.setStyleSheet(f"color: white; background: {color}; border-radius: 16px;"
+                                 " border: 3px solid rgba(255,255,255,40);")
 
     def set_echo_icon(self, index: int, pix: "QPixmap | None") -> None:
         row = getattr(self, "_echo_rows", {}).get(index)
@@ -652,14 +924,15 @@ class ResultsPanel(QWidget):
     def show_evaluation(self, ev: Evaluation | None) -> None:
         if ev is None:
             self.grade.setText("-")
-            self.summary.setText("스탯이나 에코를 입력하면 등급을 계산합니다.")
+            self._grade_style("-")
+            self.summary.setText(f"<span style='font-size:{fs(3)}; color:{MUTED_COLOR}'>스탯이나 에코를 입력하면 등급을 계산합니다.</span>")
             self.targets.setRowCount(0)
             self.echoes.setRowCount(0)
             self.advice.clear()
             return
         color = GRADE_COLORS.get(ev.grade, "#333")
         self.grade.setText(ev.grade)
-        self.grade.setStyleSheet(f"color: {color};")
+        self._grade_style(ev.grade)
         ts = (f"{ev.target_score:.0f}점" + (f" (서브옵션 약 {ev.missing_lines:.1f}줄 부족)" if ev.missing_lines else "")
               if ev.target_score is not None else "입력 없음")
         es = (f"{ev.echo_score:.0f}점 (평균 상위 {100 - ev.echo_score:.0f}%, 에코 {len(ev.echoes)}개)"
@@ -683,8 +956,13 @@ class ResultsPanel(QWidget):
             chain += f"<br><span style='color:{MUTED_COLOR}'>돌파별 DPS 상승(추정): {per}"
             chain += " (*효과 크기를 문구로 알 수 없어 기본값)</span>" if any(
                 e.estimated_default for e in ev.chain_estimates) else "</span>"
-        self.summary.setText(f"<span style='font-size:{fs(5)}'><b>종합 {ev.total_score:.1f}점</b></span><br>"
-                             f"목표 스탯 달성도: {ts}<br>에코 평균 점수: {es}{cap}{chain}")
+        def row(label: str, value: str) -> str:
+            return (f"<span style='font-size:{fs(1)}; color:{MUTED_COLOR}'>{label}</span>&nbsp; "
+                    f"<span style='font-size:{fs(2)}; font-weight:bold'>{value}</span>")
+        self.summary.setText(f"<span style='font-size:{fs(4)}; color:{MUTED_COLOR}'>종합</span>&nbsp;"
+                             f"<span style='font-size:{fs(12)}; font-weight:bold; color:{color}'>{ev.total_score:.1f}</span>"
+                             f"<span style='font-size:{fs(4)}; color:{MUTED_COLOR}'> 점</span><br>"
+                             f"{row('목표 스탯 달성도', ts)}<br>{row('에코 평균 점수', es)}{cap}{chain}")
 
         self.targets.setRowCount(len(ev.targets))
         for r, t in enumerate(ev.targets):
@@ -695,7 +973,7 @@ class ResultsPanel(QWidget):
             bar.setRange(0, 100)
             bar.setValue(round(t.ratio * 100))
             bar.setFormat("달성" if t.achieved else f"{t.ratio * 100:.0f}%  (-{S.fmt(t.stat, t.deficit)})")
-            bar.setStyleSheet(f"QProgressBar::chunk {{ background: {'#27ae60' if t.achieved else '#e67e22'}; }}")
+            bar.setStyleSheet(f"QProgressBar::chunk {{ background: {'#2ecc71' if t.achieved else '#e67e22'}; border-radius: 4px; }}")
             self.targets.setCellWidget(r, 3, bar)
 
         self.echoes.setRowCount(len(ev.replace_order))
@@ -728,11 +1006,11 @@ class ResultsPanel(QWidget):
 
 def section_label(title: str, sub: str = "") -> QLabel:
     lb = QLabel()
-    lb.setContentsMargins(0, 8, 0, 2)
+    lb.setStyleSheet(f"border-left: 4px solid {ACCENT}; padding: 2px 0 2px 8px; margin-top: 10px;")
 
     def render() -> None:
-        ex = f" <span style='font-size:{fs(-1)}; font-weight:normal; color:{MUTED_COLOR}'>({sub})</span>" if sub else ""
-        lb.setText(f"<span style='font-size:{fs(2)}; font-weight:bold'>{title}</span>{ex}")
+        ex = f"&nbsp; <span style='font-size:{fs(0)}; font-weight:normal; color:{MUTED_COLOR}'>{sub}</span>" if sub else ""
+        lb.setText(f"<span style='font-size:{fs(3)}; font-weight:bold; color:{TEXT}'>{title}</span>{ex}")
     render()
     _font_listeners.append(render)
     return lb
@@ -765,16 +1043,19 @@ class MainWindow(QMainWindow):
         central = QWidget()
         root = QVBoxLayout(central)
         bar = QHBoxLayout()
-        bar.addWidget(QLabel("캐릭터"))
+        char_label = QLabel("캐릭터")
+        char_label.setStyleSheet(f"font-weight: bold; color: {ACCENT};")
+        bar.addWidget(char_label)
         self.char_combo = QComboBox()
         self.char_combo.setEditable(True)
         self.char_combo.setInsertPolicy(QComboBox.NoInsert)
         self.char_combo.setMinimumWidth(260)
+        self.char_combo.setStyleSheet(f"QComboBox {{ font-weight: bold; border: 2px solid {ACCENT}; }}")
         self.char_combo.completer().setFilterMode(Qt.MatchContains)
         self.char_combo.completer().setCompletionMode(QCompleter.PopupCompletion)
         bar.addWidget(self.char_combo)
         self.data_label = QLabel("")
-        self.data_label.setStyleSheet("color: #7a8794;")
+        self.data_label.setStyleSheet(f"color: {MUTED_COLOR};")
         bar.addWidget(self.data_label)
         bar.addStretch()
         bar.addWidget(QLabel("글자 크기"))
@@ -803,13 +1084,14 @@ class MainWindow(QMainWindow):
         watch_bar = QHBoxLayout()
         self.b_watch = QPushButton("세팅 자동 측정 시작")
         self.b_watch.setCheckable(True)
+        self.b_watch.setProperty("primary", True)
         self.b_watch.setToolTip(
             "명조 창 화면을 읽기만 해서 캐릭터 화면의 스탯과 에코 화면의 에코를 자동으로 채웁니다.\n"
             "게임에 클릭이나 키 입력을 보내지 않고, 캡처한 화면은 저장하지 않습니다.")
         watch_bar.addWidget(self.b_watch)
         self.watch_label = plain_label(
             "자동 측정을 시작한 뒤 게임에서 캐릭터 속성 화면을 열고, 에코 화면에서 에코 5개를 차례로 클릭하세요.")
-        self.watch_label.setStyleSheet("color: #7a8794;")
+        self.watch_label.setStyleSheet(f"color: {MUTED_COLOR};")
         watch_bar.addWidget(self.watch_label, 1)
         root.addLayout(watch_bar)
         self._watch_stop = None
@@ -822,16 +1104,23 @@ class MainWindow(QMainWindow):
         self.portrait = portrait_label(PORTRAIT_SIZE)
         left_lay.addWidget(self.portrait, 0, Qt.AlignHCenter)
         self.info = CharacterInfo()
-        left_lay.addWidget(self.info, 1)
+        left_lay.addWidget(self.info)
+        self.party = PartyPanel(self.portrait_pixmap)
+        self.party.setVisible(False)
+        left_lay.addWidget(self.party)
         self.b_extra = QPushButton("유효 옵션 직접 추가")
         self.b_extra.setToolTip("공략 우선순위에 없지만 이 캐릭터에게 도움이 되는 서브옵션을 유효 옵션으로 추가합니다.\n"
                                 "추가한 옵션은 공략 우선순위 바로 다음 순위로 계산합니다.")
         self.b_extra.clicked.connect(self.edit_extra_substats)
         left_lay.addWidget(self.b_extra)
-        test_label = QLabel("퇴사하고 싶다")  # 업데이트 테스트용 문구
-        test_label.setStyleSheet(f"color: {MUTED_COLOR}; font-size: 8pt;")
+        test_label = RainbowLabel("퇴사하고 싶다")  # 업데이트 테스트용 문구 (10번 클릭하면 이스터 에그)
         left_lay.addWidget(test_label)
-        split.addWidget(left)
+        left_lay.addStretch(1)
+        left_scroll = QScrollArea()
+        left_scroll.setWidgetResizable(True)
+        left_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        left_scroll.setWidget(left)
+        split.addWidget(left_scroll)
 
         mid = QWidget()
         mid_lay = QVBoxLayout(mid)
@@ -841,6 +1130,7 @@ class MainWindow(QMainWindow):
         self.gear.changed.connect(self.schedule_eval)
         mid_lay.addWidget(self.gear)
         echo_box = QGroupBox()
+        echo_box.setProperty("untitled", True)  # 제목 대신 접기 버튼을 쓰므로 제목 자리를 비우지 않는다
         eb = QVBoxLayout(echo_box)
         echo_toggle = QToolButton()
         echo_toggle.setText("장착 에코")
@@ -849,7 +1139,7 @@ class MainWindow(QMainWindow):
         echo_toggle.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         echo_toggle.setArrowType(Qt.DownArrow)
         echo_toggle.setAutoRaise(True)
-        echo_toggle.setStyleSheet("QToolButton { font-weight: bold; border: none; }")
+        echo_toggle.setStyleSheet(f"QToolButton {{ font-weight: bold; color: {ACCENT}; border: none; }}")
         eb.addWidget(echo_toggle)
         self.echo_tabs = QTabWidget()
         self.echo_editors = [EchoEditor(i) for i in range(ECHO_COUNT)]
@@ -874,7 +1164,7 @@ class MainWindow(QMainWindow):
 
         self.results = ResultsPanel()
         split.addWidget(self.results)
-        split.setSizes([260, 560, 700])
+        split.setSizes([300, 560, 700])
         root.addWidget(split, 1)
         self.setCentralWidget(central)
         self.statusBar().showMessage("준비")
@@ -1075,6 +1365,7 @@ class MainWindow(QMainWindow):
     def _rerender(self) -> None:
         self.font_label.setText(f"{base_pt()}pt")
         self.info.show_character(getattr(self, "current", None))
+        self.show_party()
         self.run_eval()
 
     def update_data(self) -> None:
@@ -1124,6 +1415,7 @@ class MainWindow(QMainWindow):
         self.current = next((c for c in self.characters if c.id == cid), None)
         self.info.show_character(self.current)
         self.show_portrait()
+        self.show_party()
         self.totals.set_targets(self.current)
         self.gear.set_character(self.current, self.all_sets)
         self.load_build()
@@ -1192,6 +1484,16 @@ class MainWindow(QMainWindow):
         else:
             self.portrait.setPixmap(pix.scaled(PORTRAIT_SIZE, PORTRAIT_SIZE, Qt.KeepAspectRatio,
                                                Qt.SmoothTransformation))
+
+    def portrait_pixmap(self, char_id: str) -> QPixmap | None:
+        from .images import portrait_path
+        return self.pixmap(portrait_path(char_id))
+
+    def show_party(self) -> None:
+        names = {str(k): v.get("name", "") for k, v in (getattr(self, "meta", None) or {}).get("team_members", {}).items()
+                 if isinstance(v, dict) and v.get("name")}
+        names.update({c.id: c.name for c in getattr(self, "characters", [])})
+        self.party.show_character(getattr(self, "current", None), names, load_party_modes(names))
 
     def refresh_echo_icons(self) -> None:
         """에코 이름에 맞는 초상화를 에코 탭과 결과 표에 표시한다. 이미지가 없는 에코는 코스트만."""
@@ -1312,7 +1614,7 @@ class MainWindow(QMainWindow):
             self.watch_label.setStyleSheet("color: #c0392b;")
         elif self._watch_stop and self._watch_stop.is_set():
             self.watch_label.setText("자동 측정을 멈췄습니다.")
-            self.watch_label.setStyleSheet("color: #7a8794;")
+            self.watch_label.setStyleSheet(f"color: {MUTED_COLOR};")
         else:
             self.watch_label.setStyleSheet("color: #27ae60;")
         self.b_watch.blockSignals(True)
@@ -1366,9 +1668,14 @@ def main() -> int:
     font = QFont("Malgun Gothic") if sys.platform == "win32" else app.font()
     font.setPointSize(saved_font_pt())
     app.setFont(font)
-    app.setStyleSheet(APP_STYLE)
+    apply_theme(app)
     if APP_ICON.is_file():
         app.setWindowIcon(QIcon(str(APP_ICON)))
     win = MainWindow()
+    try:  # 개발용 새로고침: 저장소에서 실행할 때만 켜지고, 릴리즈에는 파일이 없다
+        from . import devreload
+        win._dev_reloader = devreload.install(win)
+    except ImportError:
+        pass
     win.show()
     return app.exec()

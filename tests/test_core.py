@@ -481,3 +481,34 @@ def test_user_extra_substats_count_as_useful():
     assert substat_weights(c)[S.HEAVY_DMG] > 0
     e = echo(4, (S.CRIT_DMG, 44.0), (S.HEAVY_DMG, 9.4))
     assert not any("쓸모없는" in n for n in evaluate_echo(c, e, 0).notes)
+
+
+def test_recommended_parties():
+    from wuwastat.models import Character
+    from wuwastat.scraper import parse_teams
+
+    teammate = {"items": [
+        {"main": {"roleGbId": "1509"}, "spares": [{"roleGbId": "1211"}, {"roleGbId": "1207"}]},
+        {"main": {"roleGbId": "1209"}, "spares": [{"roleGbId": "1508"}]},
+    ]}
+    teams = parse_teams(teammate)
+    assert teams == [["1509", "1211", "1207"], ["1209", "1508"]]
+    c = Character(id="1210", name="에이메스", teams=teams)
+    assert c.recommended_parties() == [
+        ("1210", "1509", "1209"), ("1210", "1211", "1209"),
+        ("1210", "1207", "1209"), ("1210", "1509", "1508"),
+    ]
+    assert parse_teams({"items": [], "modeTeammateRecommends": [{"items": teammate["items"][:1]}]}) == [teams[0]]
+    assert Character(id="1", name="x").recommended_parties() == []
+
+
+def test_party_modes():
+    from wuwastat.models import load_party_modes, party_modes
+
+    names = {"1210": "에이메스", "1509": "린네", "1211": "데니아", "1109": "루실라", "1108": "히유키", "1208": "갈브레나"}
+    rules = load_party_modes(names)
+    assert party_modes(("1210", "1509", "1209"), rules) == {"1509": "밀집"}
+    assert party_modes(("1210", "1211", "1209"), rules) == {"1211": "불꽃"}
+    assert party_modes(("1108", "1109", "1104"), rules) == {"1109": "서리"}
+    assert party_modes(("1109", "1208", "1104"), rules) == {"1109": "에코"}  # 루실라 쪽 추천 파티에서도 적용
+    assert party_modes(("1509", "1209"), rules) == {}  # 에이메스가 없으면 표시하지 않는다

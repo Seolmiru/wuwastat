@@ -53,4 +53,11 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" build/*.zip --title "${GITHUB_REF_NAME}" --generate-notes
+        # docs/release-notes/<태그>.md 가 있으면 그 패치 노트를 릴리즈 본문으로 쓴다 (앱의 업데이트 창에도 표시됨)
+        run: |
+          notes="docs/release-notes/${GITHUB_REF_NAME}.md"
+          if [ -f "$notes" ]; then
+            gh release create "${GITHUB_REF_NAME}" build/*.zip --title "${GITHUB_REF_NAME}" --notes-file "$notes"
+          else
+            gh release create "${GITHUB_REF_NAME}" build/*.zip --title "${GITHUB_REF_NAME}" --generate-notes
+          fi

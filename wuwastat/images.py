@@ -136,7 +136,8 @@ def download_assets(data: dict, progress=print) -> tuple[int, int]:
     PORTRAIT_DIR.mkdir(parents=True, exist_ok=True)
     ECHO_DIR.mkdir(parents=True, exist_ok=True)
     n_portrait = 0
-    for c in data.get("characters", []):
+    members = [{"id": k, **v} for k, v in (data.get("team_members") or {}).items() if isinstance(v, dict)]
+    for c in [*data.get("characters", []), *members]:
         cid, url = str(c.get("id", "")), c.get("portrait") or ""
         if not re.fullmatch(r"\d{1,8}", cid) or not url:
             continue

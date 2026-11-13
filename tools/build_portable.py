@@ -44,7 +44,7 @@ STAGE = BUILD / "wuwastat"  # 짧은 경로에서 만든다 (PySide6 경로가 �
 ZIP_PATH = BUILD / f"{NAME}.zip"
 
 APP_ITEMS = ["wuwastat", "data", "assets"]
-APP_EXCLUDE = {"__pycache__", "characters.local.json"}
+APP_EXCLUDE = {"__pycache__", "characters.local.json", "devreload.py"}  # devreload: 개발용 새로고침
 
 # 쓰지 않는 Qt 구성요소 (QtWidgets 앱이라 QML·디자이너 도구·문서가 필요 없다)
 PRUNE_DIRS = ["PySide6/qml", "PySide6/include", "PySide6/typesystems", "PySide6/glue", "PySide6/examples",
